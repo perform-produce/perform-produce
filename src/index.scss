@@ -1,20 +1,22 @@
 body {
   margin: 0;
   font-size: 30px;
-}
-body * {
-  font-size: 30px;
-  font-weight: normal;
-  line-height: 1.2em;
-  font-family: "OPS Placard";
+
+  * {
+    font-size: 30px;
+    font-weight: normal;
+    line-height: 1.2em;
+    font-family: 'OPS Placard';
+  }
 }
 
 a {
   text-decoration: none;
   color: inherit;
-}
-a:active {
-  color: inherit;
+
+  &:active {
+    color: inherit;
+  }
 }
 
 p,
@@ -31,10 +33,9 @@ h5 {
   font-style: normal;
   src: url("./assets/fonts/opsplacard-regular_RW.ttf");
 }
+
 @font-face {
   font-family: "OPS Placard";
   font-style: italic;
   src: url("./assets/fonts/opsplacard-italic.ttf");
 }
-
-/*# sourceMappingURL=index.css.map */

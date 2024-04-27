@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { loopObject, validateString } from './commonUtils'
-import { COLORS, GAP, GRID_COUNT, GRID_GAP } from '../constants'
+import { COLORS, GRID_COUNT, GRID_GAP, VERT_GAP } from '../constants'
 import { spanCol } from './styleUtils'
 
 const flex = (
@@ -43,9 +43,9 @@ const underline = () => `
 `
 
 const cover = (paddingBottom) => `
-  height: calc(100vh - ${GAP});
+  height: calc(100vh - ${VERT_GAP});
   align-items: end;
-  padding-bottom: ${paddingBottom ?? GAP};
+  padding-bottom: ${paddingBottom ?? VERT_GAP};
   background-color: ${COLORS.GRAY};
 `
 

@@ -5,24 +5,44 @@ import Grid from './common/grid'
 import { emify, lineHeight } from '../utils/styleUtils'
 import { COLORS, MENU_PADDING_BOT, MENU_PADDING_TOP } from '../constants'
 import mixins from '../utils/mixins'
-import MenuLink from './common/MenuLink'
+import MenuItem from './common/menuItem'
 import { useState } from 'react'
 import ScrollMeter from './scrollMeter'
 
 
 const Menu = () => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const handleMouseEnter = () => setIsExpanded(true)
-  const handleMouseLeave = () => setIsExpanded(false)
+  const [noContentUnderline, setNoContentUnderline] = useState(true)
+
+  const linkHoverHandlers = {
+    onMouseEnter: () => setNoContentUnderline(true),
+    onMouseLeave: () => setNoContentUnderline(false)
+  }
+
+  const handleMouseLeaveMenu = () => setIsExpanded(false)
 
   return (
-    <MenuContainer as='menu' onMouseLeave={handleMouseLeave}>
+    <MenuContainer as='menu' onMouseLeave={handleMouseLeaveMenu}>
       <LinkWrapper $end='span 2'>
-        <MenuLink noUnderline to='/'>Perform Produce</MenuLink>
+        <MenuItem
+          to='/'
+          hoverUnderlineOnly
+          {...linkHoverHandlers}>
+          Perform—Produce
+        </MenuItem>
       </LinkWrapper>
       <ContentLink $end='span 5'>
-        <MenuLink to='/' onMouseEnter={handleMouseEnter}>Contents</MenuLink>
-        {isExpanded &&
+        <MenuItem
+          hoverUnderlineOnly
+          forceUnderline={isExpanded && !noContentUnderline}
+          onMouseEnter={() => {
+            setIsExpanded(true)
+            setNoContentUnderline(false)
+          }}>
+          Contents
+        </MenuItem>
+        {
+          isExpanded &&
           <div>
             <Link to='/#the-designer-as-machine'>The Designer as Machine</Link>
             <Link to='/#exchange-bridget-moser'>Exchange: Bridget Moser</Link>
@@ -35,13 +55,21 @@ const Menu = () => {
           </div>
         }
       </ContentLink>
-      <LinkWrapper $alignRight $start={10}>
-        <MenuLink to='appendix'>Appendix</MenuLink>
+      <LinkWrapper $alignRight $start={9}>
+        <MenuItem
+          to='appendix'
+          {...linkHoverHandlers}>
+          Appendix
+        </MenuItem>
       </LinkWrapper>
       <LinkWrapper $alignRight>
-        <MenuLink to='about'>About</MenuLink>
+        <MenuItem
+          to='about'
+          {...linkHoverHandlers}>
+          About
+        </MenuItem>
       </LinkWrapper>
-      <LinkWrapper $alignRight>
+      <LinkWrapper $start={11} $end={13} $alignRight>
         <ScrollMeter />
       </LinkWrapper>
     </MenuContainer>
@@ -58,7 +86,7 @@ const MenuContainer = styled(Grid)`
 `
 
 const LinkWrapper = styled(GridItem)`
-  > a, > span {
+  > a, > span, > p {
     width: fit-content;
   }
 `

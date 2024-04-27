@@ -1,26 +1,37 @@
 import styled from 'styled-components'
 import GridItem from './gridItem'
 import { emify, wordSpace } from '../../utils/styleUtils'
+import SideAnnotation from './sideAnnotation'
+import drupalServices from '../../services/drupalServices'
 
-const DialogueCaption = props => <GridItem {...props} $end='span 4' />
+const SideAnnotations = props => <StyledAnnotation {...props} $end='span 4' />
 
 const Dialogue = ({
   interviewer,
   speaker,
   children,
-  caption,
+  annotations,
   ...rest
 }) => {
+
+  const sideAnnotations = annotations.map(({ src, alt, caption }, i) =>
+    <SideAnnotation
+      key={i}
+      src={src}
+      alt={alt}
+      caption={caption ? drupalServices.parseNoSpan(caption) : undefined} />
+  )
+
   return (
     <>
-      {!interviewer && <DialogueCaption $start={1}>{caption}</DialogueCaption>}
+      {!interviewer && <SideAnnotations $start={1}>{sideAnnotations}</SideAnnotations>}
       <Speaker {...rest} $alignRight $start={interviewer ? 2 : 5} $end='span 1' >
         {speaker}
       </Speaker>
       <Text {...rest} $start={interviewer ? 3 : 6} $end='span 6' >
         {children}
       </Text>
-      {interviewer && <DialogueCaption>{caption}</DialogueCaption>}
+      {interviewer && <SideAnnotations>{sideAnnotations}</SideAnnotations>}
     </>
   )
 }
@@ -37,5 +48,11 @@ const Text = styled(GridItem)`
   }
 `
 
+const StyledAnnotation = styled(GridItem)`
+  align-self: flex-end;
+  /* figure:last-child {
+    margin-bottom: 0;
+  } */
+`
 
 export default Dialogue

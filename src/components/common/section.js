@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import GridItem from './gridItem'
-import { GAP, IMG_POPUP_GRID_SPAN, SECTION_PADDING_LINE_HEIGHT, TEXT_POPUP_GRID_SPAN } from '../../constants'
+import { IMG_POPUP_GRID_SPAN, SECTION_PADDING_LINE_HEIGHT, TEXT_POPUP_GRID_SPAN, VERT_GAP } from '../../constants'
 import { closest, emify, getGridData, lineHeight } from '../../utils/styleUtils'
 import Grid from './grid'
 import { PopUpContext } from '../../contexts/context'
@@ -10,7 +10,7 @@ import Fade from './fade'
 import PopUp from './popUp'
 
 
-const Section = ({ children, header, backgroundColor, prefix = '', ...rest }) => {
+const Section = ({ children, header, backgroundColor, ...rest }) => {
   const [citationData, setCitationData] = useState()
   const [isQuoteOpened, setIsQuoteOpened] = useState(true)
   const sectionRef = useRef()
@@ -28,7 +28,7 @@ const Section = ({ children, header, backgroundColor, prefix = '', ...rest }) =>
 
   // TODO: font loading for italics delayed which causes a layout shift
   return (
-    <PopUpContext.Provider value={{ onCitationHover, prefix, isQuoteOpened, toggleQuoteState }}>
+    <PopUpContext.Provider value={{ onCitationHover, isQuoteOpened, toggleQuoteState }}>
       <SectionContainer ref={sectionRef} as='section' {...rest}>
         <StyledSection $backgroundColor={backgroundColor}>
           <SectionHeader as='h2' $end={'span 2'}>{header}</SectionHeader>
@@ -73,7 +73,7 @@ const StyledSection = styled(Grid)`
   }
 
   >:not(:first-child, hgroup) {
-    margin-bottom: ${GAP};
+    margin-bottom: ${VERT_GAP};
   }
 
   >:last-child {

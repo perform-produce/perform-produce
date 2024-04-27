@@ -1,10 +1,10 @@
 import { DEFAULT_EM, GAP, GAP_PX, GLYPH_SPACE, GRID_COUNT, GRID_GAP, GRID_GAP_PX, LINE_HEIGHT } from '../constants'
 
 export const emify = px => `${px / DEFAULT_EM}em`
-export const lineHeight = lines => `${lines * LINE_HEIGHT}em`
+export const lineHeight = (lines = 1) => `${lines * LINE_HEIGHT}em`
 export const wordSpace = words => `${GLYPH_SPACE * words}em`
 export const getEm = (em = 1) => parseInt(getComputedStyle(document.body).fontSize) * em
-export const getLineHeight = () => LINE_HEIGHT * getEm()
+export const getLineHeight = (lines = 1) => LINE_HEIGHT * getEm() * lines
 export const getPx = px => px / DEFAULT_EM * getEm()
 
 export const getGridData = () => {

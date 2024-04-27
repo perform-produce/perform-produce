@@ -5,9 +5,9 @@ import { lineHeight } from '../../utils/styleUtils'
 import WhiteSpace from './whitespace'
 
 
-const InterviewHeader = ({ subHeader, interviewee, ...rest }) =>
+const InterviewHeader = ({ subheader, interviewee, ...rest }) =>
   <Header {...rest} $start={4} $end={9} as='hgroup'>
-    <h3>{subHeader}</h3>
+    <h3>{subheader}</h3>
     <Interviewee><WhiteSpace>    </WhiteSpace>{interviewee}</Interviewee>
   </Header>
 

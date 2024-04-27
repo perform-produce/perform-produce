@@ -19,7 +19,7 @@ const ScrollMeter = () => {
   }), [])
 
   return (
-    <span>{data.pxScrolled.toLocaleString()} px</span>
+    <span>{parseInt(data.pxScrolled).toLocaleString()} px</span>
   )
 }
 

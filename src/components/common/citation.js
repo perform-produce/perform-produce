@@ -1,17 +1,17 @@
 import { useContext } from 'react'
 import styled from 'styled-components'
+import _ from 'lodash'
 import { PopUpContext } from '../../contexts/context'
 import WhiteSpace from './whitespace'
 
 const Citation = ({ number, ...rest }) => {
-  const { onCitationHover, prefix } = useContext(PopUpContext)
+  const { onCitationHover } = useContext(PopUpContext)
   return (
     <>
       <WhiteSpace> </WhiteSpace>
       <StyledCitation onMouseEnter={e => onCitationHover(e, { number, ...rest })}>
-        [{prefix + number}]
+        [{_.padStart(`${number}`, 2, '0')}]
       </StyledCitation >
-      <WhiteSpace> </WhiteSpace>
     </>
   )
 }

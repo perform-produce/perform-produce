@@ -10,6 +10,7 @@ const PopUp = ({
   x,
   y,
   number,
+  alt,
   header,
   subheader,
   date,
@@ -26,7 +27,7 @@ const PopUp = ({
       as={src ? 'figure' : undefined}
       $span={src ? IMG_POPUP_GRID_SPAN : TEXT_POPUP_GRID_SPAN}
       $backgroundColor={backgroundColor}>
-      {src && <FilteredImg src={src} alt={header} />}
+      {src && <FilteredImg src={src} alt={alt} />}
       <TextContainer as={src ? 'figcaption' : undefined}>
         <HeaderContainer>
           <div>{number}.</div>

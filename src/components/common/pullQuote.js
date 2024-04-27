@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import GridItem from './gridItem'
 import mixins from '../../utils/mixins'
-import { GAP, GRID_GAP, SECTION_PADDING_LINE_HEIGHT } from '../../constants'
+import { COLORS, GAP, GRID_GAP, SECTION_PADDING_LINE_HEIGHT } from '../../constants'
 import { emify, lineHeight, spanCol } from '../../utils/styleUtils'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import { useContext, useEffect } from 'react'
@@ -36,7 +36,7 @@ const PullQuote = ({ header, pageNumber, children }) => {
 
 const Container = styled(GridItem)`
   position: absolute;
-  background-color: white;
+  background-color: ${COLORS.WHITE};
   left: calc(${GAP} + ${GRID_GAP} + ${spanCol(1)});
   top: ${lineHeight(SECTION_PADDING_LINE_HEIGHT + 5)};
   padding: ${emify(40)};

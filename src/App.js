@@ -2,18 +2,38 @@ import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Menu from './components/menu.js'
 import Home from './components/home.js'
 import About from './components/about.js'
+import Appendix from './components/appendix.js'
+import drupalServices from './services/drupalServices.js'
+import styled from 'styled-components'
+import mixins from './utils/mixins.js'
+import usePromise from 'react-promise'
+import { GlobalContext } from './contexts/context.js'
 
+
+const contents = drupalServices.getContents()
 const App = () => {
+  const { value, loading } = usePromise(contents)
   return (
     <HashRouter>
-      <Menu />
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/about' element={<About />} />
-        <Route path='*' element={<Navigate to='/' replace />} />
-      </Routes>
+      <StyledGlobal>
+        <Menu />
+        <GlobalContext.Provider value={{ contents: value, contentIsLoading: loading }} >
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/about' element={<About />} />
+            <Route path='/appendix' element={<Appendix />} />
+            <Route path='*' element={<Navigate to='/' replace />} />
+          </Routes>
+        </GlobalContext.Provider>
+      </StyledGlobal>
     </HashRouter>
   )
 }
+
+const StyledGlobal = styled.div`
+  u {
+    ${mixins.underline}
+  }
+`
 
 export default App

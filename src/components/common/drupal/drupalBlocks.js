@@ -11,7 +11,6 @@ const DrupalBlocks = ({ blocks, citations }) => {
       key={i}
       content={content}
       citations={citations} />
-
   })
 }
 

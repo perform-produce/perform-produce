@@ -42,7 +42,7 @@ const Speaker = styled(GridItem)`
 `
 
 const Text = styled(GridItem)`
-  p:not(:first-of-type) {
+  p:not(:first-child) {
     margin-top: 0;
     text-indent: ${wordSpace(5)};
   }
@@ -50,9 +50,6 @@ const Text = styled(GridItem)`
 
 const StyledAnnotation = styled(GridItem)`
   align-self: flex-end;
-  /* figure:last-child {
-    margin-bottom: 0;
-  } */
 `
 
 export default Dialogue

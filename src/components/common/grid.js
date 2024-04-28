@@ -9,7 +9,7 @@ const Grid = styled.div`
   padding-left: ${GAP};
   padding-right: ${GAP};
 
-  p:not(:first-of-type) {
+  p:not(:first-child) {
     margin-top: ${lineHeight(1)};
   }
 `

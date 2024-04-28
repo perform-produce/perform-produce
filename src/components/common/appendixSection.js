@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 import mixins from '../../utils/mixins'
-import { COLORS } from '../../constants'
-import { wordSpace } from '../../utils/styleUtils'
+import { COLORS, GRID_GAP, LINE_HEIGHT } from '../../constants'
+import { emify, spanCol, wordSpace } from '../../utils/styleUtils'
+import Paragraphs from './paragraphs'
 
 
 const AppendixSection = ({ srcs, notation, header, subheader, metrics, children }) => {
@@ -13,23 +14,33 @@ const AppendixSection = ({ srcs, notation, header, subheader, metrics, children 
           {srcs && srcs.map((src, i) => <img src={'assets/images/' + src} alt='' key={i}></img>)}
         </div>
       </ImgContainer>
-      <hgroup>
+      <HeaderContainer>
         <h3>{header}</h3>
         <p>{subheader}</p>
-        <p>{metrics}</p>
-      </hgroup>
-      <div>{children}</div>
+        {metrics && <p>[{metrics}]</p>}
+      </HeaderContainer>
+      <BodyContainer>
+        <Paragraphs>
+          {children}
+        </Paragraphs>
+      </BodyContainer>
     </Section>
   )
 }
 
+const HeaderContainer = styled.hgroup``
+
 const Section = styled.section`
   ${mixins.spansCol(4)}
   background-color: ${COLORS.GRAY};
+  overflow-y: scroll;
+  flex: none;
+  margin-left: ${GRID_GAP};
 
-  img {
-    width: 62.5%; // TODO
-    background-color: black;
+  > ${HeaderContainer} {
+    h3, p {
+      margin-top: 0;
+    }
   }
 `
 
@@ -37,7 +48,26 @@ const imgNotationWidth = wordSpace(6)
 const ImgContainer = styled.div`
   ${mixins.grid(3)};
   column-gap: 0;
-  grid-template-columns: ${imgNotationWidth} minmax(1fr, 62.5%) ${imgNotationWidth};
+  grid-template-columns: ${imgNotationWidth} 1fr ${imgNotationWidth};
+  margin: ${emify(45)} 0 ${emify(40)};
+
+  > div {
+    ${mixins.flex('center', 'initial')}
+    flex-direction: column;
+
+    img {
+      width: calc(${spanCol(4)} * 0.625); // TODO
+      background-color: black;
+
+      &:not(:first-child) {
+        margin-top: 1em;
+      }
+    }
+  }
+`
+
+const BodyContainer = styled.div`
+  margin: ${LINE_HEIGHT}em 0;
 `
 
 export default AppendixSection

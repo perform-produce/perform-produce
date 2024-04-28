@@ -1,4 +1,5 @@
 import { DEFAULT_EM, GAP, GAP_PX, GLYPH_SPACE, GRID_COUNT, GRID_GAP, GRID_GAP_PX, LINE_HEIGHT } from '../constants'
+import { delta } from './commonUtils'
 
 export const emify = px => `${px / DEFAULT_EM}em`
 export const lineHeight = (lines = 1) => `${lines * LINE_HEIGHT}em`
@@ -24,7 +25,7 @@ export const closest = (number, ...bounds) => {
   let lowestDiff = Infinity
   for (let i = 0; i < bounds.length; i++) {
     const bound = bounds[i]
-    const diff = Math.abs(bound - number)
+    const diff = delta(number, bound)
     if (diff < lowestDiff) {
       currentBound = bound
       lowestDiff = diff

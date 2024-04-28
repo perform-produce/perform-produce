@@ -41,7 +41,7 @@ const Cover = styled(Grid)`
 `
 
 const CreditToggle = styled(GridItem)`
-  ${mixins.flex}
+  ${mixins.flex()}
   justify-self: right;
 
   button {

@@ -1,27 +1,24 @@
 import styled from 'styled-components'
-import { memo } from 'react'
 import mixins from '../../utils/mixins'
 import { GAP, IMG_POPUP_GRID_SPAN, TEXT_POPUP_GRID_SPAN } from '../../constants'
 import { emify, wordSpace } from '../../utils/styleUtils'
 import GridItem from './gridItem'
 import FilteredImg from './filteredImg'
 
-const PopUp = ({
+const PopUpCitation = ({
   x,
   y,
   number,
   alt,
   header,
   subheader,
-  date,
   src,
   children,
   handleMouseLeave,
   backgroundColor
 }) => {
-  const SubHeader = memo(() => <span>{subheader}</span>, [subheader, date])
   return (
-    <StyledPopUp
+    <PopUp
       style={{ left: x, top: y }}
       onMouseLeave={handleMouseLeave}
       as={src ? 'figure' : undefined}
@@ -33,18 +30,16 @@ const PopUp = ({
           <div>{number}.</div>
           <div>
             <Header>{header}</Header>
-            <p><SubHeader /></p>
+            <p>{subheader}</p>
           </div>
         </HeaderContainer>
         <div>{children}</div>
       </TextContainer>
-    </StyledPopUp>
+    </PopUp>
   )
 }
 
-export default PopUp
-
-const StyledPopUp = styled(GridItem)`
+const PopUp = styled(GridItem)`
   position: absolute;
   box-sizing: border-box;
 
@@ -75,3 +70,5 @@ const HeaderContainer = styled.hgroup`
 const Header = styled.h4`
   display: inline;
 `
+
+export default PopUpCitation

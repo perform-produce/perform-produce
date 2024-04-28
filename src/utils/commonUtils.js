@@ -11,19 +11,17 @@ export const loopObject = (object, callback) => {
   return object
 }
 
-export const mouseIsInbound = (x, y, boundsObject) =>
-  x >= boundsObject.left &&
-  x <= boundsObject.right &&
-  y >= boundsObject.top &&
-  y <= boundsObject.bottom
-
-export const parseCitationInt = string => parseInt(string.replaceAll(/[a-zA-Z]*/g, ''))
-export const getHtmlAttrib = attrib => new RegExp(`(?<=${attrib}=")(.*?)(?=")`)
 export const stripParagraph = htmlString => (htmlString?.match(/(?<=<p>)(.*?)(?=<\/p>)/) || [])[0]
 
 export const querySelectorArray = (elem, query) => Array.from(elem.querySelectorAll(query))
-export const roundTo = (number, lower, upper) => {
-  const dLower = Math.abs(number - lower)
-  const dUpper = Math.abs(number - upper)
-  return dLower <= dUpper ? lower : upper
+export const roundTo = (number, lower, upper) =>
+  delta(number, lower) <= delta(number, upper) ? lower : upper
+
+export const delta = (a, b) => Math.abs(a - b)
+export const closestIndex = (array, number) => {
+  const i = array.findIndex(bound => bound > number)
+  return i === -1 ? array.length - 1 :
+    delta(number, array[i - 1]) < delta(number, array[i]) ? i - 1 : i
 }
+
+export const closest = (array, number) => array[closestIndex(array, number)]

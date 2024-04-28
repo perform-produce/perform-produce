@@ -7,7 +7,7 @@ import { PopUpContext } from '../../contexts/context'
 import { useRef, useState } from 'react'
 import mixins from '../../utils/mixins'
 import Fade from './fade'
-import PopUp from './popUp'
+import PopUpCitation from './popUpCitation'
 
 
 const Section = ({ children, header, backgroundColor, ...rest }) => {
@@ -39,7 +39,7 @@ const Section = ({ children, header, backgroundColor, ...rest }) => {
           state={citationData}
           timeout={125}
           render={
-            (state = {}) => <PopUp
+            (state = {}) => <PopUpCitation
               {...state}
               handleMouseLeave={() => setCitationData()}
               backgroundColor={backgroundColor} />

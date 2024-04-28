@@ -22,8 +22,9 @@ export const MENU_PADDING_BOT = 15
 
 export const COLORS = {
   WHITE: 'white',
-  GRAY: '#F2F2F2',
-  PINK: '#FFDCCE'
+  GRAY: '#D9D9D9',
+  PINK: '#FFDCCE',
+  YELLOW: '#FCF7BB'
 }
 
 export const DRUPAL_ENDPOINT = 'https://rw-sux.iamasq.works'

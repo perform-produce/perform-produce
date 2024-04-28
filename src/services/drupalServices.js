@@ -1,7 +1,7 @@
 import { DRUPAL_ENDPOINT } from '../constants'
 import { querySelectorArray, validateString } from '../utils/commonUtils'
 import httpServices from './httpServices'
-import parse, { domToReact } from 'html-react-parser'
+import parse from 'html-react-parser'
 
 const getParagraphClass = className => 'paragraph--type--' + className
 const getField = fieldName => 'field_' + fieldName
@@ -34,7 +34,7 @@ const INTERVIEW_INTERVIEWEE = getField('interviewee')
 const INTERVIEW_PULL_QUOTE_TITLE = getField('pull_quote_title')
 const INTERVIEW_PULL_QUOTE_BODY = getField('pull_quote_body')
 const INTERVIEW_PULL_QUOTE_PAGE_NUMBER = getField('pull_quote_page_number')
-
+const INTERVIEW_INTRO = getField('interview_intro')
 
 const removeSpan = (htmlString = '') => htmlString.replaceAll(/<\/?span>/g, '')
 const parseNoSpan = (htmlString = '') => parse(removeSpan(htmlString))
@@ -54,7 +54,6 @@ const getBlocks = content => {
 }
 
 const getCitations = content => getBlocks(content[HOVER_CITATIONS]).map(parseCitations)
-
 const getContents = async () =>
   (await httpServices.get(`${DRUPAL_ENDPOINT}/web/json/contents`)).data
 
@@ -65,7 +64,7 @@ const getEssay = contents =>
       uuid: essay.uuid,
       title: essay.title,
       sectionId: essay[SECTION_ID],
-      blocks: getBlocks(essay[ESSAY_CONTENT]).map(parseBlock),
+      blocks: parseBlocks(essay, ESSAY_CONTENT),
       citations: getCitations(essay)
     }))
 
@@ -83,24 +82,21 @@ const getInterview = contents =>
         body: interview[INTERVIEW_PULL_QUOTE_BODY],
         pageNumber: interview[INTERVIEW_PULL_QUOTE_PAGE_NUMBER]
       },
-      blocks: getBlocks(interview[INTERVIEW_SECTION])
-        .map(block => block.classList.contains(INTERVIEW_SECTION_PARAGRAPH) ? {
-          type: 'section',
-          content: parseInterviewSection(block)
-        } : parseBlock(block)), // TODO
+      intro: interview[INTERVIEW_INTRO],
+      blocks: parseBlocks(interview, INTERVIEW_SECTION),
       citations: getCitations(interview)
     }))
 
 
-const parseBlock = block => {
-  return block.classList.contains(BLOCK_PARAGRAPH) ? {
-    type: 'paragraph',
-    content: parseParagraph(block)
-  } : {
-    type: 'image',
-    content: parseImg(block)
-  }
-}
+const getBlockParser = (block, type, parser) => ({ type, content: parser(block) })
+const parseBlocks = (content, fieldName) =>
+  getBlocks(content[fieldName]).map(block =>
+    block.classList.contains(INTERVIEW_SECTION_PARAGRAPH) ?
+      getBlockParser(block, 'section', parseInterviewSection) :
+      block.classList.contains(BLOCK_PARAGRAPH) ?
+        getBlockParser(block, 'paragraph', parseParagraph) :
+        getBlockParser(block, 'image', parseImg)
+  )
 
 const parseCitations = elem => {
   const { getContent, getItem } = getContentParsers(elem)
@@ -129,38 +125,32 @@ const parseImg = elem => {
   }
 }
 
-const parseInterviewSection = elem => {
-  return {
-    speaker: getContent(elem, INTERVIEW_SPEAKER),
-    body: parseParagraph(elem),
-    annotations: getItems(elem, SIDE_ANNOTATIONS)
-      .map(annotation => {
-        const annotationContainer = annotation.children[0]
-        return annotationContainer.children.length ? parseImg(annotationContainer) : undefined
-      })
-      .filter(a => a)
-  }
-}
+const parseInterviewSection = elem => ({
+  speaker: getContent(elem, INTERVIEW_SPEAKER),
+  body: parseParagraph(elem),
+  annotations: getItems(elem, SIDE_ANNOTATIONS)
+    .map(annotation => {
+      const annotationContainer = annotation.children[0]
+      return annotationContainer.children.length ? parseImg(annotationContainer) : undefined
+    })
+    .filter(a => a)
+})
 
 const getFieldItemQuery = (className, plural) => `.${className} > div.field__item${validateString(plural, 's')}`
 const getItem = (elem, className) => elem.querySelector(getFieldItemQuery(className))
 const getItems = (elem, className) => Array.from(elem.querySelectorAll(getFieldItemQuery(className, true))[0]?.children || [])
 const getContent = (elem, className) => getItem(elem, className)?.innerHTML
 
-const getContentParsers = elem => {
-  const _getItem = className => getItem(elem, className)
-  const _getItems = className => getItems(elem, className)
-  const _getContent = className => getContent(elem, className)
-  return {
-    getItem: _getItem,
-    getItems: _getItems,
-    getContent: _getContent
-  }
-}
+const getContentParsers = elem => ({
+  getItem: className => getItem(elem, className),
+  getItems: className => getItems(elem, className),
+  getContent: className => getContent(elem, className)
+})
 
 const drupalServices = {
   removeSpan,
   parseNoSpan,
+  redirectSrc,
   getContents,
   getEssay,
   getInterview

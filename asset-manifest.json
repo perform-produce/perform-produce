@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/static/css/main.85865f50.css",
-    "main.js": "/static/js/main.9a7782a3.js",
+    "main.js": "/static/js/main.7563d1b3.js",
     "static/js/453.6e30a6ed.chunk.js": "/static/js/453.6e30a6ed.chunk.js",
     "static/media/opsplacard-regular_RW.ttf": "/static/media/opsplacard-regular_RW.c8d6ae1adb4b111f0217.ttf",
     "static/media/opsplacard-italic.ttf": "/static/media/opsplacard-italic.82515c1a5ebbcd208ffe.ttf",
     "static/media/close.svg": "/static/media/close.27c04fc02ee92948e0c310b009fb2749.svg",
     "index.html": "/index.html",
     "main.85865f50.css.map": "/static/css/main.85865f50.css.map",
-    "main.9a7782a3.js.map": "/static/js/main.9a7782a3.js.map",
+    "main.7563d1b3.js.map": "/static/js/main.7563d1b3.js.map",
     "453.6e30a6ed.chunk.js.map": "/static/js/453.6e30a6ed.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.85865f50.css",
-    "static/js/main.9a7782a3.js"
+    "static/js/main.7563d1b3.js"
   ]
 }

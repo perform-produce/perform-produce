@@ -1,99 +1,70 @@
+import { useContext, useRef, useState } from 'react'
 import styled from 'styled-components'
+import gsap from "gsap"
+import { useGSAP } from "@gsap/react"
+import _ from 'lodash'
+import he from 'he'
 import GridItem from './common/gridItem'
-import { emify, lineHeight, spanCol } from '../utils/styleUtils'
-import { COLORS, GAP, GRID_GAP, GRID_GAP_PX, MENU_PADDING_BOT, MENU_PADDING_TOP } from '../constants'
+import { spanCol } from '../utils/styleUtils'
+import { COLORS, GAP, GRID_GAP, LINE_HEIGHT, SECTION_HEADING_TOP } from '../constants'
 import mixins from '../utils/mixins'
 import AppendixSection from './common/appendixSection'
-import { usePrevious } from '@uidotdev/usehooks'
-import { useRef } from 'react'
-import { querySelectorArray } from '../utils/commonUtils'
+import { useWindowSize } from '@uidotdev/usehooks'
+import { GlobalContext } from '../contexts/context'
+import drupalServices from '../services/drupalServices'
 
+gsap.registerPlugin(useGSAP)
 
 const Appendix = () => {
-  const sectionContainerRef = useRef()
-  const scrollRef = useRef(0)
+  const [index, setIndex] = useState(0)
+  const containerRef = useRef()
+  const innerContainerRef = useRef()
+  const { contents, contentIsLoading } = useContext(GlobalContext)
+  const appendixData = contents &&
+    drupalServices.getAppendices(contents)
 
-  const handleScroll = e => {
-    const sectionContainer = sectionContainerRef.current
-    if (!sectionContainer) return
-    const { scrollLeft } = sectionContainer
-    const isRight = scrollLeft > scrollRef.current
-    const leftBound = sectionContainer.getBoundingClientRect().left + GRID_GAP_PX
-    // TODO
-    const sectionLeftBounds = querySelectorArray(sectionContainer, 'section')
-      .map(section => section.getBoundingClientRect().left)
+  const { width } = useWindowSize()
+  useGSAP(() => {
+    if (contentIsLoading || !appendixData) return
+    const innerContainer = innerContainerRef.current
+    const section = innerContainer.children[index]
+    const dist = section.getBoundingClientRect().width * index
+    gsap.to(innerContainer, { duration: 0.5, x: -dist })
+  }, { dependencies: [index, width], scope: containerRef })
 
-    console.log(isRight, leftBound, sectionLeftBounds)
-    scrollRef.current = scrollLeft
-  }
+  if (contentIsLoading || !appendixData) return
+
+  const handleClick = increment =>
+    setIndex(_.clamp(index + increment, 0, appendixData.length - 1))
+
   return (
     <AppendixGrid>
       <SideBar>
         <h2>Production</h2>
+        <div>
+          <button onClick={() => handleClick(-1)}>←</button>
+          <button onClick={() => handleClick(1)}>→</button>
+        </div>
       </SideBar>
-      <SectionContainer ref={sectionContainerRef} onScroll={handleScroll}>
-        <AppendixSection
-          notation='A-01'
-          srcs={['test_appendix_1.png', 'test_appendix_2.png']}
-          header={'(New) Mechanick Exercises'}
-          subheader={'Research Plates'}
-          metrics={'6" x 9"'} >
-          A series of 10 plates that perform a close read of Joseph Moxon’s 1677 Mechanick Exercises or The Doctrine of Handy-Works, the first English-language book (and intructional manual) ever published on typesetting and print production. This work explores the history of design techlnology, labor, and their connection to the measurement and design of the human body.
-        </AppendixSection>
-        <AppendixSection
-          notation='A-01'
-          srcs={['test_appendix_1.png', 'test_appendix_2.png']}
-          header={'(New) Mechanick Exercises'}
-          subheader={'Research Plates'}
-          metrics={'6" x 9"'} >
-          A series of 10 plates that perform a close read of Joseph Moxon’s 1677 Mechanick Exercises or The Doctrine of Handy-Works, the first English-language book (and intructional manual) ever published on typesetting and print production. This work explores the history of design techlnology, labor, and their connection to the measurement and design of the human body.
-        </AppendixSection>
-        <AppendixSection
-          notation='A-01'
-          srcs={['test_appendix_1.png', 'test_appendix_2.png']}
-          header={'(New) Mechanick Exercises'}
-          subheader={'Research Plates'}
-          metrics={'6" x 9"'} >
-          A series of 10 plates that perform a close read of Joseph Moxon’s 1677 Mechanick Exercises or The Doctrine of Handy-Works, the first English-language book (and intructional manual) ever published on typesetting and print production. This work explores the history of design techlnology, labor, and their connection to the measurement and design of the human body.
-        </AppendixSection>
-        <AppendixSection
-          notation='A-01'
-          srcs={['test_appendix_1.png', 'test_appendix_2.png']}
-          header={'(New) Mechanick Exercises'}
-          subheader={'Research Plates'}
-          metrics={'6" x 9"'} >
-          A series of 10 plates that perform a close read of Joseph Moxon’s 1677 Mechanick Exercises or The Doctrine of Handy-Works, the first English-language book (and intructional manual) ever published on typesetting and print production. This work explores the history of design techlnology, labor, and their connection to the measurement and design of the human body.
-        </AppendixSection>
-        <AppendixSection
-          notation='A-01'
-          srcs={['test_appendix_1.png', 'test_appendix_2.png']}
-          header={'(New) Mechanick Exercises'}
-          subheader={'Research Plates'}
-          metrics={'6" x 9"'} >
-          A series of 10 plates that perform a close read of Joseph Moxon’s 1677 Mechanick Exercises or The Doctrine of Handy-Works, the first English-language book (and intructional manual) ever published on typesetting and print production. This work explores the history of design techlnology, labor, and their connection to the measurement and design of the human body.
-        </AppendixSection>
-        <AppendixSection
-          notation='A-01'
-          srcs={['test_appendix_1.png', 'test_appendix_2.png']}
-          header={'(New) Mechanick Exercises'}
-          subheader={'Research Plates'}
-          metrics={'6" x 9"'} >
-          A series of 10 plates that perform a close read of Joseph Moxon’s 1677 Mechanick Exercises or The Doctrine of Handy-Works, the first English-language book (and intructional manual) ever published on typesetting and print production. This work explores the history of design techlnology, labor, and their connection to the measurement and design of the human body.
-        </AppendixSection>
-        <AppendixSection
-          notation='A-01'
-          srcs={['test_appendix_1.png', 'test_appendix_2.png']}
-          header={'(New) Mechanick Exercises'}
-          subheader={'Research Plates'}
-          metrics={'6" x 9"'} >
-          A series of 10 plates that perform a close read of Joseph Moxon’s 1677 Mechanick Exercises or The Doctrine of Handy-Works, the first English-language book (and intructional manual) ever published on typesetting and print production. This work explores the history of design techlnology, labor, and their connection to the measurement and design of the human body.
-        </AppendixSection>
+      <SectionContainer ref={containerRef}>
+        <SectionInnerContainer ref={innerContainerRef}>
+          {appendixData.map(({ number, images, title, type, metrics, body }, i) => {
+            return <AppendixSection
+              key={i}
+              number={number}
+              images={images}
+              header={title}
+              type={type}
+              metrics={he.decode(metrics)} >
+              {drupalServices.parseNoSpan(body)}
+            </AppendixSection>
+          })}
+        </SectionInnerContainer>
       </SectionContainer>
-    </AppendixGrid>
+    </AppendixGrid >
   )
 }
 
-const menuHeight = `calc(${emify(MENU_PADDING_TOP)} + ${emify(MENU_PADDING_BOT)} + ${lineHeight(1)})`
 const AppendixGrid = styled.div`
   height: 100vh;
   ${mixins.flex()}
@@ -101,28 +72,45 @@ const AppendixGrid = styled.div`
 
 const SideBar = styled(GridItem)`
   ${mixins.spansCol(2)}
-  height: calc(100vh - ${menuHeight});
-  padding: ${menuHeight} 0 0 ${GAP};
+  height: 100vh;
+  padding-left: ${GAP};
   background-color: ${COLORS.GRAY};
 
   h2 {
-    margin-top: ${emify(45)};
+    margin-top: ${SECTION_HEADING_TOP};
     ${mixins.underline}
+  }
+
+  div {
+    margin-top: ${LINE_HEIGHT * 0.5}em;
+  }
+
+  button {
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    &:not(:first-of-type) {
+      margin-left: 0.5em;
+    }
   }
 `
 
 const SectionContainer = styled.div`
   ${mixins.flex()}
-  width: calc(${spanCol(10)} + ${GAP});
+  > div {
+    ${mixins.flex()}
+  }
+
+  width: calc(${spanCol(10)} + ${GAP} + ${GRID_GAP});
   height: 100vh;
   padding: 0;
-  overflow: scroll;
+  overflow: hidden;
+  position: relative;
+`
 
-  > section {
-    height: calc(100vh - ${menuHeight});
-    padding-top: ${menuHeight};
-
-  }
+const SectionInnerContainer = styled.div`
+  position: relative;
 `
 
 export default Appendix

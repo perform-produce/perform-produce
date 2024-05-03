@@ -1,41 +1,53 @@
 import styled from 'styled-components'
 import mixins from '../../utils/mixins'
-import { COLORS, GRID_GAP, LINE_HEIGHT } from '../../constants'
+import { COLORS, GRID_GAP, LINE_HEIGHT, SECTION_HEADING_TOP } from '../../constants'
 import { emify, spanCol, wordSpace } from '../../utils/styleUtils'
 import Paragraphs from './paragraphs'
+import { forwardRef } from 'react'
 
 
-const AppendixSection = ({ srcs, notation, header, subheader, metrics, children }) => {
+const AppendixSection = forwardRef(({ images, number, header, type, metrics, children }, ref) => {
   return (
-    <Section>
-      <ImgContainer>
-        <p>{notation}</p>
-        <div>
-          {srcs && srcs.map((src, i) => <img src={'assets/images/' + src} alt='' key={i}></img>)}
-        </div>
-      </ImgContainer>
-      <HeaderContainer>
-        <h3>{header}</h3>
-        <p>{subheader}</p>
-        {metrics && <p>[{metrics}]</p>}
-      </HeaderContainer>
-      <BodyContainer>
-        <Paragraphs>
-          {children}
-        </Paragraphs>
-      </BodyContainer>
+    <Section ref={ref} data-appendix-number={number}>
+      <InnerContainer>
+        <ImgContainer>
+          <p>{number}</p>
+          <div>
+            {images.map(({ src, alt }, i) => <img src={src} alt={alt} key={i} />)}
+          </div>
+        </ImgContainer>
+        <HeaderContainer>
+          <h3>{header}</h3>
+          <p>{type}</p>
+          {metrics && <p>{metrics}</p>}
+        </HeaderContainer>
+        <BodyContainer>
+          <Paragraphs>
+            {children}
+          </Paragraphs>
+        </BodyContainer>
+      </InnerContainer>
     </Section>
   )
-}
+})
 
 const HeaderContainer = styled.hgroup``
 
 const Section = styled.section`
-  ${mixins.spansCol(4)}
-  background-color: ${COLORS.GRAY};
+  ${mixins
+    .chain()
+    .spansCol(4)
+    .noScrollBar()}
+  height: 100vh;
+  padding-left: ${GRID_GAP};
   overflow-y: scroll;
   flex: none;
-  margin-left: ${GRID_GAP};
+`
+
+const InnerContainer = styled.div`
+  background-color: ${COLORS.GRAY};
+  padding-top: ${SECTION_HEADING_TOP};
+  height: max(fit-content, calc(100% - ${SECTION_HEADING_TOP}));
 
   > ${HeaderContainer} {
     h3, p {
@@ -49,15 +61,16 @@ const ImgContainer = styled.div`
   ${mixins.grid(3)};
   column-gap: 0;
   grid-template-columns: ${imgNotationWidth} 1fr ${imgNotationWidth};
-  margin: ${emify(45)} 0 ${emify(40)};
+  margin-bottom: ${emify(140)};
 
   > div {
     ${mixins.flex('center', 'initial')}
     flex-direction: column;
 
     img {
-      width: calc(${spanCol(4)} * 0.625); // TODO
+      width: calc(${spanCol(4)} * 0.625);
       background-color: black;
+      aspect-ratio: 10 / 7 ;
 
       &:not(:first-child) {
         margin-top: 1em;
@@ -67,7 +80,7 @@ const ImgContainer = styled.div`
 `
 
 const BodyContainer = styled.div`
-  margin: ${LINE_HEIGHT}em 0;
+  padding: ${LINE_HEIGHT}em 0;
 `
 
 export default AppendixSection

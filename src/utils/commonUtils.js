@@ -11,7 +11,7 @@ export const loopObject = (object, callback) => {
   return object
 }
 
-export const stripParagraph = htmlString => (htmlString?.match(/(?<=<p>)(.*?)(?=<\/p>)/) || [])[0]
+export const quickArray = (length, callback = i => i) => Array(length).fill(0).map((_, i) => callback(i))
 
 export const querySelectorArray = (elem, query) => Array.from(elem.querySelectorAll(query))
 export const roundTo = (number, lower, upper) =>
@@ -25,3 +25,6 @@ export const closestIndex = (array, number) => {
 }
 
 export const closest = (array, number) => array[closestIndex(array, number)]
+
+export const mod = (number, upper) => (upper + number % upper) % upper
+

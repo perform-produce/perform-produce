@@ -1,14 +1,25 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import GridItem from './common/gridItem'
 import Grid from './common/grid'
-import { emify, lineHeight } from '../utils/styleUtils'
+import { conditionalStyle, emify, lineHeight } from '../utils/styleUtils'
 import { COLORS, MENU_PADDING_BOT, MENU_PADDING_TOP } from '../constants'
 import mixins from '../utils/mixins'
 import MenuItem from './common/menuItem'
 import { useState } from 'react'
 import ScrollMeter from './scrollMeter'
 
+// TODO feed from backend
+const sectionLinks = [
+  ['the-designer-as-machine', 'The Designer as Machine'],
+  ['exchange-bridget-moser', 'Exchange: Bridget Moser'],
+  ['the-performing-body', 'The Performing Body'],
+  ['exchange-j-dakota-brown', 'Exchange: J. Dakota Brown'],
+  ['on-the-value-of-exchange', 'On The Value of Exchange'],
+  ['exchange-micah-lexier', 'Exchange: Micah Lexier'],
+  ['instruction-doug-scotts-rulers', 'Instruction: Doug Scott’s Rulers'],
+  ['readings-and-viewings', 'Readings & Viewings']
+]
 
 const Menu = () => {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -19,10 +30,14 @@ const Menu = () => {
     onMouseLeave: () => setNoContentUnderline(false)
   }
 
-  const handleMouseLeaveMenu = () => setIsExpanded(false)
+  const handleFoldMenu = () => setIsExpanded(false)
+  const location = useLocation()
 
   return (
-    <MenuContainer as='menu' onMouseLeave={handleMouseLeaveMenu}>
+    <MenuContainer
+      as='menu'
+      $outline={location.pathname.match(/appendix$/) && !isExpanded}
+      onMouseLeave={handleFoldMenu}>
       <LinkWrapper $end='span 2'>
         <MenuItem
           to='/'
@@ -44,28 +59,22 @@ const Menu = () => {
         {
           isExpanded &&
           <div>
-            <Link to='/#the-designer-as-machine'>The Designer as Machine</Link>
-            <Link to='/#exchange-bridget-moser'>Exchange: Bridget Moser</Link>
-            <Link to='/#the-performing-body'>The Performing Body</Link>
-            <Link to='/#exchange-j-dakota-brown'>Exchange: J. Dakota Brown</Link>
-            <Link to='/#on-the-value-of-exchange'>On The Value of Exchange</Link>
-            <Link to='/#exchange-micah-lexier'>Exchange: Micah Lexier</Link>
-            <Link to='/#instruction-doug-scotts-rulers'>Instruction: Doug Scott’s Rulers</Link>
-            <Link to='/#readings-and-viewings'>Readings & Viewings</Link>
+            {sectionLinks.map(([hash, title]) =>
+              <Link key={hash} to={`/#${hash}`} onClick={handleFoldMenu}>{title}</Link>)}
           </div>
         }
       </ContentLink>
       <LinkWrapper $alignRight $start={9}>
         <MenuItem
-          to='appendix'
-          {...linkHoverHandlers}>
+          {...linkHoverHandlers}
+          to='appendix'>
           Appendix
         </MenuItem>
       </LinkWrapper>
       <LinkWrapper $alignRight>
         <MenuItem
-          to='about'
-          {...linkHoverHandlers}>
+          {...linkHoverHandlers}
+          to='about'>
           About
         </MenuItem>
       </LinkWrapper>
@@ -78,11 +87,12 @@ const Menu = () => {
 
 const MenuContainer = styled(Grid)`
   ${mixins.highZIndex(5)}
-  padding-top: ${emify(MENU_PADDING_TOP)};
-  padding-bottom: ${emify(MENU_PADDING_BOT)};
+  padding-top: ${MENU_PADDING_TOP};
+  padding-bottom: ${MENU_PADDING_BOT};
   position: fixed;
   top: 0;
   background-color: ${COLORS.WHITE};
+  outline: ${conditionalStyle('$outline', 'black solid 2px')};
 `
 
 const LinkWrapper = styled(GridItem)`

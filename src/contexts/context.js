@@ -1,10 +1,10 @@
 import _ from 'lodash'
 import { createContext } from 'react'
 
-export const PopUpContext = createContext({
-  onCitationHover: _.noop,
+export const SectionContext = createContext({
   isQuoteOpened: true,
-  toggleQuoteState: _.noop
+  toggleQuoteState: _.noop,
+  backgroundColor: ''
 })
 
 export const GlobalContext = createContext({

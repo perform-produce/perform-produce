@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { loopObject, validateString } from './commonUtils'
-import { COLORS, GRID_COUNT, GRID_GAP, VERT_GAP } from '../constants'
+import { COLORS, GRID_COUNT, GRID_GAP, PERFORMING_BODY_GRID_COUNT, VERT_GAP } from '../constants'
 import { spanCol } from './styleUtils'
 
 const flex = (
@@ -26,6 +26,12 @@ const grid = colCount => ({ $start, $end }) => {
     `
 }
 
+const visualEssayGrid = ({ $start, $end }) => `
+  ${grid(PERFORMING_BODY_GRID_COUNT)({ $start, $end })}
+  grid-column-start: span 12;
+  column-gap: 0;
+`
+
 const _spansCol = colCount => `
   width: ${spanCol(colCount)};
 `
@@ -33,7 +39,7 @@ const _spansCol = colCount => `
 const background = ({ $backgroundColor }) => `
   background-color: ${$backgroundColor};
 `
-const highZIndex = (level) => `z-index: ${'9'.repeat(level)};`
+const highZIndex = level => `z-index: ${'9'.repeat(level)};`
 
 const underline = () => `
   text-decoration: underline;
@@ -42,21 +48,31 @@ const underline = () => `
   text-decoration-skip-ink: none;
 `
 
-const cover = (paddingBottom) => `
+const cover = paddingBottom => `
   height: calc(100vh - ${VERT_GAP});
   align-items: end;
   padding-bottom: ${paddingBottom ?? VERT_GAP};
   background-color: ${COLORS.GRAY};
 `
 
+const noScrollBar = () => `
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`
+
 const mixins = {
   flex,
   grid,
+  visualEssayGrid,
   spansCol: _spansCol,
   background,
   highZIndex,
   underline,
   cover,
+  noScrollBar,
   chain: function () {
     const chainedObject = {}
     let accumulatedReturn = ''

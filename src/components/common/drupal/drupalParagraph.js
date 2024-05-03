@@ -2,12 +2,11 @@ import parse from 'html-react-parser'
 import drupalServices from '../../../services/drupalServices'
 import Paragraphs from '../paragraphs'
 import Citation from '../citation'
-import { stripParagraph } from '../../../utils/commonUtils'
 import styled from 'styled-components'
 import { LINE_PADDING } from '../../../constants'
 import FilteredImg from '../filteredImg'
 
-const { removeSpan, parseNoSpan } = drupalServices
+const { removeSpan, parseNoSpan, strip } = drupalServices
 const DrupalParagraph = ({ content, citations = [] }) => {
   return <Paragraphs>
     {
@@ -21,13 +20,15 @@ const DrupalParagraph = ({ content, citations = [] }) => {
               {...domNode.attribs}
               src={drupalServices.redirectSrc(imgNode.attribs.src)} />
           }
+
+          // TODO !!! replace p with span
           if (domNode.tagName !== 'sup') return
           const citationNumber = parseInt(domNode.childNodes[0].data)
           const citation = citations[citationNumber - 1]
           if (!citation) return
           const { subtitle, body, src, alt } = citation
-          const title = parseNoSpan(stripParagraph(citation.title))
-          const subheader = parseNoSpan(stripParagraph(subtitle))
+          const title = strip(citation.title)
+          const subheader = strip(subtitle)
           return (
             <Citation
               number={citationNumber}

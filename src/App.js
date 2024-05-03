@@ -8,11 +8,16 @@ import styled from 'styled-components'
 import mixins from './utils/mixins.js'
 import usePromise from 'react-promise'
 import { GlobalContext } from './contexts/context.js'
+import { useEffect } from 'react'
 
 
 const contents = drupalServices.getContents()
 const App = () => {
   const { value, loading } = usePromise(contents)
+  // useEffect(() => {
+  //   if (value)
+  //     console.log(drupalServices.getPerformingBody(value))
+  // }, [value])
   return (
     <HashRouter>
       <StyledGlobal>

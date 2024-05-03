@@ -1,51 +1,42 @@
 import styled from 'styled-components'
 import GridItem from './gridItem'
-import { IMG_POPUP_GRID_SPAN, SECTION_PADDING_LINE_HEIGHT, TEXT_POPUP_GRID_SPAN, VERT_GAP } from '../../constants'
-import { closest, emify, getGridData, lineHeight } from '../../utils/styleUtils'
+import { IMG_POPUP_GRID_SPAN, SECTION_HEADING_TOP, SECTION_PADDING_LINE_HEIGHT, TEXT_POPUP_GRID_SPAN, VERT_GAP } from '../../constants'
+import { closest, getGridData, getGridGapPx, lineHeight } from '../../utils/styleUtils'
 import Grid from './grid'
-import { PopUpContext } from '../../contexts/context'
+import { SectionContext } from '../../contexts/context'
 import { useRef, useState } from 'react'
 import mixins from '../../utils/mixins'
-import Fade from './fade'
-import PopUpCitation from './popUpCitation'
 
 
-const Section = ({ children, header, backgroundColor, ...rest }) => {
-  const [citationData, setCitationData] = useState()
+const Section = ({ children, header, backgroundColor, getCitationData, ...rest }) => {
   const [isQuoteOpened, setIsQuoteOpened] = useState(true)
   const sectionRef = useRef()
 
-  const onCitationHover = ({ target }, data) => {
-    const { left, top, height } = target.getBoundingClientRect()
-    const sectionRect = sectionRef.current.getBoundingClientRect()
+  getCitationData ??= (targetRect, sectionRect, data) => {
+    const { left, top, height } = targetRect
     const { colBounds, colWidth } = getGridData()
-    const unadjustedPopUpLeft = left - colWidth * (data.src ? IMG_POPUP_GRID_SPAN : TEXT_POPUP_GRID_SPAN) / 2
-    const closestBound = closest(unadjustedPopUpLeft, ...colBounds)
-    setCitationData({ ...data, x: closestBound, y: top + height / 2 - sectionRect.top })
+    const colCount = data.src ? IMG_POPUP_GRID_SPAN : TEXT_POPUP_GRID_SPAN
+    const unadjustedPopUpLeft = left - (colWidth * colCount + getGridGapPx() * (colCount - 1)) / 2
+    const closestBound = closest(unadjustedPopUpLeft, ...colBounds.slice(0, colBounds.length - colCount + 1))
+    return { ...data, x: closestBound, y: top + height / 2 - sectionRect.top }
   }
 
   const toggleQuoteState = close => setIsQuoteOpened(close)
 
   // TODO: font loading for italics delayed which causes a layout shift
   return (
-    <PopUpContext.Provider value={{ onCitationHover, isQuoteOpened, toggleQuoteState }}>
+    <SectionContext.Provider value={{
+      backgroundColor,
+      isQuoteOpened,
+      toggleQuoteState
+    }}>
       <SectionContainer ref={sectionRef} as='section' {...rest}>
         <StyledSection $backgroundColor={backgroundColor}>
           <SectionHeader as='h2' $end={'span 2'}>{header}</SectionHeader>
           {children}
         </StyledSection>
-        <Fade
-          display={!!citationData}
-          state={citationData}
-          timeout={125}
-          render={
-            (state = {}) => <PopUpCitation
-              {...state}
-              handleMouseLeave={() => setCitationData()}
-              backgroundColor={backgroundColor} />
-          } />
       </SectionContainer>
-    </PopUpContext.Provider>
+    </SectionContext.Provider>
   )
 }
 
@@ -86,7 +77,7 @@ const StyledSection = styled(Grid)`
 
 const SectionHeader = styled(GridItem)`
   position: sticky;
-  top: ${emify(140)};
+  top: ${SECTION_HEADING_TOP};
   ${mixins.underline}
 `
 

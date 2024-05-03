@@ -5,16 +5,16 @@ import { COLORS, GAP, GRID_GAP, SECTION_PADDING_LINE_HEIGHT } from '../../consta
 import { emify, lineHeight, spanCol } from '../../utils/styleUtils'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import { useContext, useEffect } from 'react'
-import { PopUpContext } from '../../contexts/context'
+import { SectionContext } from '../../contexts/context'
 import { useIntersectionObserver } from '@uidotdev/usehooks'
 
 const PullQuote = ({ header, pageNumber, children }) => {
-  const { isQuoteOpened, toggleQuoteState } = useContext(PopUpContext)
+  const { isQuoteOpened, toggleQuoteState } = useContext(SectionContext)
 
   const [ref, entry] = useIntersectionObserver({
     threshold: 0,
     root: null,
-    rootMargin: "0px",
+    rootMargin: '0px',
   })
 
   useEffect(() => {

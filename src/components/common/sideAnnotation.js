@@ -1,21 +1,21 @@
 import styled from 'styled-components'
 import GridItem from './gridItem'
-import { getEm, getLineHeight, lineHeight } from '../../utils/styleUtils'
+import { getEm, getLineHeight, lineHeight, vw } from '../../utils/styleUtils'
 import FilteredImg from './filteredImg'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { addEventListener } from '../../utils/reactUtils'
 import { GLYPH_DESC, LINE_HEIGHT, LINE_PADDING } from '../../constants'
-import { roundTo } from '../../utils/commonUtils'
+import { closest, quickArray } from '../../utils/commonUtils'
 
 
 const SideAnnotation = ({ src, alt, caption }) => {
   const [imgHeight, setImgHeight] = useState()
-  const [width, setWidth] = useState(window.innerWidth)
+  const [width, setWidth] = useState(vw())
   const imgRef = useRef()
   const aspectRatio = useRef()
 
   useEffect(() => addEventListener(window, 'resize', () =>
-    setWidth(window.innerWidth)), [])
+    setWidth(vw())), [])
 
   useLayoutEffect(() => {
     const img = imgRef.current
@@ -25,15 +25,12 @@ const SideAnnotation = ({ src, alt, caption }) => {
     const uncroppedHeight = width / aspectRatio.current
     if (!uncroppedHeight) return
 
-    let multiplier = 1
-    const getCroppedHeight = multiplier => getLineHeight(multiplier) + getEm(1 - GLYPH_DESC)
-    while (true || multiplier >= 100) {
-      const croppedHeight = getCroppedHeight(multiplier)
-      if (croppedHeight >= uncroppedHeight) break
-      else multiplier++
-    }
+    const croppedHeight = closest(
+      quickArray(50, multiplier =>
+        getLineHeight(multiplier) + getEm(1 - GLYPH_DESC)),
+      uncroppedHeight
+    )
 
-    const croppedHeight = roundTo(uncroppedHeight, getCroppedHeight(multiplier - 1), getCroppedHeight(multiplier + 1))
     setImgHeight(croppedHeight)
   }, [src, width])
 

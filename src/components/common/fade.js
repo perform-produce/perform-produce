@@ -52,8 +52,9 @@ const Fade = forwardRef(({
 
 })
 
-const FadeWrapper = styled.div`
+const FadeWrapper = styled.span`
   transition: opacity ${extractStyle('$timeout')}ms ease-in-out;
+  display: block;
 `
 
 

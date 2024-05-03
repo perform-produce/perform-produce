@@ -2,6 +2,7 @@ import { DRUPAL_ENDPOINT } from '../constants'
 import { querySelectorArray, validateString } from '../utils/commonUtils'
 import httpServices from './httpServices'
 import parse from 'html-react-parser'
+import he from 'he'
 
 const getParagraphClass = className => 'paragraph--type--' + className
 const getField = fieldName => 'field_' + fieldName
@@ -17,6 +18,7 @@ const CITATION_TITLE = getFieldClass('citation-title')
 const CITATION_SUBTITLE = getFieldClass('citation-subtitle')
 const CITATION_BODY = getFieldClass('citation-body')
 const CITATION_IMG = getFieldClass('citation-image')
+const CITATION_THE_BODY_AS = getFieldClass('the-body-as')
 
 const IMG = getFieldClass('image')
 const IMG_ALIGNMENT = getFieldClass('image-alignment')
@@ -37,9 +39,21 @@ const INTERVIEW_PULL_QUOTE_PAGE_NUMBER = getField('pull_quote_page_number')
 const INTERVIEW_INTRO = getField('interview_intro')
 
 const removeSpan = (htmlString = '') => htmlString.replaceAll(/<\/?span>/g, '')
-const parseNoSpan = (htmlString = '') => parse(removeSpan(htmlString))
+const parseNoSpan = (htmlString = '') => parse(removeSpan(he.decode(htmlString)))
+const strip = (htmlString = '') => parseNoSpan((htmlString?.match(/(?<=<p>)(.*?)(?=<\/p>)/) || [])[0])
 
 const redirectSrc = src => validateString(src, DRUPAL_ENDPOINT + src?.replace(window.location.origin, ''))
+const extractImgData = html => {
+  if (!html) return {}
+  if (typeof html === 'string') {
+    const tempDiv = document.createElement('div')
+    tempDiv.innerHTML = html
+    html = tempDiv
+  }
+
+  const { src, alt } = html.querySelector('img')
+  return { src: redirectSrc(src), alt }
+}
 
 const getBlocks = content => {
   const tempHtml = document.createElement('div')
@@ -87,6 +101,40 @@ const getInterview = contents =>
       citations: getCitations(interview)
     }))
 
+const getAppendices = contents => {
+  return contents.filter(content => content.type === 'Appendix')
+    .sort((a, b) => parseInt(a.field_appendix_order) - parseInt(b.field_appendix_order))
+    .map(appendix => ({
+      title: appendix.title,
+      type: appendix.field_appendix_type,
+      metrics: appendix.field_appendix_metrics,
+      images: [
+        extractImgData(appendix.field_appendix_image_1),
+        extractImgData(appendix.field_appendix_image_2),
+      ],
+      body: appendix.field_appendix_body,
+      number: appendix.field_appendix_number
+    }))
+}
+
+const getPerformingBody = contents => {
+  const essay = contents.find(content => content.uuid === '37489294-5229-4639-8b59-9622b8fd63d9')
+  const entries = getBlocks(essay.field_the_performing_body_entry)
+    .map(entry => {
+      const { getContent } = getContentParsers(entry)
+      return {
+        ...extractImgData(entry),
+        title: getContent(CITATION_TITLE),
+        subtitle: getContent(CITATION_SUBTITLE),
+        text: getContent(CITATION_THE_BODY_AS),
+      }
+    })
+  return {
+    title: essay.title,
+    sectionId: essay[SECTION_ID],
+    entries
+  }
+}
 
 const getBlockParser = (block, type, parser) => ({ type, content: parser(block) })
 const parseBlocks = (content, fieldName) =>
@@ -100,14 +148,11 @@ const parseBlocks = (content, fieldName) =>
 
 const parseCitations = elem => {
   const { getContent, getItem } = getContentParsers(elem)
-  const imgContainer = getItem(CITATION_IMG)
-  const { src, alt } = imgContainer ? imgContainer.querySelector('img') : {}
   return {
+    ...extractImgData(getItem(CITATION_IMG)),
     title: getContent(CITATION_TITLE),
     subtitle: getContent(CITATION_SUBTITLE),
     body: getContent(CITATION_BODY),
-    src: redirectSrc(src),
-    alt
   }
 }
 
@@ -115,11 +160,8 @@ const parseParagraph = elem => getContent(elem, BLOCK_PARAGRAPH_TEXT)
 
 const parseImg = elem => {
   const { getItem, getContent } = getContentParsers(elem)
-  const img = getItem(IMG).querySelector('img')
-  const { src, alt } = img
   return {
-    src: redirectSrc(src),
-    alt,
+    ...extractImgData(getItem(IMG)),
     alignLeft: getContent(IMG_ALIGNMENT) === 'Left',
     caption: getContent(IMG_CAPTION)
   }
@@ -150,10 +192,13 @@ const getContentParsers = elem => ({
 const drupalServices = {
   removeSpan,
   parseNoSpan,
+  strip,
   redirectSrc,
   getContents,
   getEssay,
-  getInterview
+  getInterview,
+  getAppendices,
+  getPerformingBody
 }
 
 export default drupalServices

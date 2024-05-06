@@ -6,10 +6,11 @@ import { extractStyle, vh, vw } from '../../utils/styleUtils'
 import { useIntersectionObserver } from '@uidotdev/usehooks'
 import { useEffect, useRef, useState } from 'react'
 import { quickArray } from '../../utils/commonUtils'
-import Fade from '../common/fade'
-import PopUpCitation from '../common/popUpCitation'
-import { COLORS, GAP, GAP_PX, PERFORMING_BODY_FIGMA_COL_WIDTH, PERFORMING_BODY_GRID_COUNT, PERFORMING_BODY_GRID_SPAN, POP_UP_TIMEOUT } from '../../constants'
+import Fade from '../citation/fade'
+import PopUpCitation from '../citation/popUpCitation'
+import { COLORS, GAP, PERFORMING_BODY_FIGMA_COL_WIDTH, PERFORMING_BODY_GRID_COUNT, PERFORMING_BODY_GRID_SPAN, POP_UP_TIMEOUT } from '../../constants'
 import drupalServices from '../../services/drupalServices'
+import { getPx } from '../../utils/stylesBase'
 
 
 const PerformingBodyContainer = ({
@@ -37,8 +38,8 @@ const PerformingBodyContainer = ({
       onExit(indices)
   }, [entry?.isIntersecting])
 
-  const getColWidth = () => (vw() - GAP_PX * 2) / PERFORMING_BODY_GRID_COUNT
-  const onHover = (e, i) => {
+  const getColWidth = () => (vw() - getPx(GAP) * 2) / PERFORMING_BODY_GRID_COUNT
+  const handleMouseEnter = (e, i) => {
     const citationRect = e.target.getBoundingClientRect()
     const colWidth = getColWidth()
     const { width, height } = citationRect
@@ -72,7 +73,7 @@ const PerformingBodyContainer = ({
       <FilteredImg
         src={src}
         alt={alt}
-        onMouseEnter={e => onHover(e, i)} />
+        onMouseEnter={e => handleMouseEnter(e, i)} />
     </GridItem>
 
   return (

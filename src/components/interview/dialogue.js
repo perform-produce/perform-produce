@@ -1,8 +1,9 @@
 import styled from 'styled-components'
-import GridItem from './gridItem'
-import { emify, wordSpace } from '../../utils/styleUtils'
+import GridItem from '../common/gridItem'
 import SideAnnotation from './sideAnnotation'
 import drupalServices from '../../services/drupalServices'
+import IndentText from '../common/indentText'
+import { emify } from '../../utils/stylesBase'
 
 const SideAnnotations = props => <StyledAnnotation {...props} $end='span 4' />
 
@@ -28,9 +29,9 @@ const Dialogue = ({
       <Speaker {...rest} $alignRight $start={interviewer ? 2 : 5} $end='span 1' >
         {speaker}
       </Speaker>
-      <Text {...rest} $start={interviewer ? 3 : 6} $end='span 6' >
+      <IndentText {...rest} $start={interviewer ? 3 : 6} $end='span 6' >
         {children}
-      </Text>
+      </IndentText>
       {interviewer && <SideAnnotations>{sideAnnotations}</SideAnnotations>}
     </>
   )
@@ -39,13 +40,6 @@ const Dialogue = ({
 
 const Speaker = styled(GridItem)`
   padding-right: ${emify(35)};
-`
-
-const Text = styled(GridItem)`
-  > p:not(:first-child) {
-    margin-top: 0;
-    text-indent: ${wordSpace(5)};
-  }
 `
 
 const StyledAnnotation = styled(GridItem)`

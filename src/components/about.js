@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 import Grid from './common/grid'
-import { emify } from '../utils/styleUtils'
 import GridItem from './common/gridItem'
 import { useState } from 'react'
 import mixins from '../utils/mixins'
+import { emify } from '../utils/stylesBase'
 
 const About = () => {
   const [isCreditShown, setIsCreditShown] = useState(false)

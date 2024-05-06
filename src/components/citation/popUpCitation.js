@@ -1,17 +1,20 @@
 import styled from 'styled-components'
 import mixins from '../../utils/mixins'
-import { IMG_POPUP_GRID_SPAN, TEXT_POPUP_GRID_SPAN } from '../../constants'
-import { emify, wordSpace } from '../../utils/styleUtils'
-import GridItem from './gridItem'
-import FilteredImg from './filteredImg'
+import { IMG_POPUP_GRID_SPAN, POP_UP_TOP_PADDING, TEXT_POPUP_GRID_SPAN } from '../../constants'
+import { conditionalStyle, wordSpace } from '../../utils/styleUtils'
+import GridItem from '../common/gridItem'
+import FilteredImg from '../common/filteredImg'
 import { useContext } from 'react'
 import { SectionContext } from '../../contexts/context'
+import { validateString } from '../../utils/commonUtils'
+import { emify } from '../../utils/stylesBase'
 
 const PopUpCitation = ({
-  x,
-  y,
+  x = 0,
+  y = 0,
   width,
   number,
+  shouldCenter = true,
   alt,
   header,
   subheader,
@@ -21,20 +24,20 @@ const PopUpCitation = ({
   handleMouseLeave
 }) => {
   const { onPopUpEnter } = useContext(SectionContext)
-  console.log(number, header, subheader)
   return (
     <PopUp
       style={{ left: x, top: y }}
       onMouseEnter={onPopUpEnter}
-      // onMouseLeave={handleMouseLeave}
+      onMouseLeave={handleMouseLeave}
       as={'span'}
       $width={width}
       $span={src ? IMG_POPUP_GRID_SPAN : TEXT_POPUP_GRID_SPAN}
+      $shouldCenter={shouldCenter}
       $backgroundColor={backgroundColor}>
       {src && <FilteredImg src={src} alt={alt} />}
       <TextContainer>
         <HeaderContainer>
-          <SpanBlock>{number}.</SpanBlock>
+          <SpanBlock>{validateString(number, `${number}.`)}</SpanBlock>
           <SpanBlock>
             <SpanBlock>{header}</SpanBlock>
             <SpanBlock>{subheader}</SpanBlock>
@@ -53,9 +56,13 @@ const PopUp = styled(GridItem)`
   box-sizing: border-box;
   margin: 0;
   border: 1.5px dashed black;
-  transform: translateY(-50%);
+  transform: ${conditionalStyle('$shouldCenter', 'translateY(-50%)')};
   overflow: hidden;
   cursor: default;
+
+  &, span, p, img {
+    text-indent: 0;
+  }
 
   ${props =>
     mixins
@@ -81,7 +88,8 @@ const SpanBlock = styled.span`
 
 
 const TextContainer = styled.span`
-  padding: ${emify(10)} 1em ${emify(22.5)};
+  /* padding: ${emify(10)} 1em ${emify(22.5)}; */
+  padding: ${POP_UP_TOP_PADDING} 1em;
   display: block;
 `
 

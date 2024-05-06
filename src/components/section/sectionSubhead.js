@@ -1,11 +1,11 @@
 import styled from 'styled-components'
-import GridItem from './gridItem'
+import GridItem from '../common/gridItem'
 import mixins from '../../utils/mixins'
 import { lineHeight } from '../../utils/styleUtils'
-import WhiteSpace from './whitespace'
+import WhiteSpace from '../common/whitespace'
 
 
-const InterviewHeader = ({ subheader, interviewee, ...rest }) =>
+const SectionSubhead = ({ subheader, interviewee, ...rest }) =>
   <Header {...rest} $start={4} $end={9} as='hgroup'>
     <h3>{subheader}</h3>
     <Interviewee><WhiteSpace>    </WhiteSpace>{interviewee}</Interviewee>
@@ -18,4 +18,4 @@ const Header = styled(GridItem)`
 const Interviewee = styled.p`
   ${mixins.underline}
 `
-export default InterviewHeader
+export default SectionSubhead

@@ -1,12 +1,13 @@
 import styled from 'styled-components'
-import GridItem from './gridItem'
+import GridItem from '../common/gridItem'
 import mixins from '../../utils/mixins'
-import { COLORS, GAP, GRID_GAP, SECTION_PADDING_LINE_HEIGHT } from '../../constants'
-import { emify, lineHeight, spanCol } from '../../utils/styleUtils'
+import { COLORS, SECTION_PADDING_LINE_HEIGHT } from '../../constants'
+import { lineHeight, spanCol } from '../../utils/styleUtils'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
 import { useContext, useEffect } from 'react'
 import { SectionContext } from '../../contexts/context'
 import { useIntersectionObserver } from '@uidotdev/usehooks'
+import { emify } from '../../utils/stylesBase'
 
 const PullQuote = ({ header, pageNumber, children }) => {
   const { isQuoteOpened, toggleQuoteState } = useContext(SectionContext)
@@ -37,7 +38,7 @@ const PullQuote = ({ header, pageNumber, children }) => {
 const Container = styled(GridItem)`
   position: absolute;
   background-color: ${COLORS.WHITE};
-  left: calc(${GAP} + ${GRID_GAP} + ${spanCol(1)});
+  left: ${spanCol(1, 1, 1)};
   top: ${lineHeight(SECTION_PADDING_LINE_HEIGHT + 5)};
   padding: ${emify(40)};
   border: 2px solid black;

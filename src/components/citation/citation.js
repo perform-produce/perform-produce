@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import styled from 'styled-components'
 import _ from 'lodash'
-import WhiteSpace from './whitespace'
+import WhiteSpace from '../common/whitespace'
 import { getGridData, getGridGapPx } from '../../utils/styleUtils'
 import { IMG_POPUP_GRID_SPAN, POP_UP_TIMEOUT, TEXT_POPUP_GRID_SPAN } from '../../constants'
 import { closest } from '../../utils/commonUtils'

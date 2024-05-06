@@ -3,14 +3,15 @@ import styled from 'styled-components'
 import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
 import PerformingBodyContainer from './performingBodyContainer'
-import Section from '../common/section'
+import Section from '../section/section'
 import GridItem from '../common/gridItem'
-import { COLORS, SECTION_HEADING_TOP, SECTION_HEADING_PADDING_TOP_PX, SECTION_HEADING_PADDING_TOP, SECTION_HEADING_TOP_PX, LINE_HEIGHT } from '../../constants'
+import { COLORS, SECTION_HEADING_TOP, SECTION_HEADING_PADDING_TOP, LINE_HEIGHT } from '../../constants'
 import mixins from '../../utils/mixins'
 import { getLineHeight, vh } from '../../utils/styleUtils'
 import { quickArray } from '../../utils/commonUtils'
 import { GlobalContext } from '../../contexts/context'
 import drupalServices from '../../services/drupalServices'
+import { getPx } from '../../utils/stylesBase'
 
 
 const entryPositions = [
@@ -53,7 +54,7 @@ const PerformingBody = () => {
   const { contents, contentIsLoading } = useContext(GlobalContext)
   const essay = useMemo(() => contents && drupalServices.getPerformingBody(contents), [contents])
   const { title, sectionId, entries } = essay ?? {}
-  const getColumnLength = () => (vh() - SECTION_HEADING_TOP_PX - SECTION_HEADING_PADDING_TOP_PX) / getLineHeight()
+  const getColumnLength = () => (vh() - getPx(SECTION_HEADING_TOP) - getPx(SECTION_HEADING_PADDING_TOP)) / getLineHeight()
   const [columnLength, setColumnLength] = useState(getColumnLength())
   const [textList, setTextList] = useState([])
   const { height } = useWindowSize()

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { addEventListener } from '../utils/reactUtils'
-import { delta } from '../utils/commonUtils'
+import { addEventListener } from '../../utils/reactUtils'
+import { delta } from '../../utils/commonUtils'
 
 
 const ScrollMeter = () => {

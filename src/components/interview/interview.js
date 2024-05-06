@@ -1,9 +1,9 @@
 import drupalServices from '../../services/drupalServices'
-import Section from './section'
-import InterviewHeader from './interviewHeader'
+import Section from '../section/section'
+import SectionSubhead from '../section/sectionSubhead'
 import PullQuote from './pullQuote'
-import DrupalBlocks from './drupal/drupalBlocks'
-import Paragraphs from './paragraphs'
+import DrupalBlocks from '../drupal/drupalBlocks'
+import Paragraphs from '../common/paragraphs'
 import useDrupal from '../../hooks/useDrupal'
 
 
@@ -15,7 +15,7 @@ const Interview = ({ uuid, backgroundColor }) => {
   return (
     interviewData &&
     <Section id={sectionId} header={title} backgroundColor={backgroundColor}>
-      <InterviewHeader
+      <SectionSubhead
         subheader={parseNoSpan(subtitle)}
         interviewee={interviewee} />
       <PullQuote header={parseNoSpan(pullQuote.title)} pageNumber={pullQuote.pageNumber}>

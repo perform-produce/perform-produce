@@ -1,5 +1,5 @@
-import drupalServices from '../../../services/drupalServices'
-import Img from '../img'
+import drupalServices from '../../services/drupalServices'
+import Img from '../common/img'
 
 const DrupalImg = ({ content }) => {
   const { src, alt, alignLeft, caption } = content

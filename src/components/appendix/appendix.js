@@ -4,14 +4,14 @@ import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
 import _ from 'lodash'
 import he from 'he'
-import GridItem from './common/gridItem'
-import { spanCol } from '../utils/styleUtils'
-import { COLORS, GAP, GRID_GAP, LINE_HEIGHT, SECTION_HEADING_TOP } from '../constants'
-import mixins from '../utils/mixins'
-import AppendixSection from './common/appendixSection'
+import GridItem from '../common/gridItem'
+import { spanCol } from '../../utils/styleUtils'
+import { COLORS, GAP, LINE_HEIGHT, SECTION_HEADING_TOP } from '../../constants'
+import mixins from '../../utils/mixins'
+import AppendixSection from './appendixSection'
 import { useWindowSize } from '@uidotdev/usehooks'
-import { GlobalContext } from '../contexts/context'
-import drupalServices from '../services/drupalServices'
+import { GlobalContext } from '../../contexts/context'
+import drupalServices from '../../services/drupalServices'
 
 gsap.registerPlugin(useGSAP)
 
@@ -104,7 +104,7 @@ const SectionContainer = styled.div`
     ${mixins.flex()}
   }
 
-  width: calc(${spanCol(10)} + ${GAP} + ${GRID_GAP});
+  width: ${spanCol(10, 10, 1)};
   height: 100vh;
   padding: 0;
   overflow: hidden;

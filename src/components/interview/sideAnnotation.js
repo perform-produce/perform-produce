@@ -1,11 +1,12 @@
 import styled from 'styled-components'
-import GridItem from './gridItem'
-import { getEm, getLineHeight, lineHeight, vw } from '../../utils/styleUtils'
-import FilteredImg from './filteredImg'
+import GridItem from '../common/gridItem'
+import { getLineHeight, lineHeight, toggleStyle, vw } from '../../utils/styleUtils'
+import FilteredImg from '../common/filteredImg'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { addEventListener } from '../../utils/reactUtils'
-import { GLYPH_DESC, LINE_HEIGHT, LINE_PADDING } from '../../constants'
+import { GLYPH_DESC, LINE_PADDING_HALF } from '../../constants'
 import { closest, quickArray } from '../../utils/commonUtils'
+import { getEm } from '../../utils/stylesBase'
 
 
 const SideAnnotation = ({ src, alt, caption }) => {
@@ -27,7 +28,7 @@ const SideAnnotation = ({ src, alt, caption }) => {
 
     const croppedHeight = closest(
       quickArray(50, multiplier =>
-        getLineHeight(multiplier) + getEm(1 - GLYPH_DESC)),
+        getLineHeight(multiplier) + getEm(1 + LINE_PADDING_HALF - GLYPH_DESC)),
       uncroppedHeight
     )
 
@@ -47,13 +48,14 @@ const Figure = styled(GridItem)`
   margin: 0;
 
   &:not(:last-child){
-    margin-bottom: calc(${lineHeight(2)} - 1em + ${({ $noCaption }) =>
-    $noCaption ? GLYPH_DESC - LINE_PADDING - LINE_HEIGHT : 0}em);
+    margin-bottom: calc(${LINE_PADDING_HALF}em + ${toggleStyle('$noCaption', `${GLYPH_DESC}em`, lineHeight(2))
+  });
   }
+
 
   img {
     vertical-align: top;
-    margin-top: ${LINE_PADDING}em;
+    margin-top: ${LINE_PADDING_HALF}em;
   }
 `
 

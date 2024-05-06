@@ -2,14 +2,17 @@ import { useContext, useLayoutEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import Grid from './common/grid'
-import { COLORS, LINE_HEIGHT, SECTION_HEADING_TOP_PX, SECTION_PADDING_LINE_HEIGHT } from '../constants'
+import { COLORS, SECTION_HEADING_TOP, SECTION_PADDING_LINE_HEIGHT } from '../constants'
 import { getLineHeight, lineHeight } from '../utils/styleUtils'
 import GridItem from './common/gridItem'
 import mixins from '../utils/mixins'
-import Essay from './common/essay'
-import Interview from './common/interview'
+import Essay from './section/essay'
+import Interview from './interview/interview'
 import { GlobalContext } from '../contexts/context'
 import PerformingBody from './visualEssays/performingBody'
+import Rulers from './visualEssays/rulers'
+import { getPx } from '../utils/stylesBase'
+import Paragraphs from './common/paragraphs'
 
 
 const Home = () => {
@@ -20,7 +23,7 @@ const Home = () => {
     const section = document.getElementById(id) // bad practice shorthands
     if (!section) return window.scrollTo({ top: 0, behavior: 'smooth' })
     const { top } = section.getBoundingClientRect()
-    window.scrollBy({ top: top + SECTION_PADDING_LINE_HEIGHT * getLineHeight() - SECTION_HEADING_TOP_PX, behavior: 'smooth' })
+    window.scrollBy({ top: top + SECTION_PADDING_LINE_HEIGHT * getLineHeight() - getPx(SECTION_HEADING_TOP), behavior: 'smooth' })
   }, [location, contentIsLoading])
 
   return (
@@ -38,6 +41,17 @@ const Home = () => {
       <PerformingBody />
       <Essay uuid='33b481a0-7166-41c6-ae88-e6f08cf16062' />
       <Interview uuid='f658fa2e-a44c-49fb-ac7e-be2a4597916d' backgroundColor={COLORS.YELLOW} />
+      <Rulers />
+      <Footer as='footer'>
+        <Paragraphs $start={1} $end={5}>
+          <p>© 2024 Rebecca Wilkinson</p>
+          <p>Rhode Island School of Design</p>
+          <p>Master of Fine Arts, Graphic Design</p>
+        </Paragraphs>
+        <Paragraphs $start={6} $end={11}>
+          <p>All efforts have been made to contact and credit the copyright holders of images used on this website. I apologize for any inadvertent omissions and will amend if informed.</p>
+        </Paragraphs>
+      </Footer>
     </>
   )
 }
@@ -47,5 +61,18 @@ const Cover = styled(Grid)`
   background-color: ${COLORS.WHITE};
 `
 
+const Footer = styled(Grid)`
+  ${GridItem} {
+    p:last-child {
+      margin-top: 0;
+    }
+
+    &:last-of-type {
+      align-self: flex-end;
+    }
+  }
+
+  margin: ${lineHeight(5)} 0 ${lineHeight(2)};
+`
 
 export default Home

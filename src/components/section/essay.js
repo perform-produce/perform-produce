@@ -1,7 +1,7 @@
 import drupalServices from '../../services/drupalServices'
 import Section from './section'
 import { COLORS } from '../../constants'
-import DrupalBlocks from './drupal/drupalBlocks'
+import DrupalBlocks from '../drupal/drupalBlocks'
 import useDrupal from '../../hooks/useDrupal'
 
 

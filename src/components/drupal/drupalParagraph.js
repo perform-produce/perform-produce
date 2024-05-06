@@ -1,10 +1,9 @@
 import parse from 'html-react-parser'
-import drupalServices from '../../../services/drupalServices'
-import Paragraphs from '../paragraphs'
-import Citation from '../citation'
+import drupalServices from '../../services/drupalServices'
+import Paragraphs from '../common/paragraphs'
+import Citation from '../citation/citation'
 import styled from 'styled-components'
-import { LINE_PADDING } from '../../../constants'
-import FilteredImg from '../filteredImg'
+import FilteredImg from '../common/filteredImg'
 
 const { removeSpan, parseNoSpan, strip } = drupalServices
 const DrupalParagraph = ({ content, citations = [] }) => {
@@ -50,7 +49,7 @@ const NestedImg = styled(FilteredImg)`
   width: 100%;
 
   &:not(:first-child) {
-    padding-top: ${nestedPadding + LINE_PADDING}em;
+    padding-top: ${nestedPadding}em;
   }
 
   &:not(:last-child) {

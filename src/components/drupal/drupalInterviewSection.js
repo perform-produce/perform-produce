@@ -1,5 +1,5 @@
 import React from 'react'
-import Dialogue from '../dialogue'
+import Dialogue from '../interview/dialogue'
 import DrupalParagraph from './drupalParagraph'
 
 const DrupalInterviewSection = ({ content, citations }) => {

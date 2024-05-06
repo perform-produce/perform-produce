@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import mixins from '../../utils/mixins'
-import { GAP, IMG_POPUP_GRID_SPAN, TEXT_POPUP_GRID_SPAN } from '../../constants'
+import { IMG_POPUP_GRID_SPAN, TEXT_POPUP_GRID_SPAN } from '../../constants'
 import { emify, wordSpace } from '../../utils/styleUtils'
 import GridItem from './gridItem'
 import FilteredImg from './filteredImg'
@@ -21,11 +21,12 @@ const PopUpCitation = ({
   handleMouseLeave
 }) => {
   const { onPopUpEnter } = useContext(SectionContext)
+  console.log(number, header, subheader)
   return (
     <PopUp
       style={{ left: x, top: y }}
       onMouseEnter={onPopUpEnter}
-      onMouseLeave={handleMouseLeave}
+      // onMouseLeave={handleMouseLeave}
       as={'span'}
       $width={width}
       $span={src ? IMG_POPUP_GRID_SPAN : TEXT_POPUP_GRID_SPAN}

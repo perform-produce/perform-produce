@@ -42,7 +42,7 @@ const Speaker = styled(GridItem)`
 `
 
 const Text = styled(GridItem)`
-  p:not(:first-child) {
+  > p:not(:first-child) {
     margin-top: 0;
     text-indent: ${wordSpace(5)};
   }

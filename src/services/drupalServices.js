@@ -38,7 +38,15 @@ const INTERVIEW_PULL_QUOTE_BODY = getField('pull_quote_body')
 const INTERVIEW_PULL_QUOTE_PAGE_NUMBER = getField('pull_quote_page_number')
 const INTERVIEW_INTRO = getField('interview_intro')
 
-const removeSpan = (htmlString = '') => htmlString.replaceAll(/<\/?span>/g, '')
+const APPENDIX_NUMBER = getFieldClass('appendix-number')
+const APPENDIX_IMAGE_1 = getFieldClass('appendix-image-1')
+const APPENDIX_IMAGE_2 = getFieldClass('appendix-image-2')
+const APPENDIX_TITLE = getFieldClass('appendix-title')
+const APPENDIX_TYPE = getFieldClass('appendix-type')
+const APPENDIX_METRICS = getFieldClass('appendix-metrics')
+const APPENDIX_BODY = getFieldClass('appendix-body')
+
+const removeSpan = (htmlString = '') => htmlString.replaceAll(/<\/?span>/g, '').replaceAll('&nbsp;', '')
 const parseNoSpan = (htmlString = '') => parse(removeSpan(he.decode(htmlString)))
 const strip = (htmlString = '') => parseNoSpan((htmlString?.match(/(?<=<p>)(.*?)(?=<\/p>)/) || [])[0])
 
@@ -72,6 +80,8 @@ const getContents = async () =>
   (await httpServices.get(`${DRUPAL_ENDPOINT}/web/json/contents`)).data
 
 
+
+
 const getEssay = contents =>
   contents.filter(content => content.type === 'Essay')
     .map(essay => ({
@@ -83,8 +93,8 @@ const getEssay = contents =>
     }))
 
 
-const getInterview = contents =>
-  contents.filter(content => content.type === 'Interview')
+const getInterview = contents => {
+  return contents.filter(content => content.type === 'Interview')
     .map(interview => ({
       uuid: interview.uuid,
       title: interview.title,
@@ -100,21 +110,29 @@ const getInterview = contents =>
       blocks: parseBlocks(interview, INTERVIEW_SECTION),
       citations: getCitations(interview)
     }))
+}
+
 
 const getAppendices = contents => {
-  return contents.filter(content => content.type === 'Appendix')
-    .sort((a, b) => parseInt(a.field_appendix_order) - parseInt(b.field_appendix_order))
-    .map(appendix => ({
-      title: appendix.title,
-      type: appendix.field_appendix_type,
-      metrics: appendix.field_appendix_metrics,
-      images: [
-        extractImgData(appendix.field_appendix_image_1),
-        extractImgData(appendix.field_appendix_image_2),
-      ],
-      body: appendix.field_appendix_body,
-      number: appendix.field_appendix_number
-    }))
+  const appendices = contents.find(content => content.uuid === '2e0d1a6e-b879-4995-8933-377e7efab275')
+  return {
+    title: appendices.title,
+    appendices: getBlocks(appendices.field_appendix)
+      .map(appendix => {
+        const { getContent } = getContentParsers(appendix)
+        return {
+          number: getContent(APPENDIX_NUMBER),
+          images: [
+            extractImgData(getContent(APPENDIX_IMAGE_1)),
+            extractImgData(getContent(APPENDIX_IMAGE_2)),
+          ],
+          title: getContent(APPENDIX_TITLE),
+          type: getContent(APPENDIX_TYPE),
+          metrics: getContent(APPENDIX_METRICS),
+          body: getContent(APPENDIX_BODY)
+        }
+      })
+  }
 }
 
 const getPerformingBody = contents => {
@@ -137,23 +155,25 @@ const getPerformingBody = contents => {
 }
 
 const getBlockParser = (block, type, parser) => ({ type, content: parser(block) })
-const parseBlocks = (content, fieldName) =>
-  getBlocks(content[fieldName]).map(block =>
+const parseBlocks = (content, fieldName) => {
+  return getBlocks(content[fieldName]).map(block =>
     block.classList.contains(INTERVIEW_SECTION_PARAGRAPH) ?
       getBlockParser(block, 'section', parseInterviewSection) :
       block.classList.contains(BLOCK_PARAGRAPH) ?
         getBlockParser(block, 'paragraph', parseParagraph) :
         getBlockParser(block, 'image', parseImg)
   )
+}
 
 const parseCitations = elem => {
   const { getContent, getItem } = getContentParsers(elem)
-  return {
+  const result = {
     ...extractImgData(getItem(CITATION_IMG)),
     title: getContent(CITATION_TITLE),
     subtitle: getContent(CITATION_SUBTITLE),
     body: getContent(CITATION_BODY),
   }
+  return result
 }
 
 const parseParagraph = elem => getContent(elem, BLOCK_PARAGRAPH_TEXT)
@@ -167,16 +187,18 @@ const parseImg = elem => {
   }
 }
 
-const parseInterviewSection = elem => ({
-  speaker: getContent(elem, INTERVIEW_SPEAKER),
-  body: parseParagraph(elem),
-  annotations: getItems(elem, SIDE_ANNOTATIONS)
-    .map(annotation => {
-      const annotationContainer = annotation.children[0]
-      return annotationContainer.children.length ? parseImg(annotationContainer) : undefined
-    })
-    .filter(a => a)
-})
+const parseInterviewSection = elem => {
+  return {
+    speaker: getContent(elem, INTERVIEW_SPEAKER),
+    body: parseParagraph(elem),
+    annotations: getItems(elem, SIDE_ANNOTATIONS)
+      .map(annotation => {
+        const annotationContainer = annotation.children[0]
+        return annotationContainer.children.length ? parseImg(annotationContainer) : undefined
+      })
+      .filter(a => a)
+  }
+}
 
 const getFieldItemQuery = (className, plural) => `.${className} > div.field__item${validateString(plural, 's')}`
 const getItem = (elem, className) => elem.querySelector(getFieldItemQuery(className))

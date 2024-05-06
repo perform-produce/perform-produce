@@ -11,7 +11,6 @@ import mixins from '../../utils/mixins'
 const Section = ({ children, header, backgroundColor, getCitationData, ...rest }) => {
   const [isQuoteOpened, setIsQuoteOpened] = useState(true)
   const sectionRef = useRef()
-
   getCitationData ??= (targetRect, sectionRect, data) => {
     const { left, top, height } = targetRect
     const { colBounds, colWidth } = getGridData()
@@ -22,7 +21,6 @@ const Section = ({ children, header, backgroundColor, getCitationData, ...rest }
   }
 
   const toggleQuoteState = close => setIsQuoteOpened(close)
-
   // TODO: font loading for italics delayed which causes a layout shift
   return (
     <SectionContext.Provider value={{

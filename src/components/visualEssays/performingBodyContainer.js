@@ -87,6 +87,7 @@ const PerformingBodyContainer = ({
 
 const Container = styled.div`
   position: absolute;
+  display: flex;
 `
 
 const ImgContainer = styled(GridItem)`

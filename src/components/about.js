@@ -10,7 +10,7 @@ const About = () => {
   return (
     <Cover>
       <GridItem $end='span 6'>
-        <p>Perform—Produce is an MFA thesis by Rebecca Wilkinson at the Rhode Island School of Design. This project was developed in 2024 under the guidance and with the support of Pouya Ahmadi, Bethany Johns, Anther Kiley, Wael Morcos, Ali S. Qadeer, and Ryan Waller.</p>
+        <p>Perform — Produce is an MFA thesis by Rebecca Wilkinson at the Rhode Island School of Design. This project was developed in 2024 under the guidance and with the support of Pouya Ahmadi, Bethany Johns, Anther Kiley, Wael Morcos, Ali S. Qadeer, and Ryan Waller.</p>
         <p>To see more of Rebecca’s work, visit her personal website here. If you’d like to get in touch, email rebeccawilkI@gmail.com.</p>
       </GridItem>
       {isCreditShown ?

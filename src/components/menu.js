@@ -23,37 +23,25 @@ const sectionLinks = [
 
 const Menu = () => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const [noContentUnderline, setNoContentUnderline] = useState(true)
-
-  const linkHoverHandlers = {
-    onMouseEnter: () => setNoContentUnderline(true),
-    onMouseLeave: () => setNoContentUnderline(false)
-  }
-
   const handleFoldMenu = () => setIsExpanded(false)
   const location = useLocation()
 
   return (
     <MenuContainer
       as='menu'
-      $outline={location.pathname.match(/appendix$/) && !isExpanded}
-      onMouseLeave={handleFoldMenu}>
+      $outline={location.pathname.match(/appendix$/) && !isExpanded}>
       <LinkWrapper $end='span 2'>
         <MenuItem
           to='/'
-          hoverUnderlineOnly
-          {...linkHoverHandlers}>
-          Perform—Produce
+          hoverUnderlineOnly>
+          Perform — Produce
         </MenuItem>
       </LinkWrapper>
-      <ContentLink $end='span 5'>
+      <ContentLink $end='span 5' onMouseLeave={handleFoldMenu}>
         <MenuItem
           hoverUnderlineOnly
-          forceUnderline={isExpanded && !noContentUnderline}
-          onMouseEnter={() => {
-            setIsExpanded(true)
-            setNoContentUnderline(false)
-          }}>
+          forceUnderline={isExpanded}
+          onMouseEnter={() => setIsExpanded(true)}>
           Contents
         </MenuItem>
         {
@@ -66,14 +54,12 @@ const Menu = () => {
       </ContentLink>
       <LinkWrapper $alignRight $start={9}>
         <MenuItem
-          {...linkHoverHandlers}
           to='appendix'>
           Appendix
         </MenuItem>
       </LinkWrapper>
       <LinkWrapper $alignRight>
         <MenuItem
-          {...linkHoverHandlers}
           to='about'>
           About
         </MenuItem>
@@ -101,7 +87,12 @@ const LinkWrapper = styled(GridItem)`
   }
 `
 
+const hoverPadding = '1em'
 const ContentLink = styled(LinkWrapper)`
+  padding: 0 ${hoverPadding};
+  position: relative;
+  left: -${hoverPadding};
+  width: fit-content;
   div {
     display: block;
     margin: ${lineHeight(1)} 0;

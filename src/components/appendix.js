@@ -22,25 +22,26 @@ const Appendix = () => {
   const { contents, contentIsLoading } = useContext(GlobalContext)
   const appendixData = contents &&
     drupalServices.getAppendices(contents)
+  const { title, appendices } = appendixData ?? {}
 
   const { width } = useWindowSize()
   useGSAP(() => {
-    if (contentIsLoading || !appendixData) return
+    if (contentIsLoading || !appendices) return
     const innerContainer = innerContainerRef.current
     const section = innerContainer.children[index]
     const dist = section.getBoundingClientRect().width * index
     gsap.to(innerContainer, { duration: 0.5, x: -dist })
   }, { dependencies: [index, width], scope: containerRef })
 
-  if (contentIsLoading || !appendixData) return
+  if (contentIsLoading || !appendices) return
 
   const handleClick = increment =>
-    setIndex(_.clamp(index + increment, 0, appendixData.length - 1))
+    setIndex(_.clamp(index + increment, 0, appendices.length - 1))
 
   return (
     <AppendixGrid>
       <SideBar>
-        <h2>Production</h2>
+        <h2>{title}</h2>
         <div>
           <button onClick={() => handleClick(-1)}>←</button>
           <button onClick={() => handleClick(1)}>→</button>
@@ -48,7 +49,7 @@ const Appendix = () => {
       </SideBar>
       <SectionContainer ref={containerRef}>
         <SectionInnerContainer ref={innerContainerRef}>
-          {appendixData.map(({ number, images, title, type, metrics, body }, i) => {
+          {appendices.map(({ number, images, title, type, metrics, body }, i) => {
             return <AppendixSection
               key={i}
               number={number}
@@ -89,6 +90,7 @@ const SideBar = styled(GridItem)`
     border: none;
     padding: 0;
     cursor: pointer;
+    background-color: ${COLORS.GRAY};
 
     &:not(:first-of-type) {
       margin-left: 0.5em;

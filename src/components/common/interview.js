@@ -1,23 +1,19 @@
-import { useContext } from 'react'
-import _ from 'lodash'
 import drupalServices from '../../services/drupalServices'
 import Section from './section'
 import InterviewHeader from './interviewHeader'
 import PullQuote from './pullQuote'
-import { GlobalContext } from '../../contexts/context'
 import DrupalBlocks from './drupal/drupalBlocks'
 import Paragraphs from './paragraphs'
+import useDrupal from '../../hooks/useDrupal'
 
 
 const Interview = ({ uuid, backgroundColor }) => {
-  const { contents, contentIsLoading } = useContext(GlobalContext)
-  const interviewData = contents &&
-    _.find(drupalServices.getInterview(contents), { uuid })
+  const interviewData = useDrupal(uuid, drupalServices.getInterview)
   const { sectionId, title, subtitle, interviewee, blocks, pullQuote, intro, citations } = interviewData ?? {}
   const { parseNoSpan } = drupalServices
 
   return (
-    !contentIsLoading && interviewData &&
+    interviewData &&
     <Section id={sectionId} header={title} backgroundColor={backgroundColor}>
       <InterviewHeader
         subheader={parseNoSpan(subtitle)}

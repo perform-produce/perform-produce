@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
 import PerformingBodyContainer from './performingBodyContainer'
 import Section from '../common/section'
 import GridItem from '../common/gridItem'
-import { COLORS, SECTION_HEADING_TOP, SECTION_HEADING_PADDING_TOP_PX, SECTION_HEADING_PADDING_TOP, SECTION_HEADING_TOP_PX } from '../../constants'
+import { COLORS, SECTION_HEADING_TOP, SECTION_HEADING_PADDING_TOP_PX, SECTION_HEADING_PADDING_TOP, SECTION_HEADING_TOP_PX, LINE_HEIGHT } from '../../constants'
 import mixins from '../../utils/mixins'
 import { getLineHeight, vh } from '../../utils/styleUtils'
 import { quickArray } from '../../utils/commonUtils'
@@ -14,7 +14,7 @@ import drupalServices from '../../services/drupalServices'
 
 
 const entryPositions = [
-  [1, 3, true, { margin: 1004 }],
+  [1, 3, true, { margin: 45 }],
   [3, 7, true],
   [7, 10, true],
   [8, 12, false, { margin: 587, sameRow: true }],
@@ -51,7 +51,7 @@ const entryPositions = [
 
 const PerformingBody = () => {
   const { contents, contentIsLoading } = useContext(GlobalContext)
-  const essay = contents && drupalServices.getPerformingBody(contents)
+  const essay = useMemo(() => contents && drupalServices.getPerformingBody(contents), [contents])
   const { title, sectionId, entries } = essay ?? {}
   const getColumnLength = () => (vh() - SECTION_HEADING_TOP_PX - SECTION_HEADING_PADDING_TOP_PX) / getLineHeight()
   const [columnLength, setColumnLength] = useState(getColumnLength())
@@ -136,13 +136,15 @@ const TextContainer = styled(GridItem)`
   ${mixins.visualEssayGrid}
   height: calc(100vh - ${SECTION_HEADING_TOP} - ${SECTION_HEADING_PADDING_TOP});
   position: sticky;
-  top: ${SECTION_HEADING_TOP};
+  top: calc(${SECTION_HEADING_TOP} + ${LINE_HEIGHT}em);
 `
 
 const List = styled(GridItem)`
   list-style-type: none;
   padding: 0;
   margin: 0;
+  position: relative;
+  top: -${LINE_HEIGHT}em;
 `
 
 export default PerformingBody

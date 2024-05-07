@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import GridItem from '../common/gridItem'
-import { IMG_POPUP_GRID_SPAN, SECTION_HEADING_TOP, SECTION_PADDING_LINE_HEIGHT, TEXT_POPUP_GRID_SPAN, VERT_GAP } from '../../constants'
+import { IMG_POPUP_GRID_SPAN, SECTION_HEADING_TOP, SECTION_PADDING_LINE_HEIGHT, TEXT_POPUP_GRID_SPAN, VERT_GAP } from '../../constants/styleConstants'
 import { closest, getGridData, getGridGapPx, lineHeight } from '../../utils/styleUtils'
 import Grid from '../common/grid'
 import { SectionContext } from '../../contexts/context'
@@ -41,6 +41,10 @@ const Section = ({ children, header, backgroundColor, getCitationData, ...rest }
 
 const SectionContainer = styled.div`
   position: relative;
+
+  &:first-of-type {
+    margin-top: ${lineHeight(3)};
+  }
 `
 
 const StyledSection = styled(Grid)`
@@ -76,7 +80,9 @@ const StyledSection = styled(Grid)`
 const SectionHeader = styled(GridItem)`
   position: sticky;
   top: ${SECTION_HEADING_TOP};
-  ${mixins.underline}
+  &, & span {
+    ${mixins.underline}
+  }
 `
 
 export default Section

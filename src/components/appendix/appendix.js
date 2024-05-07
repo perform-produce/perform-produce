@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
@@ -6,39 +6,46 @@ import _ from 'lodash'
 import he from 'he'
 import GridItem from '../common/gridItem'
 import { spanCol } from '../../utils/styleUtils'
-import { COLORS, GAP, LINE_HEIGHT, SECTION_HEADING_TOP } from '../../constants'
+import { COLORS, GAP, LINE_HEIGHT, SECTION_HEADING_TOP } from '../../constants/styleConstants'
 import mixins from '../../utils/mixins'
 import AppendixSection from './appendixSection'
 import { useWindowSize } from '@uidotdev/usehooks'
-import { GlobalContext } from '../../contexts/context'
-import drupalServices from '../../services/drupalServices'
+import apiServices from '../../services/apiServices'
+import parserServices from '../../services/parserServices'
 
 gsap.registerPlugin(useGSAP)
 
-const Appendix = () => {
+const Appendix = ({ data, onScroll }) => {
   const [index, setIndex] = useState(0)
   const containerRef = useRef()
   const innerContainerRef = useRef()
-  const { contents, contentIsLoading } = useContext(GlobalContext)
-  const appendixData = contents &&
-    drupalServices.getAppendices(contents)
+
+  const appendixData = data && apiServices.getAppendices(data)
   const { title, appendices } = appendixData ?? {}
 
   const { width } = useWindowSize()
+
   useGSAP(() => {
-    if (contentIsLoading || !appendices) return
+    if (!appendices) return
     const innerContainer = innerContainerRef.current
     const section = innerContainer.children[index]
     const dist = section.getBoundingClientRect().width * index
     gsap.to(innerContainer, { duration: 0.5, x: -dist })
   }, { dependencies: [index, width], scope: containerRef })
 
-  if (contentIsLoading || !appendices) return
+  useEffect(() => {
+    if (!appendices) return
+    onScroll(index, appendices.length)
+  }, [index, appendices])
+
+  useEffect(() => onScroll, [])
 
   const handleClick = increment =>
     setIndex(_.clamp(index + increment, 0, appendices.length - 1))
 
+
   return (
+    appendices &&
     <AppendixGrid>
       <SideBar>
         <h2>{title}</h2>
@@ -57,7 +64,7 @@ const Appendix = () => {
               header={title}
               type={type}
               metrics={he.decode(metrics)} >
-              {drupalServices.parseNoSpan(body)}
+              {parserServices.parseWithNoSpan(body)}
             </AppendixSection>
           })}
         </SectionInnerContainer>

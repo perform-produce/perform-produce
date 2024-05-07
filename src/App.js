@@ -1,35 +1,41 @@
+import { useEffect, useState } from 'react'
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
+import styled from 'styled-components'
+import _ from 'lodash'
+import usePromise from 'react-promise'
 import Menu from './components/menu/menu.js'
 import Home from './components/home.js'
 import About from './components/about.js'
 import Appendix from './components/appendix/appendix.js'
-import drupalServices from './services/drupalServices.js'
-import styled from 'styled-components'
+import apiServices from './services/apiServices.js'
 import mixins from './utils/mixins.js'
-import usePromise from 'react-promise'
-import { GlobalContext } from './contexts/context.js'
-import { useEffect } from 'react'
+import Section from './components/section/section.js'
+import usePreload from './hooks/usePreload.js'
 
-
-const contents = drupalServices.getContents()
 const App = () => {
-  const { value, loading } = usePromise(contents)
-  // useEffect(() => {
-  //   if (value)
-  //     console.log(drupalServices.getPerformingBody(value))
-  // }, [value])
+  const { value } = usePromise(apiServices.data)
+  const { contents, appendix, footer } = value ?? {}
+  const [scrollMeterAltText, setScrollMeterAltText] = useState()
+
+  usePreload(!!value)
+
+  const handleAppendixScroll = (index, length) => {
+    if (index === undefined && length === undefined)
+      return setScrollMeterAltText()
+    const pad = number => _.padStart(number, 2, '0')
+    setScrollMeterAltText(`A–${pad(index + 1)}/${pad(length)}`)
+  }
+
   return (
     <HashRouter>
       <StyledGlobal>
-        <Menu />
-        <GlobalContext.Provider value={{ contents: value, contentIsLoading: loading }} >
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/about' element={<About />} />
-            <Route path='/appendix' element={<Appendix />} />
-            <Route path='*' element={<Navigate to='/' replace />} />
-          </Routes>
-        </GlobalContext.Provider>
+        <Menu contents={contents} scrollMeterAltText={scrollMeterAltText} />
+        <Routes>
+          <Route path='/' element={<Home contents={contents} footer={footer} />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/appendix' element={<Appendix data={appendix} onScroll={handleAppendixScroll} />} />
+          <Route path='*' element={<Navigate to='/' replace />} />
+        </Routes>
       </StyledGlobal>
     </HashRouter>
   )

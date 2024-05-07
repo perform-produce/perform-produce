@@ -5,13 +5,14 @@ import { useState } from 'react'
 import mixins from '../utils/mixins'
 import { emify } from '../utils/stylesBase'
 
+// TODO: drupal
 const About = () => {
   const [isCreditShown, setIsCreditShown] = useState(false)
   return (
     <Cover>
-      <GridItem $end='span 6'>
+      <GridItem $end='span 8'>
         <p>Perform — Produce is an MFA thesis by Rebecca Wilkinson at the Rhode Island School of Design. This project was developed in 2024 under the guidance and with the support of Pouya Ahmadi, Bethany Johns, Anther Kiley, Wael Morcos, Ali S. Qadeer, and Ryan Waller.</p>
-        <p>To see more of Rebecca’s work, visit her personal website here. If you’d like to get in touch, email rebeccawilkI@gmail.com.</p>
+        <p>To see more of Rebecca’s work, visit her personal website <u>here</u>. If you’d like to get in touch, email rebeccawilkI@gmail.com.</p>
       </GridItem>
       {isCreditShown ?
         <Credits $start={10} $end='span 3'>
@@ -45,9 +46,9 @@ const CreditToggle = styled(GridItem)`
   justify-self: right;
 
   button {
+    ${mixins.border()}
     width: ${emify(50)};
     aspect-ratio: 1;
-    border: solid black 2px;
     border-radius: 1em;
     cursor: pointer;
 

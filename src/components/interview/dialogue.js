@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 import GridItem from '../common/gridItem'
 import SideAnnotation from './sideAnnotation'
-import drupalServices from '../../services/drupalServices'
 import IndentText from '../common/indentText'
 import { emify } from '../../utils/stylesBase'
+import parserServices from '../../services/parserServices'
 
 const SideAnnotations = props => <StyledAnnotation {...props} $end='span 4' />
 
@@ -20,7 +20,7 @@ const Dialogue = ({
       key={i}
       src={src}
       alt={alt}
-      caption={caption ? drupalServices.parseNoSpan(caption) : undefined} />
+      caption={caption ? parserServices.parseWithNoSpan(caption) : undefined} />
   )
 
   return (

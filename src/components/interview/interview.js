@@ -1,29 +1,19 @@
-import drupalServices from '../../services/drupalServices'
+import apiServices from '../../services/apiServices'
 import Section from '../section/section'
-import SectionSubhead from '../section/sectionSubhead'
-import PullQuote from './pullQuote'
 import DrupalBlocks from '../drupal/drupalBlocks'
-import Paragraphs from '../common/paragraphs'
-import useDrupal from '../../hooks/useDrupal'
+import useApi from '../../hooks/useApi'
+import parserServices from '../../services/parserServices'
+import InterviewIntro from '../section/interviewIntro'
 
 
-const Interview = ({ uuid, backgroundColor }) => {
-  const interviewData = useDrupal(uuid, drupalServices.getInterview)
-  const { sectionId, title, subtitle, interviewee, blocks, pullQuote, intro, citations } = interviewData ?? {}
-  const { parseNoSpan } = drupalServices
+const Interview = ({ content, backgroundColor }) => {
+  const data = useApi(content, apiServices.getInterview)
+  const { sectionId, title, blocks, citations, loading } = data
 
   return (
-    interviewData &&
-    <Section id={sectionId} header={title} backgroundColor={backgroundColor}>
-      <SectionSubhead
-        subheader={parseNoSpan(subtitle)}
-        interviewee={interviewee} />
-      <PullQuote header={parseNoSpan(pullQuote.title)} pageNumber={pullQuote.pageNumber}>
-        {parseNoSpan(pullQuote.body)}
-      </PullQuote>
-      {intro &&
-        <Paragraphs $end={13}>{parseNoSpan(intro)}</Paragraphs>
-      }
+    !loading &&
+    <Section id={sectionId} header={parserServices.parseTitleWithName(title)} backgroundColor={backgroundColor}>
+      <InterviewIntro content={data} />
       <DrupalBlocks blocks={blocks} citations={citations} />
     </Section>
   )

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { GAP } from '../../constants'
+import { GAP } from '../../constants/styleConstants'
 import mixins from '../../utils/mixins'
 import { lineHeight } from '../../utils/styleUtils'
 

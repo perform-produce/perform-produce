@@ -2,30 +2,20 @@ import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import GridItem from '../common/gridItem'
 import Grid from '../common/grid'
-import { conditionalStyle, emify, lineHeight } from '../../utils/styleUtils'
-import { COLORS, MENU_PADDING_BOT, MENU_PADDING_TOP } from '../../constants'
+import { conditionalStyle, lineHeight } from '../../utils/styleUtils'
+import { COLORS, MENU_PADDING_BOT, MENU_PADDING_TOP, STROKE_WIDTH } from '../../constants/styleConstants'
 import mixins from '../../utils/mixins'
 import MenuItem from './menuItem'
 import { useState } from 'react'
 import ScrollMeter from './scrollMeter'
+import apiServices from '../../services/apiServices'
 
-// TODO feed from backend
-const sectionLinks = [
-  ['the-designer-as-machine', 'The Designer as Machine'],
-  ['exchange-bridget-moser', 'Exchange: Bridget Moser'],
-  ['the-performing-body', 'The Performing Body'],
-  ['exchange-j-dakota-brown', 'Exchange: J. Dakota Brown'],
-  ['on-the-value-of-exchange', 'On The Value of Exchange'],
-  ['exchange-micah-lexier', 'Exchange: Micah Lexier'],
-  ['instruction-doug-scotts-rulers', 'Instruction: Doug Scott’s Rulers'],
-  ['readings-and-viewings', 'Readings & Viewings']
-]
-
-const Menu = () => {
+const Menu = ({ contents, scrollMeterAltText }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const handleFoldMenu = () => setIsExpanded(false)
-  const location = useLocation()
+  const links = contents && apiServices.getMenuLinks(contents)
 
+  const location = useLocation()
   return (
     <MenuContainer
       as='menu'
@@ -45,10 +35,10 @@ const Menu = () => {
           Contents
         </MenuItem>
         {
-          isExpanded &&
+          isExpanded && links &&
           <div>
-            {sectionLinks.map(([hash, title]) =>
-              <Link key={hash} to={`/#${hash}`} onClick={handleFoldMenu}>{title}</Link>)}
+            {links.map(({ sectionId, title }) =>
+              <Link key={sectionId} to={`/#${sectionId}`} onClick={handleFoldMenu}>{title}</Link>)}
           </div>
         }
       </ContentLink>
@@ -65,7 +55,7 @@ const Menu = () => {
         </MenuItem>
       </LinkWrapper>
       <LinkWrapper $start={11} $end={13} $alignRight>
-        <ScrollMeter />
+        <ScrollMeter altText={scrollMeterAltText} />
       </LinkWrapper>
     </MenuContainer>
   )
@@ -78,7 +68,7 @@ const MenuContainer = styled(Grid)`
   position: fixed;
   top: 0;
   background-color: ${COLORS.WHITE};
-  outline: ${conditionalStyle('$outline', 'black solid 2px')};
+  outline: ${conditionalStyle('$outline', `black solid ${STROKE_WIDTH}`)};
 `
 
 const LinkWrapper = styled(GridItem)`

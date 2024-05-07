@@ -1,19 +1,25 @@
+import { useState } from 'react'
 import styled from 'styled-components'
+import _ from 'lodash'
 import GridItem from '../common/gridItem'
-import { getGridData, getLineHeight, lineHeight, spanCol, toggleStyle } from '../../utils/styleUtils'
+import { conditionalStyle, getGridData, getLineHeight, lineHeight, spanCol, toggleStyle } from '../../utils/styleUtils'
 import IndentText from '../common/indentText'
-import { COLORS, GLYPH_CAP_SPACE, GLYPH_DESC, LINE_PADDING_HALF, POP_UP_TIMEOUT, POP_UP_TOP_PADDING, RULER_SECTION_MARGIN_TOP } from '../../constants'
+import { COLORS, GLYPH_CAP_SPACE, GLYPH_DESC, LINE_PADDING_HALF, POP_UP_TIMEOUT, POP_UP_TOP_PADDING, RULER_SECTION_MARGIN_TOP, STROKE_WIDTH } from '../../constants/styleConstants'
 import FilteredImg from '../common/filteredImg'
 import { ReactComponent as MarkSvg } from '../../assets/svg/mark.svg'
 import mixins from '../../utils/mixins'
-import { useState } from 'react'
 import Fade from '../citation/fade'
 import PopUpCitation from '../citation/popUpCitation'
 import { emify, getPx } from '../../utils/stylesBase'
 
 
-const RulerSection = ({ number, src, width, left, description, units, purpose, isLong, children }) => {
+const RulerSection = ({ index, src, alt, width, description, units, purpose, children }) => {
   const [citationData, setCitationData] = useState()
+
+  const number = _.padStart(index + 1, 2, '0')
+  const isLong = !index
+  const isLast = index === 8
+  const left = index === 7 ? -0.5 : 0
 
   const handleMouseEnter = () => {
     const { colWidth, gridGap } = getGridData()
@@ -29,7 +35,7 @@ const RulerSection = ({ number, src, width, left, description, units, purpose, i
       <Container $start={2} $end={8}>
         <Description>
           <p>Description: {description}</p>
-          <p>Units of Measurement: {units}</p>
+          <p>{isLast ? 'Scale' : 'Units of Measurement'}: {units}</p>
           <p>Purpose: {purpose}</p>
         </Description>
         <Details>
@@ -63,8 +69,9 @@ const RulerSection = ({ number, src, width, left, description, units, purpose, i
         $end={13}
         $colSpan={width}
         $left={left}
-        $isLong={isLong}>
-        <FilteredImg src={`assets/images/rulers/${src}`} />
+        $isLong={isLong}
+        $isLast={isLast}>
+        <FilteredImg src={src} alt={alt} />
       </ImgContainer>
     </>
   )
@@ -88,8 +95,8 @@ const NumberContainer = styled(Container)`
   left: ${spanCol(0.5)};
 `
 
-const SURPRISE_VALUE = 3
-const nonTypeMarginTop = `calc(${LINE_PADDING_HALF + GLYPH_CAP_SPACE}em + ${SURPRISE_VALUE}px)`
+const MYSTERY_FIX_VALUE = 3
+const nonTypeMarginTop = `calc(${LINE_PADDING_HALF + GLYPH_CAP_SPACE}em + ${MYSTERY_FIX_VALUE}px)`
 const MarkContainer = styled(Container)`
   ${mixins.flex('initial', 'center')}
   position: relative;
@@ -108,10 +115,9 @@ const SvgContainer = styled.div`
   top: -${vertPadding};
 
   svg {
-    width: 18px;
     height: calc(${lineHeight(6)} - ${nonTypeMarginTop} - ${GLYPH_DESC}em);
     margin-top: ${nonTypeMarginTop};
-    stroke-width: 2px;
+    stroke-width: ${STROKE_WIDTH};
   }
 `
 
@@ -122,6 +128,8 @@ const ImgContainer = styled(Container)`
     left: ${({ $left }) => $left ? spanCol($left) : ''};
     margin-top: ${nonTypeMarginTop};
   }
+
+  padding-bottom: ${conditionalStyle('$isLast', lineHeight(10))};
 `
 
 export default RulerSection

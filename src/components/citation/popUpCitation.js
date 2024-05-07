@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import mixins from '../../utils/mixins'
-import { IMG_POPUP_GRID_SPAN, POP_UP_TOP_PADDING, TEXT_POPUP_GRID_SPAN } from '../../constants'
+import { IMG_POPUP_GRID_SPAN, POP_UP_TOP_PADDING, TEXT_POPUP_GRID_SPAN } from '../../constants/styleConstants'
 import { conditionalStyle, wordSpace } from '../../utils/styleUtils'
 import GridItem from '../common/gridItem'
 import FilteredImg from '../common/filteredImg'

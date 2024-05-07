@@ -4,7 +4,7 @@ import { getLineHeight, lineHeight, toggleStyle, vw } from '../../utils/styleUti
 import FilteredImg from '../common/filteredImg'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { addEventListener } from '../../utils/reactUtils'
-import { GLYPH_DESC, LINE_PADDING_HALF } from '../../constants'
+import { GLYPH_DESC, LINE_PADDING_HALF } from '../../constants/styleConstants'
 import { closest, quickArray } from '../../utils/commonUtils'
 import { getEm } from '../../utils/stylesBase'
 

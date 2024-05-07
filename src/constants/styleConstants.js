@@ -1,4 +1,4 @@
-import { DEFAULT_EM, emify, getPx } from './utils/stylesBase'
+import { DEFAULT_EM, emify, getPx } from '../utils/stylesBase'
 
 export const LINE_HEIGHT = 1.2
 export const LINE_PADDING_HALF = (LINE_HEIGHT - 1) / 2
@@ -34,13 +34,15 @@ export const MENU_HEIGHT = emify(MENU_HEIGHT_PX)
 export const SECTION_HEADING_PADDING_TOP = emify(35)
 export const SECTION_HEADING_TOP = emify(MENU_HEIGHT_PX + getPx(SECTION_HEADING_PADDING_TOP))
 
+export const STROKE_WIDTH = '3px'
+
 export const COLORS = {
   WHITE: 'white',
   GRAY: '#EAEAEA',
   PINK: '#FFE7DA',
   YELLOW: '#FCF7BB',
   BROWN: '#D2AB8E',
-  GREEN: '#E1F0E1'
+  GREEN: '#E1F0E1',
+  LIGTH_GRAY: '#D2D2D2'
 }
 
-export const DRUPAL_ENDPOINT = 'https://rw-sux.iamasq.works'

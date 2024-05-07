@@ -1,16 +1,16 @@
-import drupalServices from '../../services/drupalServices'
+import apiServices from '../../services/apiServices'
 import Section from './section'
-import { COLORS } from '../../constants'
+import { COLORS } from '../../constants/styleConstants'
 import DrupalBlocks from '../drupal/drupalBlocks'
-import useDrupal from '../../hooks/useDrupal'
+import useApi from '../../hooks/useApi'
 
 
-const Essay = ({ uuid }) => {
-  const essayData = useDrupal(uuid, drupalServices.getEssay)
-  const { sectionId, title, blocks, citations } = essayData ?? {}
+
+const Essay = ({ content }) => {
+  const { sectionId, title, blocks, citations, loading } = useApi(content, apiServices.getEssay)
 
   return (
-    essayData &&
+    !loading &&
     <Section id={sectionId} header={title} backgroundColor={COLORS.GRAY}>
       <DrupalBlocks blocks={blocks} citations={citations} />
     </Section>

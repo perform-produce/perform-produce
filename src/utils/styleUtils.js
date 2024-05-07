@@ -1,4 +1,4 @@
-import { GAP, GLYPH_SPACE, GRID_COUNT, GRID_GAP, GRID_GAP_PX, GRID_VW, LINE_HEIGHT } from '../constants'
+import { GAP, GLYPH_SPACE, GRID_COUNT, GRID_GAP, GRID_GAP_PX, GRID_VW, LINE_HEIGHT } from '../constants/styleConstants'
 import { delta, quickArray } from './commonUtils'
 import { emify, getEm, getPx } from './stylesBase'
 

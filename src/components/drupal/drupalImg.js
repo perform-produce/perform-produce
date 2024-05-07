@@ -1,4 +1,4 @@
-import drupalServices from '../../services/drupalServices'
+import parserServices from '../../services/parserServices'
 import Img from '../common/img'
 
 const DrupalImg = ({ content }) => {
@@ -6,7 +6,7 @@ const DrupalImg = ({ content }) => {
   return <Img
     src={src}
     alt={alt}
-    caption={drupalServices.parseNoSpan(caption)}
+    caption={parserServices.parseWithNoSpan(caption)}
     alignLeft={alignLeft}
     transparent />
 }

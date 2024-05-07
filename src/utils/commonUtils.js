@@ -13,7 +13,6 @@ export const loopObject = (object, callback) => {
 
 export const quickArray = (length, callback = i => i) => Array(length).fill(0).map((_, i) => callback(i))
 
-export const querySelectorArray = (elem, query) => Array.from(elem.querySelectorAll(query))
 export const roundTo = (number, lower, upper) =>
   delta(number, lower) <= delta(number, upper) ? lower : upper
 

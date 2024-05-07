@@ -8,9 +8,9 @@ import { useEffect, useRef, useState } from 'react'
 import { quickArray } from '../../utils/commonUtils'
 import Fade from '../citation/fade'
 import PopUpCitation from '../citation/popUpCitation'
-import { COLORS, GAP, PERFORMING_BODY_FIGMA_COL_WIDTH, PERFORMING_BODY_GRID_COUNT, PERFORMING_BODY_GRID_SPAN, POP_UP_TIMEOUT } from '../../constants'
-import drupalServices from '../../services/drupalServices'
+import { COLORS, GAP, PERFORMING_BODY_FIGMA_COL_WIDTH, PERFORMING_BODY_GRID_COUNT, PERFORMING_BODY_GRID_SPAN, POP_UP_TIMEOUT } from '../../constants/styleConstants'
 import { getPx } from '../../utils/stylesBase'
+import parserServices from '../../services/parserServices'
 
 
 const PerformingBodyContainer = ({
@@ -47,8 +47,8 @@ const PerformingBodyContainer = ({
     const { header, subheader, toRight } = citation
 
     setCitationData({
-      header: drupalServices.strip(header),
-      subheader: drupalServices.strip(subheader),
+      header: parserServices.stripParagraph(header),
+      subheader: parserServices.stripParagraph(subheader),
       number: startIndex + i,
       x: toRight ? width - colWidth : -colWidth * (PERFORMING_BODY_GRID_SPAN - 1),
       y: height / 2

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { loopObject, validateString } from './commonUtils'
-import { COLORS, GRID_COUNT, GRID_GAP, PERFORMING_BODY_GRID_COUNT, VERT_GAP } from '../constants'
+import { COLORS, GRID_COUNT, GRID_GAP, PERFORMING_BODY_GRID_COUNT, STROKE_WIDTH, VERT_GAP } from '../constants/styleConstants'
 import { spanCol } from './styleUtils'
 
 const flex = (
@@ -43,15 +43,18 @@ const highZIndex = level => `z-index: ${'9'.repeat(level)};`
 
 const underline = () => `
   text-decoration: underline;
-  text-decoration-thickness: 2.5px;
-  text-underline-offset: 0.05em;
+  text-decoration-thickness: ${STROKE_WIDTH}px;
+  text-underline-offset: 0.07em;
   text-decoration-skip-ink: none;
 `
 
-const cover = paddingBottom => `
+const border = isBottom => `
+  border${validateString(isBottom, '-bottom')}: black solid ${STROKE_WIDTH};
+`
+
+const cover = () => `
   height: calc(100vh - ${VERT_GAP});
   align-items: end;
-  padding-bottom: ${paddingBottom ?? VERT_GAP};
   background-color: ${COLORS.GRAY};
 `
 
@@ -71,6 +74,7 @@ const mixins = {
   background,
   highZIndex,
   underline,
+  border,
   cover,
   noScrollBar,
   chain: function () {

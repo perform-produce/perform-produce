@@ -12,6 +12,9 @@ const SectionSubhead = ({ subheader, interviewee, ...rest }) =>
   </Header>
 
 const Header = styled(GridItem)`
+  h3 {
+    margin-bottom: ${lineHeight(1)};
+  }
   margin-bottom: ${lineHeight(7)};
 `
 

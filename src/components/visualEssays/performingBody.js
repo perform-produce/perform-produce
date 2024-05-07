@@ -1,17 +1,17 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
 import PerformingBodyContainer from './performingBodyContainer'
 import Section from '../section/section'
 import GridItem from '../common/gridItem'
-import { COLORS, SECTION_HEADING_TOP, SECTION_HEADING_PADDING_TOP, LINE_HEIGHT } from '../../constants'
+import { COLORS, SECTION_HEADING_TOP, SECTION_HEADING_PADDING_TOP, LINE_HEIGHT } from '../../constants/styleConstants'
 import mixins from '../../utils/mixins'
 import { getLineHeight, vh } from '../../utils/styleUtils'
 import { quickArray } from '../../utils/commonUtils'
-import { GlobalContext } from '../../contexts/context'
-import drupalServices from '../../services/drupalServices'
+import apiServices from '../../services/apiServices'
 import { getPx } from '../../utils/stylesBase'
+import useApi from '../../hooks/useApi'
 
 
 const entryPositions = [
@@ -50,21 +50,20 @@ const entryPositions = [
 ]
 
 
-const PerformingBody = () => {
-  const { contents, contentIsLoading } = useContext(GlobalContext)
-  const essay = useMemo(() => contents && drupalServices.getPerformingBody(contents), [contents])
-  const { title, sectionId, entries } = essay ?? {}
+const PerformingBody = ({ content }) => {
+  const { title, sectionId, entries, loading } = useApi(content, apiServices.getPerformingBody)
+
   const getColumnLength = () => (vh() - getPx(SECTION_HEADING_TOP) - getPx(SECTION_HEADING_PADDING_TOP)) / getLineHeight()
   const [columnLength, setColumnLength] = useState(getColumnLength())
   const [textList, setTextList] = useState([])
   const { height } = useWindowSize()
   useEffect(() => setColumnLength(getColumnLength()), [height])
 
-  if (contentIsLoading || !entries) return
-
   const onEnter = indices => setTextList(prev => _.uniq([...prev, ...indices].sort((a, b) => a - b)))
   const onExit = indices => setTextList(prev => _.uniq(_.without(prev, ...indices)))
-  const renderList = () => {
+
+  const memoizedComponents = useMemo(() => {
+    if (loading) return
     const children = []
     const getData = i => {
       const { title, subtitle, src, alt } = entries[i]
@@ -103,9 +102,10 @@ const PerformingBody = () => {
         onExit={onExit} />)
     }
     return children
-  }
+  }, [entries])
 
   return (
+    !loading &&
     <Section
       id={sectionId}
       header={title}
@@ -127,7 +127,7 @@ const PerformingBody = () => {
         )}
       </TextContainer>
       <GridItem $start='span 12'>
-        {renderList()}
+        {memoizedComponents}
       </GridItem>
     </Section>
   )

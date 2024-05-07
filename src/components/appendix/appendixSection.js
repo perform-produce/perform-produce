@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import mixins from '../../utils/mixins'
-import { COLORS, GRID_GAP, LINE_HEIGHT, SECTION_HEADING_TOP } from '../../constants'
+import { COLORS, GRID_GAP, LINE_HEIGHT, SECTION_HEADING_TOP } from '../../constants/styleConstants'
 import { spanCol, wordSpace } from '../../utils/styleUtils'
 import Paragraphs from '../common/paragraphs'
 import { forwardRef } from 'react'

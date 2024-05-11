@@ -1,7 +1,7 @@
 import { validateString } from '../utils/commonUtils'
 import httpServices from './httpServices'
 import parserServices from './parserServices'
-import { PARAGRAPH_CLASS_NAME, PARAGRAPH_CLASSES, FIELD_CLASSES, FIELDS, UUID_LIST, DRUPAL_ENDPOINT, APPENDIX_UUID, FOOTER_UUID } from '../constants/apiConstants'
+import { PARAGRAPH_CLASS_NAME, PARAGRAPH_CLASSES, FIELD_CLASSES, FIELDS, UUID_LIST, DRUPAL_ENDPOINT, APPENDIX_UUID, FOOTER_UUID, ABOUT_UUID } from '../constants/apiConstants'
 
 const querySelectorArray = (elem, query) => Array.from(elem.querySelectorAll(query))
 const createHtml = htmlString => {
@@ -37,11 +37,14 @@ const data = (
     const { data } = (await httpServices.get(`${DRUPAL_ENDPOINT}/web/json/contents`))
     return {
       contents: UUID_LIST.map(uuid => data.find(content => content.uuid === uuid)),
+      footer: data.find(({ uuid }) => uuid === FOOTER_UUID),
       appendix: data.find(({ uuid }) => uuid === APPENDIX_UUID),
-      footer: data.find(({ uuid }) => uuid === FOOTER_UUID)
+      about: data.find(({ uuid }) => uuid === ABOUT_UUID)
     }
   }
 )()
+
+
 
 const getBasicData = (content, {
   blockKey,
@@ -111,10 +114,10 @@ const getDougScottsRulers = content => ({
       const { getContent } = getContentParsers(entry)
       return {
         ...extractImgData(entry),
-        description: getContent(FIELDS.RULER_DESCRIPTION),
-        units: getContent(FIELDS.RULER_UNITS),
-        purpose: getContent(FIELDS.RULER_PURPOSE),
-        details: getContent(FIELDS.RULER_DETAILS)
+        description: getContent(FIELD_CLASSES.RULER_DESCRIPTION),
+        units: getContent(FIELD_CLASSES.RULER_UNITS),
+        purpose: getContent(FIELD_CLASSES.RULER_PURPOSE),
+        details: getContent(FIELD_CLASSES.RULER_DETAILS)
       }
     })
 })
@@ -145,6 +148,12 @@ const getAppendices = ({ title, ...appendices }) => ({
     })
 })
 
+const getAbout = content => ({
+  about: content[FIELDS.ABOUT],
+  credits: content[FIELDS.CREDITS]
+})
+
+
 const getBlockParser = (block, type, parser) => ({ type, content: parser(block) })
 const parseBlocks = (content, fieldName) => {
   return getBlocks(content[fieldName]).map(block =>
@@ -163,6 +172,7 @@ const parseCitations = elem => {
     title: getContent(FIELD_CLASSES.CITATION_TITLE),
     subtitle: getContent(FIELD_CLASSES.CITATION_SUBTITLE),
     body: getContent(FIELD_CLASSES.CITATION_BODY),
+    noMultiply: getContent(FIELD_CLASSES.IMG_NO_MULTIPLY) === 'No Multiply'
   }
   return result
 }
@@ -170,10 +180,13 @@ const parseCitations = elem => {
 const parseParagraph = elem => getContent(elem, FIELD_CLASSES.PARAGRAPH)
 
 const parseImg = elem => {
+
   const { getItem, getContent } = getContentParsers(elem)
   return {
     ...extractImgData(getItem(FIELD_CLASSES.IMG)),
-    caption: getContent(FIELD_CLASSES.IMG_CAPTION)
+    caption: getContent(FIELD_CLASSES.IMG_CAPTION),
+    noMultiply: getContent(FIELD_CLASSES.IMG_NO_MULTIPLY) === 'No Multiply',
+    fullWidth: getContent(FIELD_CLASSES.IMG_FULL_WIDTH) === 'Full Width'
   }
 }
 
@@ -184,7 +197,11 @@ const parseInterviewSection = elem => {
     annotations: getItems(elem, FIELD_CLASSES.SIDE_ANNOTATIONS)
       .map(annotation => {
         const annotationContainer = annotation.children[0]
-        return annotationContainer.children.length ? parseImg(annotationContainer) : undefined
+        const alignRight = getContent(annotation, FIELD_CLASSES.IMG_ALIGN_RIGHT) === 'Right'
+        return annotationContainer.children.length ? {
+          ...parseImg(annotationContainer),
+          alignRight
+        } : undefined
       })
       .filter(a => a)
   }
@@ -211,6 +228,7 @@ const apiServices = {
   getDougScottsRulers,
   getFooter,
   getAppendices,
+  getAbout,
 }
 
 export default apiServices

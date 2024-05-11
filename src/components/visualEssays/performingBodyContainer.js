@@ -3,7 +3,7 @@ import mixins from '../../utils/mixins'
 import GridItem from '../common/gridItem'
 import FilteredImg from '../common/filteredImg'
 import { extractStyle, vh, vw } from '../../utils/styleUtils'
-import { useIntersectionObserver } from '@uidotdev/usehooks'
+import { useWindowSize } from '@uidotdev/usehooks'
 import { useEffect, useRef, useState } from 'react'
 import { quickArray } from '../../utils/commonUtils'
 import Fade from '../citation/fade'
@@ -11,6 +11,7 @@ import PopUpCitation from '../citation/popUpCitation'
 import { COLORS, GAP, PERFORMING_BODY_FIGMA_COL_WIDTH, PERFORMING_BODY_GRID_COUNT, PERFORMING_BODY_GRID_SPAN, POP_UP_TIMEOUT } from '../../constants/styleConstants'
 import { getPx } from '../../utils/stylesBase'
 import parserServices from '../../services/parserServices'
+import { addEventListener } from '../../utils/reactUtils'
 
 
 const PerformingBodyContainer = ({
@@ -21,22 +22,26 @@ const PerformingBodyContainer = ({
   onEnter,
   onExit
 }) => {
-  const [ref, entry] = useIntersectionObserver({
-    threshold: 0,
-    root: null,
-    rootMargin: '0px',
-  })
-  const [citationData, setCitationData] = useState()
   const containerRef = useRef()
+  const [citationData, setCitationData] = useState()
+  const [isIntersecting, setIsIntersecting] = useState(false)
+  const { width, height } = useWindowSize()
 
-  useEffect(() => ref(containerRef.current), [containerRef])
+  const checkIsIntersecting = () => {
+    const { top } = containerRef.current.getBoundingClientRect()
+    setIsIntersecting(top < vh(60))
+  }
+
+  useEffect(() => {
+    checkIsIntersecting()
+    return addEventListener(window, 'scroll', checkIsIntersecting)
+  }, [width, height])
 
   useEffect(() => {
     const indices = quickArray(data.length, i => startIndex + i)
-    if (entry?.isIntersecting) onEnter(indices)
-    else if (containerRef.current?.getBoundingClientRect().top >= vh())
-      onExit(indices)
-  }, [entry?.isIntersecting])
+    if (isIntersecting) onEnter(indices)
+    else onExit(indices)
+  }, [isIntersecting])
 
   const getColWidth = () => (vw() - getPx(GAP) * 2) / PERFORMING_BODY_GRID_COUNT
   const handleMouseEnter = (e, i) => {
@@ -54,7 +59,6 @@ const PerformingBodyContainer = ({
       y: height / 2
     })
   }
-
 
   const renderImg = ({ src, alt, start, end }, i = 0) =>
     <GridItem key={i} $start={start} $end={end} onMouseLeave={() => setCitationData()}>

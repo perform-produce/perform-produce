@@ -2,13 +2,13 @@ import parserServices from '../../services/parserServices'
 import Img from '../common/img'
 
 const DrupalImg = ({ content }) => {
-  const { src, alt, alignLeft, caption } = content
+  const { src, alt, caption, noMultiply, fullWidth } = content
   return <Img
     src={src}
     alt={alt}
     caption={parserServices.parseWithNoSpan(caption)}
-    alignLeft={alignLeft}
-    transparent />
+    noMultiply={noMultiply}
+    fullWidth={fullWidth} />
 }
 
 

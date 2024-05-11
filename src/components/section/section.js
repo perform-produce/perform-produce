@@ -1,27 +1,28 @@
 import styled from 'styled-components'
 import GridItem from '../common/gridItem'
 import { IMG_POPUP_GRID_SPAN, SECTION_HEADING_TOP, SECTION_PADDING_LINE_HEIGHT, TEXT_POPUP_GRID_SPAN, VERT_GAP } from '../../constants/styleConstants'
-import { closest, getGridData, getGridGapPx, lineHeight } from '../../utils/styleUtils'
+import { getGridData, getGridGapPx, lineHeight } from '../../utils/styleUtils'
 import Grid from '../common/grid'
 import { SectionContext } from '../../contexts/context'
 import { useRef, useState } from 'react'
 import mixins from '../../utils/mixins'
+import { closest } from '../../utils/commonUtils'
 
 
 const Section = ({ children, header, backgroundColor, getCitationData, ...rest }) => {
   const [isQuoteOpened, setIsQuoteOpened] = useState(true)
   const sectionRef = useRef()
+
   getCitationData ??= (targetRect, sectionRect, data) => {
     const { left, top, height } = targetRect
     const { colBounds, colWidth } = getGridData()
     const colCount = data.src ? IMG_POPUP_GRID_SPAN : TEXT_POPUP_GRID_SPAN
     const unadjustedPopUpLeft = left - (colWidth * colCount + getGridGapPx() * (colCount - 1)) / 2
-    const closestBound = closest(unadjustedPopUpLeft, ...colBounds.slice(0, colBounds.length - colCount + 1))
+    const closestBound = closest(colBounds.slice(0, colBounds.length - colCount + 1), unadjustedPopUpLeft)
     return { ...data, x: closestBound, y: top + height / 2 - sectionRect.top }
   }
 
   const toggleQuoteState = close => setIsQuoteOpened(close)
-  // TODO: font loading for italics delayed which causes a layout shift
   return (
     <SectionContext.Provider value={{
       backgroundColor,

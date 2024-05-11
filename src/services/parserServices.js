@@ -3,8 +3,14 @@ import parse from 'html-react-parser'
 import he from 'he'
 import { DRUPAL_ENDPOINT } from '../constants/apiConstants'
 
-const noSpan = (htmlString = '') => htmlString.replaceAll(/<\/?span>/g, '').replaceAll('&nbsp;', '')
-const parseWithNoSpan = (htmlString = '') => parse(noSpan(he.decode(htmlString)))
+const linkToBlankConfig = {
+  replace: domNode => {
+    if (domNode.tagName === 'a')
+      domNode.attribs.target = '_blank'
+  }
+}
+const noSpan = (htmlString = '') => he.decode(htmlString).replaceAll(/<\/?span>/g, '').replaceAll('&nbsp;', '').replaceAll(/\s+/g, ' ')
+const parseWithNoSpan = (htmlString = '', config) => parse(noSpan(htmlString), config)
 const stripParagraph = (htmlString = '') => parseWithNoSpan((htmlString?.match(/(?<=<p>)(.*?)(?=<\/p>)/) || [])[0])
 
 const parseTitleWithName = title => {
@@ -14,7 +20,9 @@ const parseTitleWithName = title => {
 
 const redirectSrc = src => validateString(src, DRUPAL_ENDPOINT + src?.replace(window.location.origin, ''))
 
+
 const parserServices = {
+  linkToBlankConfig,
   noSpan,
   parseWithNoSpan,
   stripParagraph,

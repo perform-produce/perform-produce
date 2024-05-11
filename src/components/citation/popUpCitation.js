@@ -7,7 +7,6 @@ import FilteredImg from '../common/filteredImg'
 import { useContext } from 'react'
 import { SectionContext } from '../../contexts/context'
 import { validateString } from '../../utils/commonUtils'
-import { emify } from '../../utils/stylesBase'
 
 const PopUpCitation = ({
   x = 0,
@@ -21,6 +20,7 @@ const PopUpCitation = ({
   src,
   children,
   backgroundColor,
+  noMultiply,
   handleMouseLeave
 }) => {
   const { onPopUpEnter } = useContext(SectionContext)
@@ -34,7 +34,7 @@ const PopUpCitation = ({
       $span={src ? IMG_POPUP_GRID_SPAN : TEXT_POPUP_GRID_SPAN}
       $shouldCenter={shouldCenter}
       $backgroundColor={backgroundColor}>
-      {src && <FilteredImg src={src} alt={alt} />}
+      {src && <FilteredImg src={src} alt={alt} noMultiply={noMultiply} />}
       <TextContainer>
         <HeaderContainer>
           <SpanBlock>{validateString(number, `${number}.`)}</SpanBlock>
@@ -76,6 +76,7 @@ const PopUp = styled(GridItem)`
 
   img {
     width: calc(100% + ${cropPx * 2}px);
+    aspect-ratio: 7 / 4;
     position: relative;
     left: ${-cropPx}px;
     top: ${-cropPx}px;
@@ -88,7 +89,6 @@ const SpanBlock = styled.span`
 
 
 const TextContainer = styled.span`
-  /* padding: ${emify(10)} 1em ${emify(22.5)}; */
   padding: ${POP_UP_TOP_PADDING} 1em;
   display: block;
 `

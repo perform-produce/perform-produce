@@ -10,7 +10,7 @@ import { useState } from 'react'
 import ScrollMeter from './scrollMeter'
 import apiServices from '../../services/apiServices'
 
-const Menu = ({ contents, scrollMeterAltText }) => {
+const Menu = ({ contents, scrollMeterAltText, loaded }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const handleFoldMenu = () => setIsExpanded(false)
   const links = contents && apiServices.getMenuLinks(contents)
@@ -55,7 +55,9 @@ const Menu = ({ contents, scrollMeterAltText }) => {
         </MenuItem>
       </LinkWrapper>
       <LinkWrapper $start={11} $end={13} $alignRight>
-        <ScrollMeter altText={scrollMeterAltText} />
+        <ScrollMeter
+          loaded={loaded}
+          altText={scrollMeterAltText} />
       </LinkWrapper>
     </MenuContainer>
   )

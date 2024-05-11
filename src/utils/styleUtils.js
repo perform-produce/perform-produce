@@ -1,5 +1,5 @@
 import { GAP, GLYPH_SPACE, GRID_COUNT, GRID_GAP, GRID_GAP_PX, GRID_VW, LINE_HEIGHT } from '../constants/styleConstants'
-import { delta, quickArray } from './commonUtils'
+import { quickArray } from './commonUtils'
 import { emify, getEm, getPx } from './stylesBase'
 
 export const vw = (percentage = 100) => percentage / 100 * window.innerWidth
@@ -17,21 +17,6 @@ export const getGridData = () => {
   const colWidth = (vw() - gap * 2 - gridGap * (GRID_COUNT - 1)) / GRID_COUNT
   const colBounds = quickArray(GRID_COUNT, i => gap + (colWidth + gridGap) * i)
   return { gap, gridGap, colWidth, colBounds }
-}
-
-// TODO: same as commonUtil?
-export const closest = (number, ...bounds) => {
-  let currentBound
-  let lowestDiff = Infinity
-  for (let i = 0; i < bounds.length; i++) {
-    const bound = bounds[i]
-    const diff = delta(number, bound)
-    if (diff < lowestDiff) {
-      currentBound = bound
-      lowestDiff = diff
-    }
-  }
-  return currentBound
 }
 
 export const extractStyle = (key, fallbackString) => props =>

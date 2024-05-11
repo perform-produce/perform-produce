@@ -43,7 +43,7 @@ const highZIndex = level => `z-index: ${'9'.repeat(level)};`
 
 const underline = () => `
   text-decoration: underline;
-  text-decoration-thickness: ${STROKE_WIDTH}px;
+  text-decoration-thickness: ${STROKE_WIDTH};
   text-underline-offset: 0.07em;
   text-decoration-skip-ink: none;
 `

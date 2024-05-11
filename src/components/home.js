@@ -1,9 +1,9 @@
-import { useLayoutEffect } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import Grid from './common/grid'
 import { COLORS, SECTION_HEADING_TOP, SECTION_PADDING_LINE_HEIGHT } from '../constants/styleConstants'
-import { getLineHeight, lineHeight } from '../utils/styleUtils'
+import { getLineHeight } from '../utils/styleUtils'
 import GridItem from './common/gridItem'
 import mixins from '../utils/mixins'
 import Essay from './section/essay'
@@ -14,16 +14,23 @@ import { getPx } from '../utils/stylesBase'
 import Footer from './footer'
 
 
-const Home = ({ contents, footer }) => {
+const Home = ({ contents, footer, allRendered, onRendered }) => {
   const location = useLocation()
+  const [childrenRendered, setChildrenRendered] = useState(new Set())
 
   useLayoutEffect(() => {
+    if (!allRendered) return
     const id = location.hash.replace(/^#/, '')
     const section = document.getElementById(id)
-    if (!section) return window.scrollTo({ top: 0, behavior: 'smooth' })
+    if (!section) return window.scrollTo({ top: 0 })
     const { top } = section.getBoundingClientRect()
-    window.scrollBy({ top: top + SECTION_PADDING_LINE_HEIGHT * getLineHeight() - getPx(SECTION_HEADING_TOP), behavior: 'smooth' })
-  }, [location, contents])
+    window.scrollBy({ top: top + SECTION_PADDING_LINE_HEIGHT * getLineHeight() - getPx(SECTION_HEADING_TOP) })
+  }, [location, contents, allRendered])
+
+  useEffect(() => {
+    if (childrenRendered.size === contents?.length)
+      onRendered()
+  }, [childrenRendered])
 
   const componentMap = {
     'Essay': Essay,
@@ -34,17 +41,22 @@ const Home = ({ contents, footer }) => {
 
   const interviewColorMap = [
     COLORS.PINK,
+    COLORS.CYAN,
     COLORS.YELLOW
   ]
+
+  const onChildRendered = i =>
+    setChildrenRendered(prev => (new Set(prev)).add(i))
+
 
   return (
     <>
       <Cover>
         <GridItem $end='span 8'>
-          <p>Perform — Produce defines graphic design as a discipline rooted in work rather than a process that springs forth spontaneously from the creative imagination.</p>
-          <p>Perform — Produce is driven by strict constraints and machine-like craft, but employs outdated tools and the physical body in processes of making that are stubbornly slow.</p>
-          <p>Perform — Produce deploys performance as a tactic to expose the otherwise invisible labor of design and its valuation.</p>
-          <p>Perform — Produce proposes a new organizational model that integrates live happenings, cross-disciplinary dialogue, and self-publishing to consider not just the product of design but also the conditions under which it is produced.</p>
+          <p><i>Perform — Produce</i> defines graphic design as a discipline rooted in work rather than a process that springs forth spontaneously from the creative imagination.</p>
+          <p><i>Perform — Produce</i> is driven by strict constraints and machine-like craft, but employs outdated tools and the physical body in processes of making that are stubbornly slow.</p>
+          <p><i>Perform — Produce</i> deploys performance as a tactic to expose the otherwise invisible labor of design and its valuation.</p>
+          <p><i>Perform — Produce</i> proposes a new organizational model that integrates live happenings, cross-disciplinary dialogue, and self-publishing to consider not just the product of design but also the conditions under which it is produced.</p>
         </GridItem>
       </Cover>
       {
@@ -56,6 +68,7 @@ const Home = ({ contents, footer }) => {
             return <Component
               key={i}
               content={content}
+              onRendered={() => onChildRendered(i)}
               backgroundColor={type === 'Interview' ? interviewColorMap.shift() : undefined} />
           })}
           <Footer content={footer} />

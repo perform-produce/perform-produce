@@ -1,4 +1,4 @@
-import parse from 'html-react-parser'
+import parse, { domToReact } from 'html-react-parser'
 import Paragraphs from '../common/paragraphs'
 import Citation from '../citation/citation'
 import styled from 'styled-components'
@@ -6,10 +6,10 @@ import FilteredImg from '../common/filteredImg'
 import { useMemo } from 'react'
 import parserServices from '../../services/parserServices'
 
-const { noSpan: removeSpan, parseWithNoSpan: parseNoSpan, stripParagraph: strip } = parserServices
+const { noSpan, stripParagraph } = parserServices
 const DrupalParagraph = ({ content, citations = [] }) => {
   const memoizedContent = useMemo(() => {
-    return parse(removeSpan(content), {
+    return parse(noSpan(content), {
       replace: domNode => {
         const hasNestedImg = domNode.tagName === 'p' &&
           domNode.firstChild.tagName === 'img'
@@ -20,22 +20,30 @@ const DrupalParagraph = ({ content, citations = [] }) => {
             src={parserServices.redirectSrc(imgNode.attribs.src)} />
         }
 
-        // TODO !!! replace p with span
         if (domNode.tagName !== 'sup') return
         const citationNumber = parseInt(domNode.childNodes[0].data)
         const citation = citations[citationNumber - 1]
         if (!citation) return
-        const { subtitle, body, src, alt } = citation
-        const title = strip(citation.title)
-        const subheader = strip(subtitle)
+        const { subtitle, body, src, alt, noMultiply } = citation
+        const title = stripParagraph(citation.title)
+        const subheader = stripParagraph(subtitle)
         return (
           <Citation
             number={citationNumber}
             header={title}
             subheader={subheader}
             alt={alt}
-            src={src}>
-            {parseNoSpan(body)}
+            src={src}
+            noMultiply={noMultiply}>
+            {parse(
+              noSpan(body),
+              {
+                replace: domNode => {
+                  if (domNode.tagName === 'p')
+                    return <SpanParagraph>{domToReact(domNode.children)}</SpanParagraph>
+                }
+              }
+            )}
           </Citation>
         )
       }
@@ -57,6 +65,10 @@ const NestedImg = styled(FilteredImg)`
     padding-bottom: ${nestedPadding}em;
   }
 
+`
+
+const SpanParagraph = styled.span`
+  display: block;
 `
 
 export default DrupalParagraph

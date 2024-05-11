@@ -4,40 +4,52 @@ import GridItem from './common/gridItem'
 import { useState } from 'react'
 import mixins from '../utils/mixins'
 import { emify } from '../utils/stylesBase'
+import { VERT_GAP } from '../constants/styleConstants'
+import apiServices from '../services/apiServices'
+import parserServices from '../services/parserServices'
 
-// TODO: drupal
-const About = () => {
+const About = ({ data }) => {
   const [isCreditShown, setIsCreditShown] = useState(false)
+  const aboutData = data && apiServices.getAbout(data)
+  const { about, credits } = aboutData ?? {}
+
+  const parser = html => parserServices.parseWithNoSpan(html, parserServices.linkToBlankConfig)
   return (
     <Cover>
-      <GridItem $end='span 8'>
-        <p>Perform — Produce is an MFA thesis by Rebecca Wilkinson at the Rhode Island School of Design. This project was developed in 2024 under the guidance and with the support of Pouya Ahmadi, Bethany Johns, Anther Kiley, Wael Morcos, Ali S. Qadeer, and Ryan Waller.</p>
-        <p>To see more of Rebecca’s work, visit her personal website <u>here</u>. If you’d like to get in touch, email rebeccawilkI@gmail.com.</p>
-      </GridItem>
-      {isCreditShown ?
-        <Credits $start={10} $end='span 3'>
-          <p>Site design: Rebecca Wilkinson</p>
-          <p>Site development: Donald Zhu</p>
-          <p>Font: OPS Placard</p>
-        </Credits> :
-        <CreditToggle $end={13}>
-          <button onClick={() => setIsCreditShown(true)}>
-            <div>?</div>
-          </button>
-        </CreditToggle>
+      {
+        aboutData &&
+        <>
+          <GridItem $end='span 8'>{parser(about)}</GridItem>
+          {isCreditShown ?
+            <Credits $start={10} $end='span 3'>
+              {parser(credits)}
+            </Credits> :
+            <CreditToggle $end={13}>
+              <button onClick={() => setIsCreditShown(true)}>
+                <div>?</div>
+              </button>
+            </CreditToggle>
+          }
+        </>
       }
     </Cover>
   )
 }
 
 const Credits = styled(GridItem)``
+
 const Cover = styled(Grid)`
   ${mixins.cover()}
+  padding-bottom: ${VERT_GAP};
 
   ${Credits} {
     > p {
       margin: 0;
     }
+  }
+
+  a {
+    ${mixins.underline}
   }
 `
 

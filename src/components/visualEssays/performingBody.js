@@ -12,6 +12,7 @@ import { quickArray } from '../../utils/commonUtils'
 import apiServices from '../../services/apiServices'
 import { getPx } from '../../utils/stylesBase'
 import useApi from '../../hooks/useApi'
+import useRender from '../../hooks/useRender'
 
 
 const entryPositions = [
@@ -50,7 +51,7 @@ const entryPositions = [
 ]
 
 
-const PerformingBody = ({ content }) => {
+const PerformingBody = ({ content, onRendered }) => {
   const { title, sectionId, entries, loading } = useApi(content, apiServices.getPerformingBody)
 
   const getColumnLength = () => (vh() - getPx(SECTION_HEADING_TOP) - getPx(SECTION_HEADING_PADDING_TOP)) / getLineHeight()
@@ -62,6 +63,7 @@ const PerformingBody = ({ content }) => {
   const onEnter = indices => setTextList(prev => _.uniq([...prev, ...indices].sort((a, b) => a - b)))
   const onExit = indices => setTextList(prev => _.uniq(_.without(prev, ...indices)))
 
+  useRender(onRendered, loading)
   const memoizedComponents = useMemo(() => {
     if (loading) return
     const children = []
@@ -103,6 +105,7 @@ const PerformingBody = ({ content }) => {
     }
     return children
   }, [entries])
+
 
   return (
     !loading &&

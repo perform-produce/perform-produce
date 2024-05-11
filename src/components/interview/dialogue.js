@@ -15,11 +15,12 @@ const Dialogue = ({
   ...rest
 }) => {
 
-  const sideAnnotations = annotations.map(({ src, alt, caption }, i) =>
+  const sideAnnotations = annotations.map(({ src, alt, caption, alignRight }, i) =>
     <SideAnnotation
       key={i}
       src={src}
       alt={alt}
+      alignRight={alignRight}
       caption={caption ? parserServices.parseWithNoSpan(caption) : undefined} />
   )
 

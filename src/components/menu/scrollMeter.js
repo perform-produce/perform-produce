@@ -3,14 +3,15 @@ import { addEventListener } from '../../utils/reactUtils'
 import { delta } from '../../utils/commonUtils'
 
 // Localizing state to avoid updating global
-const ScrollMeter = ({ altText }) => {
+const ScrollMeter = ({ altText, loaded }) => {
   const [data, setData] = useState({
-    pxScrolled: 0, lastScrollY: 0
+    pxScrolled: 0, lastScrollY: undefined
   })
 
   useEffect(() => addEventListener(window, 'scroll', () => {
+    if (!loaded) return
     setData(({ pxScrolled, lastScrollY }) => {
-      const scrolled = delta(window.scrollY, lastScrollY)
+      const scrolled = lastScrollY ? delta(window.scrollY, lastScrollY) : 0
       const newPxScrolled = pxScrolled + scrolled
 
       return {
@@ -19,7 +20,7 @@ const ScrollMeter = ({ altText }) => {
       }
 
     })
-  }), [])
+  }), [loaded])
 
 
   return (

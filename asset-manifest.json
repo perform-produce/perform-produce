@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.610e7886.css",
-    "main.js": "/static/js/main.4a650bd1.js",
+    "main.js": "/static/js/main.98d75aee.js",
     "static/js/453.6e30a6ed.chunk.js": "/static/js/453.6e30a6ed.chunk.js",
     "static/media/opsplacard-regular_RW.ttf": "/static/media/opsplacard-regular_RW.c8d6ae1adb4b111f0217.ttf",
     "static/media/opsplacard-italic.ttf": "/static/media/opsplacard-italic.82515c1a5ebbcd208ffe.ttf",
@@ -9,11 +9,11 @@
     "static/media/close.svg": "/static/media/close.8ca8cfaa61296e6773682f7f63011d78.svg",
     "index.html": "/index.html",
     "main.610e7886.css.map": "/static/css/main.610e7886.css.map",
-    "main.4a650bd1.js.map": "/static/js/main.4a650bd1.js.map",
+    "main.98d75aee.js.map": "/static/js/main.98d75aee.js.map",
     "453.6e30a6ed.chunk.js.map": "/static/js/453.6e30a6ed.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.610e7886.css",
-    "static/js/main.4a650bd1.js"
+    "static/js/main.98d75aee.js"
   ]
 }

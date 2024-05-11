@@ -12,6 +12,7 @@ import PerformingBody from './visualEssays/performingBody'
 import DougScottsRulers from './visualEssays/dougScottsRulers'
 import { getPx } from '../utils/stylesBase'
 import Footer from './footer'
+import { windowScrollTo } from '../utils/reactUtils'
 
 
 const Home = ({ contents, footer, allRendered, onRendered }) => {
@@ -23,8 +24,7 @@ const Home = ({ contents, footer, allRendered, onRendered }) => {
     const id = location.hash.replace(/^#/, '')
     const section = document.getElementById(id)
     if (!section) return window.scrollTo({ top: 0 })
-    const { top } = section.getBoundingClientRect()
-    window.scrollBy({ top: top + SECTION_PADDING_LINE_HEIGHT * getLineHeight() - getPx(SECTION_HEADING_TOP) })
+    windowScrollTo(section)
   }, [location, contents, allRendered])
 
   useEffect(() => {

@@ -7,6 +7,7 @@ import { SectionContext } from '../../contexts/context'
 import { useRef, useState } from 'react'
 import mixins from '../../utils/mixins'
 import { closest } from '../../utils/commonUtils'
+import { windowScrollTo } from '../../utils/reactUtils'
 
 
 const Section = ({ children, header, backgroundColor, getCitationData, ...rest }) => {
@@ -23,6 +24,11 @@ const Section = ({ children, header, backgroundColor, getCitationData, ...rest }
   }
 
   const toggleQuoteState = close => setIsQuoteOpened(close)
+
+  const hanldeHeaderClick = () => {
+    windowScrollTo(sectionRef.current)
+  }
+
   return (
     <SectionContext.Provider value={{
       backgroundColor,
@@ -31,7 +37,12 @@ const Section = ({ children, header, backgroundColor, getCitationData, ...rest }
     }}>
       <SectionContainer ref={sectionRef} as='section' {...rest}>
         <StyledSection $backgroundColor={backgroundColor}>
-          <SectionHeader as='h2' $end={'span 2'}>{header}</SectionHeader>
+          <SectionHeader
+            as='h2'
+            onClick={hanldeHeaderClick}
+            $end={'span 2'}>
+            {header}
+          </SectionHeader>
           {children}
         </StyledSection>
       </SectionContainer>
@@ -79,7 +90,9 @@ const StyledSection = styled(Grid)`
 `
 
 const SectionHeader = styled(GridItem)`
+  ${mixins.highZIndex(3)}
   position: sticky;
+  cursor: pointer;
   top: ${SECTION_HEADING_TOP};
   &, & span {
     ${mixins.underline}

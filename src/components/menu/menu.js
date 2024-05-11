@@ -85,9 +85,9 @@ const ContentLink = styled(LinkWrapper)`
   position: relative;
   left: -${hoverPadding};
   width: fit-content;
+
   div {
     display: block;
-    margin: ${lineHeight(1)} 0;
 
     a {
       display: block;

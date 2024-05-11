@@ -45,7 +45,10 @@ const Fade = forwardRef(({
     <FadeWrapper
       ref={ref}
       style={{ opacity }}
-      onTransitionEnd={() => setIsDisplayed(display)}
+      onTransitionEnd={() => {
+        console.log('end')
+        setIsDisplayed(display)
+      }}
       $timeout={timeout}>
       {render(animationState === 'exiting' ? prevState : state)}
     </FadeWrapper>

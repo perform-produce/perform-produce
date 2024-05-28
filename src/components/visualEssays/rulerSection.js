@@ -60,7 +60,8 @@ const RulerSection = ({ index, src, alt, width, description, units, purpose, chi
               width={spanCol(3.5)}
               shouldCenter={false}
               backgroundColor={COLORS.WHITE}>
-              While the rulers you see on this page are visually proportional to each other, they are not accurate 1:1 representations of their physical counterparts.
+              While the rulers you see on this page are visually proportional to each other,
+              they are not accurate 1:1 representations of their physical counterparts.
             </PopUpCitation>
           } />
       </MarkContainer>
@@ -107,7 +108,7 @@ const MarkContainer = styled(Container)`
   }
 `
 
-const vertPadding = `0.25em`
+const vertPadding = '0.25em'
 const SvgContainer = styled.div`
   width: fit-content;
   padding: ${vertPadding} 0.5em;

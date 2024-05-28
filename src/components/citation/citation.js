@@ -1,13 +1,13 @@
+import _ from 'lodash'
 import { useContext, useState } from 'react'
 import styled from 'styled-components'
-import _ from 'lodash'
-import WhiteSpace from '../common/whitespace'
-import { getGridData, getGridGapPx } from '../../utils/styleUtils'
 import { IMG_POPUP_GRID_SPAN, POP_UP_TIMEOUT, TEXT_POPUP_GRID_SPAN } from '../../constants/styleConstants'
+import { SectionContext } from '../../contexts/context'
 import { closest } from '../../utils/commonUtils'
+import { getGridData, getGridGapPx } from '../../utils/styleUtils'
+import WhiteSpace from '../common/whitespace'
 import Fade from './fade'
 import PopUpCitation from './popUpCitation'
-import { SectionContext } from '../../contexts/context'
 
 const Citation = ({ number, ...rest }) => {
   const { backgroundColor } = useContext(SectionContext)

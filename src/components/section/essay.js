@@ -1,9 +1,9 @@
-import apiServices from '../../services/apiServices'
-import Section from './section'
 import { COLORS } from '../../constants/styleConstants'
-import DrupalBlocks from '../drupal/drupalBlocks'
 import useApi from '../../hooks/useApi'
 import useRender from '../../hooks/useRender'
+import apiServices from '../../services/apiServices'
+import DrupalBlocks from '../drupal/drupalBlocks'
+import Section from './section'
 
 
 const Essay = ({ content, onRendered }) => {

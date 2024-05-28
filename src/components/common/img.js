@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import GridItem from './gridItem'
 import mixins from '../../utils/mixins'
 import FilteredImg from './filteredImg'
+import GridItem from './gridItem'
 
 const Img = ({ src, alt, caption, noMultiply, fullWidth }) => {
   return (

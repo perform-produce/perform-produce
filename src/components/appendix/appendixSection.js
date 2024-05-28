@@ -1,13 +1,20 @@
-import styled from 'styled-components'
-import mixins from '../../utils/mixins'
-import { COLORS, GRID_GAP, LINE_HEIGHT, SECTION_HEADING_TOP } from '../../constants/styleConstants'
-import { spanCol, wordSpace } from '../../utils/styleUtils'
-import Paragraphs from '../common/paragraphs'
 import { forwardRef } from 'react'
+import styled from 'styled-components'
+import { COLORS, GRID_GAP, LINE_HEIGHT, SECTION_HEADING_TOP } from '../../constants/styleConstants'
+import mixins from '../../utils/mixins'
+import { spanCol, wordSpace } from '../../utils/styleUtils'
 import { emify } from '../../utils/stylesBase'
+import Paragraphs from '../common/paragraphs'
 
 
-const AppendixSection = forwardRef(({ images, number, header, type, metrics, children }, ref) => {
+const AppendixSection = forwardRef(function AppendixSection({
+  images,
+  number,
+  header,
+  type,
+  metrics,
+  children
+}, ref) {
   return (
     <Section ref={ref} data-appendix-number={number}>
       <InnerContainer>
@@ -32,7 +39,11 @@ const AppendixSection = forwardRef(({ images, number, header, type, metrics, chi
   )
 })
 
-const HeaderContainer = styled.hgroup``
+const HeaderContainer = styled.hgroup`
+  h3 {
+    ${mixins.underline}
+  }
+`
 
 const Section = styled.section`
   ${mixins

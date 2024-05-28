@@ -1,18 +1,18 @@
-import { useEffect, useMemo, useState } from 'react'
-import styled from 'styled-components'
 import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
-import PerformingBodyContainer from './performingBodyContainer'
-import Section from '../section/section'
-import GridItem from '../common/gridItem'
-import { COLORS, SECTION_HEADING_TOP, SECTION_HEADING_PADDING_TOP, LINE_HEIGHT } from '../../constants/styleConstants'
-import mixins from '../../utils/mixins'
-import { getLineHeight, vh } from '../../utils/styleUtils'
-import { quickArray } from '../../utils/commonUtils'
-import apiServices from '../../services/apiServices'
-import { getPx } from '../../utils/stylesBase'
+import { useEffect, useMemo, useState } from 'react'
+import styled from 'styled-components'
+import { COLORS, LINE_HEIGHT, SECTION_HEADING_PADDING_TOP, SECTION_HEADING_TOP } from '../../constants/styleConstants'
 import useApi from '../../hooks/useApi'
 import useRender from '../../hooks/useRender'
+import apiServices from '../../services/apiServices'
+import { quickArray } from '../../utils/commonUtils'
+import mixins from '../../utils/mixins'
+import { getLineHeight, vh } from '../../utils/styleUtils'
+import { getPx } from '../../utils/stylesBase'
+import GridItem from '../common/gridItem'
+import Section from '../section/section'
+import PerformingBodyContainer from './performingBodyContainer'
 
 
 const entryPositions = [
@@ -54,14 +54,18 @@ const entryPositions = [
 const PerformingBody = ({ content, onRendered }) => {
   const { title, sectionId, entries, loading } = useApi(content, apiServices.getPerformingBody)
 
-  const getColumnLength = () => (vh() - getPx(SECTION_HEADING_TOP) - getPx(SECTION_HEADING_PADDING_TOP)) / getLineHeight()
+  const getColumnLength = () => (
+    vh() - getPx(SECTION_HEADING_TOP) - getPx(SECTION_HEADING_PADDING_TOP)
+  ) / getLineHeight()
   const [columnLength, setColumnLength] = useState(getColumnLength())
   const [textList, setTextList] = useState([])
   const { height } = useWindowSize()
   useEffect(() => setColumnLength(getColumnLength()), [height])
 
-  const onEnter = indices => setTextList(prev => _.uniq([...prev, ...indices].sort((a, b) => a - b)))
-  const onExit = indices => setTextList(prev => _.uniq(_.without(prev, ...indices)))
+  const onEnter = indices =>
+    setTextList(prev => _.uniq([...prev, ...indices].sort((a, b) => a - b)))
+  const onExit = indices =>
+    setTextList(prev => _.uniq(_.without(prev, ...indices)))
 
   useRender(onRendered, loading)
   const memoizedComponents = useMemo(() => {

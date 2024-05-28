@@ -1,12 +1,12 @@
-import styled from 'styled-components'
-import Grid from './common/grid'
-import GridItem from './common/gridItem'
 import { useState } from 'react'
-import mixins from '../utils/mixins'
-import { emify } from '../utils/stylesBase'
+import styled from 'styled-components'
 import { VERT_GAP } from '../constants/styleConstants'
 import apiServices from '../services/apiServices'
 import parserServices from '../services/parserServices'
+import mixins from '../utils/mixins'
+import { emify } from '../utils/stylesBase'
+import Grid from './common/grid'
+import GridItem from './common/gridItem'
 
 const About = ({ data }) => {
   const [isCreditShown, setIsCreditShown] = useState(false)
@@ -63,10 +63,7 @@ const CreditToggle = styled(GridItem)`
     aspect-ratio: 1;
     border-radius: 1em;
     cursor: pointer;
-
-    &:active {
-      background-color: #E5E5E5;
-    }
+    background-color: #E5E5E5;
 
     div {
       position: relative;

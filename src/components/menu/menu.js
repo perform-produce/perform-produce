@@ -1,14 +1,14 @@
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import GridItem from '../common/gridItem'
-import Grid from '../common/grid'
-import { conditionalStyle, lineHeight } from '../../utils/styleUtils'
 import { COLORS, MENU_PADDING_BOT, MENU_PADDING_TOP, STROKE_WIDTH } from '../../constants/styleConstants'
-import mixins from '../../utils/mixins'
-import MenuItem from './menuItem'
-import { useState } from 'react'
-import ScrollMeter from './scrollMeter'
 import apiServices from '../../services/apiServices'
+import mixins from '../../utils/mixins'
+import { conditionalStyle, lineHeight } from '../../utils/styleUtils'
+import Grid from '../common/grid'
+import GridItem from '../common/gridItem'
+import MenuItem from './menuItem'
+import ScrollMeter from './scrollMeter'
 
 const Menu = ({ contents, scrollMeterAltText, loaded }) => {
   const [isExpanded, setIsExpanded] = useState(false)

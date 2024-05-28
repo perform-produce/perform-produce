@@ -1,10 +1,10 @@
 import parse, { domToReact } from 'html-react-parser'
-import Paragraphs from '../common/paragraphs'
-import Citation from '../citation/citation'
-import styled from 'styled-components'
-import FilteredImg from '../common/filteredImg'
 import { useMemo } from 'react'
+import styled from 'styled-components'
 import parserServices from '../../services/parserServices'
+import Citation from '../citation/citation'
+import FilteredImg from '../common/filteredImg'
+import Paragraphs from '../common/paragraphs'
 
 const { noSpan, stripParagraph } = parserServices
 const DrupalParagraph = ({ content, citations = [] }) => {

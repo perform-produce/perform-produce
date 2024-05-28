@@ -1,12 +1,12 @@
-import styled from 'styled-components'
-import mixins from '../../utils/mixins'
-import { IMG_POPUP_GRID_SPAN, POP_UP_TOP_PADDING, TEXT_POPUP_GRID_SPAN } from '../../constants/styleConstants'
-import { conditionalStyle, wordSpace } from '../../utils/styleUtils'
-import GridItem from '../common/gridItem'
-import FilteredImg from '../common/filteredImg'
 import { useContext } from 'react'
+import styled from 'styled-components'
+import { IMG_POPUP_GRID_SPAN, POP_UP_TOP_PADDING, TEXT_POPUP_GRID_SPAN } from '../../constants/styleConstants'
 import { SectionContext } from '../../contexts/context'
 import { validateString } from '../../utils/commonUtils'
+import mixins from '../../utils/mixins'
+import { conditionalStyle, wordSpace } from '../../utils/styleUtils'
+import FilteredImg from '../common/filteredImg'
+import GridItem from '../common/gridItem'
 
 const PopUpCitation = ({
   x = 0,

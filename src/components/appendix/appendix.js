@@ -1,17 +1,17 @@
+import { useGSAP } from '@gsap/react'
+import { useWindowSize } from '@uidotdev/usehooks'
+import gsap from 'gsap'
+import he from 'he'
+import _ from 'lodash'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import gsap from "gsap"
-import { useGSAP } from "@gsap/react"
-import _ from 'lodash'
-import he from 'he'
-import GridItem from '../common/gridItem'
-import { spanCol } from '../../utils/styleUtils'
 import { COLORS, GAP, LINE_HEIGHT, SECTION_HEADING_TOP } from '../../constants/styleConstants'
-import mixins from '../../utils/mixins'
-import AppendixSection from './appendixSection'
-import { useWindowSize } from '@uidotdev/usehooks'
 import apiServices from '../../services/apiServices'
 import parserServices from '../../services/parserServices'
+import mixins from '../../utils/mixins'
+import { spanCol } from '../../utils/styleUtils'
+import GridItem from '../common/gridItem'
+import AppendixSection from './appendixSection'
 
 gsap.registerPlugin(useGSAP)
 
@@ -48,7 +48,7 @@ const Appendix = ({ data, onScroll }) => {
     appendices &&
     <AppendixGrid>
       <SideBar>
-        <h2>{title}</h2>
+        <h2 onClick={() => setIndex(0)}>{title}</h2>
         <div>
           <button onClick={() => handleClick(-1)}>←</button>
           <button onClick={() => handleClick(1)}>→</button>
@@ -85,8 +85,9 @@ const SideBar = styled(GridItem)`
   background-color: ${COLORS.GRAY};
 
   h2 {
-    margin-top: ${SECTION_HEADING_TOP};
     ${mixins.underline}
+    margin-top: ${SECTION_HEADING_TOP};
+    cursor: pointer;
   }
 
   div {

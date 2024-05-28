@@ -1,12 +1,12 @@
-import { COLORS } from '../../constants/styleConstants'
-import Section from '../section/section'
-import RulerSection from './rulerSection'
 import { useMemo } from 'react'
-import apiServices from '../../services/apiServices'
+import { COLORS } from '../../constants/styleConstants'
 import useApi from '../../hooks/useApi'
+import useRender from '../../hooks/useRender'
+import apiServices from '../../services/apiServices'
 import parserServices from '../../services/parserServices'
 import InterviewIntro from '../section/interviewIntro'
-import useRender from '../../hooks/useRender'
+import Section from '../section/section'
+import RulerSection from './rulerSection'
 
 const rulerWidths = [1, 2.25, 2, 2.25, 1, 3.25, 1.75, 4, 0.75]
 

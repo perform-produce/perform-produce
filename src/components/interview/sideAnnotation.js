@@ -1,13 +1,13 @@
-import styled from 'styled-components'
-import GridItem from '../common/gridItem'
-import { conditionalStyle, getLineHeight, getSpanCol, lineHeight, spanCol, toggleStyle, vw } from '../../utils/styleUtils'
-import FilteredImg from '../common/filteredImg'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { addEventListener } from '../../utils/reactUtils'
+import styled from 'styled-components'
 import { GLYPH_DESC, LINE_PADDING_HALF } from '../../constants/styleConstants'
 import { closest, quickArray, validateString } from '../../utils/commonUtils'
-import { getEm } from '../../utils/stylesBase'
 import mixins from '../../utils/mixins'
+import { addEventListener } from '../../utils/reactUtils'
+import { conditionalStyle, getLineHeight, getSpanCol, lineHeight, spanCol, toggleStyle, vw } from '../../utils/styleUtils'
+import { getEm } from '../../utils/stylesBase'
+import FilteredImg from '../common/filteredImg'
+import GridItem from '../common/gridItem'
 
 
 const SideAnnotation = ({ src, alt, caption, alignRight }) => {

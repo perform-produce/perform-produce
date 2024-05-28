@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import { loopObject, validateString } from './commonUtils'
 import { COLORS, GRID_COUNT, GRID_GAP, PERFORMING_BODY_GRID_COUNT, STROKE_WIDTH, VERT_GAP } from '../constants/styleConstants'
+import { loopObject, validateString } from './commonUtils'
 import { spanCol } from './styleUtils'
 
 const flex = (

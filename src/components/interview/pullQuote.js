@@ -1,13 +1,13 @@
-import styled from 'styled-components'
-import GridItem from '../common/gridItem'
-import mixins from '../../utils/mixins'
-import { COLORS, SECTION_PADDING_LINE_HEIGHT, STROKE_WIDTH } from '../../constants/styleConstants'
-import { lineHeight, spanCol } from '../../utils/styleUtils'
-import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
-import { useContext, useEffect } from 'react'
-import { SectionContext } from '../../contexts/context'
 import { useIntersectionObserver } from '@uidotdev/usehooks'
+import { useContext, useEffect } from 'react'
+import styled from 'styled-components'
+import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
+import { COLORS, SECTION_PADDING_LINE_HEIGHT, STROKE_WIDTH } from '../../constants/styleConstants'
+import { SectionContext } from '../../contexts/context'
+import mixins from '../../utils/mixins'
+import { lineHeight, spanCol } from '../../utils/styleUtils'
 import { emify } from '../../utils/stylesBase'
+import GridItem from '../common/gridItem'
 
 const PullQuote = ({ header, pageNumber, children }) => {
   const { isQuoteOpened, toggleQuoteState } = useContext(SectionContext)
@@ -25,6 +25,7 @@ const PullQuote = ({ header, pageNumber, children }) => {
   }, [entry])
 
   return (
+    null &&
     <Container as='aside' ref={ref} style={{ opacity: isQuoteOpened ? 1 : 0 }}>
       <Header>
         <h3>{header} PP.{pageNumber}</h3>

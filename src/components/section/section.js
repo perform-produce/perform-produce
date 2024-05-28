@@ -1,13 +1,13 @@
+import { useRef, useState } from 'react'
 import styled from 'styled-components'
-import GridItem from '../common/gridItem'
 import { IMG_POPUP_GRID_SPAN, SECTION_HEADING_TOP, SECTION_PADDING_LINE_HEIGHT, TEXT_POPUP_GRID_SPAN, VERT_GAP } from '../../constants/styleConstants'
+import { SectionContext } from '../../contexts/context'
+import { closest } from '../../utils/commonUtils'
+import mixins from '../../utils/mixins'
+import { windowScrollTo } from '../../utils/reactUtils'
 import { getGridData, getGridGapPx, lineHeight } from '../../utils/styleUtils'
 import Grid from '../common/grid'
-import { SectionContext } from '../../contexts/context'
-import { useRef, useState } from 'react'
-import mixins from '../../utils/mixins'
-import { closest } from '../../utils/commonUtils'
-import { windowScrollTo } from '../../utils/reactUtils'
+import GridItem from '../common/gridItem'
 
 
 const Section = ({ children, header, backgroundColor, getCitationData, ...rest }) => {
@@ -19,7 +19,8 @@ const Section = ({ children, header, backgroundColor, getCitationData, ...rest }
     const { colBounds, colWidth } = getGridData()
     const colCount = data.src ? IMG_POPUP_GRID_SPAN : TEXT_POPUP_GRID_SPAN
     const unadjustedPopUpLeft = left - (colWidth * colCount + getGridGapPx() * (colCount - 1)) / 2
-    const closestBound = closest(colBounds.slice(0, colBounds.length - colCount + 1), unadjustedPopUpLeft)
+    const closestBound =
+      closest(colBounds.slice(0, colBounds.length - colCount + 1), unadjustedPopUpLeft)
     return { ...data, x: closestBound, y: top + height / 2 - sectionRect.top }
   }
 

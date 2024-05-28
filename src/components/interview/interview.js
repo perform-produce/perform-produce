@@ -15,7 +15,9 @@ const Interview = ({ content, backgroundColor, onRendered }) => {
   useRender(onRendered, loading)
   return (
     !loading &&
-    <Section id={sectionId} header={parserServices.parseTitleWithName(title)} backgroundColor={backgroundColor}>
+    <Section
+      id={sectionId}
+      header={parserServices.parseTitleWithName(title)} backgroundColor={backgroundColor}>
       <InterviewIntro content={data} />
       <DrupalBlocks blocks={blocks} citations={citations} />
     </Section>

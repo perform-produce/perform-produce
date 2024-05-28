@@ -1,9 +1,9 @@
 import styled from 'styled-components'
-import GridItem from '../common/gridItem'
-import SideAnnotation from './sideAnnotation'
-import IndentText from '../common/indentText'
-import { emify } from '../../utils/stylesBase'
 import parserServices from '../../services/parserServices'
+import { emify } from '../../utils/stylesBase'
+import GridItem from '../common/gridItem'
+import IndentText from '../common/indentText'
+import SideAnnotation from './sideAnnotation'
 
 const SideAnnotations = props => <StyledAnnotation {...props} $end='span 4' />
 

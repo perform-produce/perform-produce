@@ -12,7 +12,9 @@ const MenuItem = ({ to, forceUnderline, hoverUnderlineOnly, ...rest }) => {
       to={to}
       onClick={() => console.time('click')}
       as={to ? undefined : 'p'}
-      $shouldUnderline={forceUnderline || (!hoverUnderlineOnly && location.pathname.match(pathRegex))}
+      $shouldUnderline={
+        forceUnderline || (!hoverUnderlineOnly && location.pathname.match(pathRegex))
+      }
       $cursor={to ? 'pointer' : 'default'} />
   )
 }

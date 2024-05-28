@@ -1,7 +1,7 @@
+import { ABOUT_UUID, APPENDIX_UUID, DRUPAL_ENDPOINT, FIELDS, FIELD_CLASSES, FOOTER_UUID, PARAGRAPH_CLASSES, PARAGRAPH_CLASS_NAME, UUID_LIST } from '../constants/apiConstants'
 import { validateString } from '../utils/commonUtils'
 import httpServices from './httpServices'
 import parserServices from './parserServices'
-import { PARAGRAPH_CLASS_NAME, PARAGRAPH_CLASSES, FIELD_CLASSES, FIELDS, UUID_LIST, DRUPAL_ENDPOINT, APPENDIX_UUID, FOOTER_UUID, ABOUT_UUID } from '../constants/apiConstants'
 
 const querySelectorArray = (elem, query) => Array.from(elem.querySelectorAll(query))
 const createHtml = htmlString => {
@@ -209,7 +209,8 @@ const parseInterviewSection = elem => {
 
 const getFieldItemQuery = (className, plural) => `.${className} > div.field__item${validateString(plural, 's')}`
 const getItem = (elem, className) => elem.querySelector(getFieldItemQuery(className))
-const getItems = (elem, className) => Array.from(elem.querySelectorAll(getFieldItemQuery(className, true))[0]?.children || [])
+const getItems = (elem, className) =>
+  Array.from(elem.querySelectorAll(getFieldItemQuery(className, true))[0]?.children || [])
 const getContent = (elem, className) => getItem(elem, className)?.innerHTML
 
 const getContentParsers = elem => ({

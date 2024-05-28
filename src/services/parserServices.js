@@ -1,7 +1,7 @@
-import { validateString } from '../utils/commonUtils'
-import parse from 'html-react-parser'
 import he from 'he'
+import parse from 'html-react-parser'
 import { DRUPAL_ENDPOINT } from '../constants/apiConstants'
+import { validateString } from '../utils/commonUtils'
 
 const linkToBlankConfig = {
   replace: domNode => {
@@ -15,7 +15,7 @@ const stripParagraph = (htmlString = '') => parseWithNoSpan((htmlString?.match(/
 
 const parseTitleWithName = title => {
   const [prefix, name] = title.split(': ')
-  return <>{prefix}: <br />{name}</>
+  return <>{prefix}:<br />{name}</>
 }
 
 const redirectSrc = src => validateString(src, DRUPAL_ENDPOINT + src?.replace(window.location.origin, ''))

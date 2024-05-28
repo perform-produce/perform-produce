@@ -1,11 +1,11 @@
 import styled from 'styled-components'
-import Grid from './common/grid'
-import GridItem from './common/gridItem'
-import Paragraphs from './common/paragraphs'
-import { lineHeight } from '../utils/styleUtils'
 import useApi from '../hooks/useApi'
 import apiServices from '../services/apiServices'
 import parserServices from '../services/parserServices'
+import { lineHeight } from '../utils/styleUtils'
+import Grid from './common/grid'
+import GridItem from './common/gridItem'
+import Paragraphs from './common/paragraphs'
 
 
 const Footer = ({ content }) => {

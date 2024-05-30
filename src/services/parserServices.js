@@ -1,28 +1,29 @@
 import he from 'he'
-import parse from 'html-react-parser'
+import parse, { domToReact } from 'html-react-parser'
+import UnderlineLink from '../components/common/underlineLink'
 import { DRUPAL_ENDPOINT } from '../constants/apiConstants'
 import { validateString } from '../utils/commonUtils'
 
-const linkToBlankConfig = {
+
+const noSpan = (htmlString = '') => he.decode(htmlString).replaceAll(/<\/?span>/g, '').replaceAll('&nbsp;', '').replaceAll(/\s+/g, ' ')
+const parseWithNoSpan = (htmlString = '', replace) => parse(noSpan(htmlString), {
   replace: domNode => {
     if (domNode.tagName === 'a')
-      domNode.attribs.target = '_blank'
+      return <UnderlineLink {...domNode.attribs} target='_blank'>{domToReact(domNode.children)}</UnderlineLink>
+    if (replace) return replace(domNode)
   }
-}
-const noSpan = (htmlString = '') => he.decode(htmlString).replaceAll(/<\/?span>/g, '').replaceAll('&nbsp;', '').replaceAll(/\s+/g, ' ')
-const parseWithNoSpan = (htmlString = '', config) => parse(noSpan(htmlString), config)
+})
 const stripParagraph = (htmlString = '') => parseWithNoSpan((htmlString?.match(/(?<=<p>)(.*?)(?=<\/p>)/) || [])[0])
 
 const parseTitleWithName = title => {
   const [prefix, name] = title.split(': ')
-  return <>{prefix}:<br />{name}</>
+  return <>{prefix}: <br />{name}</>
 }
 
 const redirectSrc = src => validateString(src, DRUPAL_ENDPOINT + src?.replace(window.location.origin, ''))
 
 
 const parserServices = {
-  linkToBlankConfig,
   noSpan,
   parseWithNoSpan,
   stripParagraph,

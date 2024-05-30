@@ -75,7 +75,7 @@ const StyledSection = styled(Grid)`
 
 
   ol li::before {
-    content: counter(list-counter) ") ";
+    content: counter(list-counter) ". ";
   }
 
   >:not(:first-child, hgroup) {

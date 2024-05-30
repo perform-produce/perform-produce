@@ -13,7 +13,7 @@ const About = ({ data }) => {
   const aboutData = data && apiServices.getAbout(data)
   const { about, credits } = aboutData ?? {}
 
-  const parser = html => parserServices.parseWithNoSpan(html, parserServices.linkToBlankConfig)
+  const parser = html => parserServices.parseWithNoSpan(html)
   return (
     <Cover>
       {

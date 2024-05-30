@@ -88,6 +88,7 @@ const ContentLink = styled(LinkWrapper)`
 
   div {
     display: block;
+    margin-bottom: ${lineHeight(0.5)};
 
     a {
       display: block;

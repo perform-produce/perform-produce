@@ -35,7 +35,7 @@ const RulerSection = ({ index, src, alt, width, description, units, purpose, chi
       <Container $start={2} $end={8}>
         <Description>
           <p>Description: {description}</p>
-          <p>{isLast ? 'Scale' : 'Units of Measurement'}: {units}</p>
+          <p>{isLast ? 'Scales' : 'Units of Measurement'}: {units}</p>
           <p>Purpose: {purpose}</p>
         </Description>
         <Details>

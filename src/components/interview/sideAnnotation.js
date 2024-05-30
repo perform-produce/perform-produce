@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { GLYPH_DESC, LINE_PADDING_HALF } from '../../constants/styleConstants'
+import { GLYPH_CAP_SPACE, GLYPH_DESC, LINE_PADDING_HALF } from '../../constants/styleConstants'
 import { closest, quickArray, validateString } from '../../utils/commonUtils'
 import mixins from '../../utils/mixins'
 import { addEventListener } from '../../utils/reactUtils'
@@ -30,7 +30,7 @@ const SideAnnotation = ({ src, alt, caption, alignRight }) => {
 
     const croppedHeight = closest(
       quickArray(50, multiplier =>
-        getLineHeight(multiplier) + getEm(1 + LINE_PADDING_HALF - GLYPH_DESC)),
+        getLineHeight(multiplier) + getEm(1 + LINE_PADDING_HALF - GLYPH_DESC - GLYPH_CAP_SPACE)),
       uncroppedHeight
     )
 

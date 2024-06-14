@@ -1,16 +1,15 @@
 import styled from 'styled-components'
-import { GAP } from '../../constants/styleConstants'
+import { DESKTOP_GAP, DESKTOP_LINE_HEIGHT } from '../../constants/styleConstants'
 import mixins from '../../utils/mixins'
-import { lineHeight } from '../../utils/styleUtils'
 
 const Grid = styled.div`
   ${mixins.grid}
-  width: calc(100vw - ${GAP} * 2);
-  padding-left: ${GAP};
-  padding-right: ${GAP};
+  width: calc(100vw - ${DESKTOP_GAP} * 2);
+  padding-left: ${DESKTOP_GAP};
+  padding-right: ${DESKTOP_GAP};
 
   p:not(:first-of-type) {
-    margin-top: ${lineHeight(1)};
+    margin-top: ${DESKTOP_LINE_HEIGHT};
   }
 `
 

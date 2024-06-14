@@ -1,17 +1,17 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import styled from 'styled-components'
-import { VERT_GAP } from '../constants/styleConstants'
-import apiServices from '../services/apiServices'
+import { DESKTOP_VERT_GAP } from '../constants/styleConstants'
+import { GlobalContext } from '../contexts/context'
 import parserServices from '../services/parserServices'
 import mixins from '../utils/mixins'
-import { emify } from '../utils/stylesBase'
+import { remify } from '../utils/stylesBase'
 import Grid from './common/grid'
 import GridItem from './common/gridItem'
 
-const About = ({ data }) => {
+const About = () => {
   const [isCreditShown, setIsCreditShown] = useState(false)
-  const aboutData = data && apiServices.getAbout(data)
-  const { about, credits } = aboutData ?? {}
+  const aboutData = useContext(GlobalContext)
+  const { about, credits } = aboutData?.about ?? {}
 
   const parser = html => parserServices.parseWithNoSpan(html)
   return (
@@ -40,7 +40,7 @@ const Credits = styled(GridItem)``
 
 const Cover = styled(Grid)`
   ${mixins.cover()}
-  padding-bottom: ${VERT_GAP};
+  padding-bottom: ${DESKTOP_VERT_GAP};
 
   ${Credits} {
     > p {
@@ -59,7 +59,7 @@ const CreditToggle = styled(GridItem)`
 
   button {
     ${mixins.border()}
-    width: ${emify(50)};
+    width: ${remify(50)};
     aspect-ratio: 1;
     border-radius: 1em;
     cursor: pointer;

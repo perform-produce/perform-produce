@@ -1,24 +1,27 @@
-import apiServices from '../../services/apiServices'
-import Section from '../section/section'
-import DrupalBlocks from '../drupal/drupalBlocks'
-import useApi from '../../hooks/useApi'
-import parserServices from '../../services/parserServices'
-import InterviewIntro from '../section/interviewIntro'
+import { useContext } from 'react'
+import { GlobalContext } from '../../contexts/context'
 import useRender from '../../hooks/useRender'
+import parserServices from '../../services/parserServices'
+import DrupalBlocks from '../drupal/drupalBlocks'
+import InterviewIntro from '../section/interviewIntro'
+import Section from '../section/section'
+import useIsMobile from '../../hooks/useIsMobile'
 
 
-const Interview = ({ content, backgroundColor, onRendered }) => {
-  const data = useApi(content, apiServices.getInterview)
-  const { sectionId, title, blocks, citations, loading } = data
+const Interview = ({ uuid, backgroundColor, onRendered }) => {
+  const interviewData = useContext(GlobalContext)?.interviews
+    .find(interview => interview.uuid === uuid)
+  const { sectionId, title, blocks, citations } = interviewData ?? {}
+  const isMobile = useIsMobile()
 
-
-  useRender(onRendered, loading)
+  useRender(onRendered, !interviewData)
   return (
-    !loading &&
+    interviewData &&
     <Section
       id={sectionId}
-      header={parserServices.parseTitleWithName(title)} backgroundColor={backgroundColor}>
-      <InterviewIntro content={data} />
+      header={isMobile ? undefined : parserServices.parseTitleWithName(title)}
+      backgroundColor={backgroundColor}>
+      <InterviewIntro content={interviewData} />
       <DrupalBlocks blocks={blocks} citations={citations} />
     </Section>
   )

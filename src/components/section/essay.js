@@ -1,17 +1,18 @@
+import { useContext } from 'react'
 import { COLORS } from '../../constants/styleConstants'
-import useApi from '../../hooks/useApi'
+import { GlobalContext } from '../../contexts/context'
 import useRender from '../../hooks/useRender'
-import apiServices from '../../services/apiServices'
 import DrupalBlocks from '../drupal/drupalBlocks'
 import Section from './section'
 
 
-const Essay = ({ content, onRendered }) => {
-  const { sectionId, title, blocks, citations, loading } = useApi(content, apiServices.getEssay)
+const Essay = ({ uuid, onRendered }) => {
+  const essayData = useContext(GlobalContext)?.essays.find(essay => essay.uuid === uuid)
+  const { sectionId, title, blocks, citations } = essayData ?? {}
 
-  useRender(onRendered, loading)
+  useRender(onRendered, !essayData)
   return (
-    !loading &&
+    essayData &&
     <Section id={sectionId} header={title} backgroundColor={COLORS.GRAY}>
       <DrupalBlocks blocks={blocks} citations={citations} />
     </Section>

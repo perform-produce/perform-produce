@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import { COLORS, MENU_PADDING_BOT, MENU_PADDING_TOP, STROKE_WIDTH } from '../../constants/styleConstants'
-import apiServices from '../../services/apiServices'
+import { COLORS, DESKTOP_MENU_PADDING_BOT, DESKTOP_MENU_PADDING_TOP, STROKE_WIDTH } from '../../constants/styleConstants'
+import { GlobalContext } from '../../contexts/context'
 import mixins from '../../utils/mixins'
 import { conditionalStyle, lineHeight } from '../../utils/styleUtils'
 import Grid from '../common/grid'
@@ -10,10 +10,10 @@ import GridItem from '../common/gridItem'
 import MenuItem from './menuItem'
 import ScrollMeter from './scrollMeter'
 
-const Menu = ({ contents, scrollMeterAltText, loaded }) => {
+const Menu = ({ scrollMeterAltText, loaded }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const handleFoldMenu = () => setIsExpanded(false)
-  const links = contents && apiServices.getMenuLinks(contents)
+  const links = useContext(GlobalContext)?.menuLinks
 
   const location = useLocation()
   return (
@@ -65,8 +65,8 @@ const Menu = ({ contents, scrollMeterAltText, loaded }) => {
 
 const MenuContainer = styled(Grid)`
   ${mixins.highZIndex(5)}
-  padding-top: ${MENU_PADDING_TOP};
-  padding-bottom: ${MENU_PADDING_BOT};
+  padding-top: ${DESKTOP_MENU_PADDING_TOP};
+  padding-bottom: ${DESKTOP_MENU_PADDING_BOT};
   position: fixed;
   top: 0;
   background-color: ${COLORS.WHITE};

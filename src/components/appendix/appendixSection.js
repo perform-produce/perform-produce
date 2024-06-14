@@ -1,10 +1,10 @@
 import { forwardRef } from 'react'
 import styled from 'styled-components'
-import { COLORS, GRID_GAP, LINE_HEIGHT, SECTION_HEADING_TOP } from '../../constants/styleConstants'
+import { COLORS, GRID_GAP, DESKTOP_LINE_HEIGHT, SECTION_HEADING_TOP } from '../../constants/styleConstants'
 import mixins from '../../utils/mixins'
 import { spanCol, wordSpace } from '../../utils/styleUtils'
-import { emify } from '../../utils/stylesBase'
 import Paragraphs from '../common/paragraphs'
+import { remify } from '../../utils/stylesBase'
 
 
 const AppendixSection = forwardRef(function AppendixSection({
@@ -16,7 +16,7 @@ const AppendixSection = forwardRef(function AppendixSection({
   children
 }, ref) {
   return (
-    <Section ref={ref} data-appendix-number={number}>
+    <Section ref={ref} data-appendix-number={number} tabIndex={-1}>
       <InnerContainer>
         <ImgContainer>
           <p>{number}</p>
@@ -59,7 +59,7 @@ const Section = styled.section`
 const InnerContainer = styled.div`
   background-color: ${COLORS.GRAY};
   padding-top: ${SECTION_HEADING_TOP};
-  height: max(fit-content, calc(100% - ${SECTION_HEADING_TOP}));
+  min-height: calc(100% - ${SECTION_HEADING_TOP});
 
   > ${HeaderContainer} {
     h3, p {
@@ -73,7 +73,7 @@ const ImgContainer = styled.div`
   ${mixins.grid(3)};
   column-gap: 0;
   grid-template-columns: ${imgNotationWidth} 1fr ${imgNotationWidth};
-  margin-bottom: ${emify(140)};
+  margin-bottom: ${remify(140)};
 
   > div {
     ${mixins.flex('center', 'initial')}
@@ -92,7 +92,7 @@ const ImgContainer = styled.div`
 `
 
 const BodyContainer = styled.div`
-  padding: ${LINE_HEIGHT}em 0;
+  padding: ${DESKTOP_LINE_HEIGHT} 0;
 `
 
 export default AppendixSection

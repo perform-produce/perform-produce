@@ -6,7 +6,7 @@ import { COLORS, SECTION_PADDING_LINE_HEIGHT, STROKE_WIDTH } from '../../constan
 import { SectionContext } from '../../contexts/context'
 import mixins from '../../utils/mixins'
 import { lineHeight, spanCol } from '../../utils/styleUtils'
-import { emify } from '../../utils/stylesBase'
+import { remify } from '../../utils/stylesBase'
 import GridItem from '../common/gridItem'
 
 const PullQuote = ({ header, pageNumber, children }) => {
@@ -42,7 +42,7 @@ const Container = styled(GridItem)`
   background-color: ${COLORS.WHITE};
   left: ${spanCol(1, 1, 1)};
   top: ${lineHeight(SECTION_PADDING_LINE_HEIGHT + 5)};
-  padding: ${emify(40)};
+  padding: ${remify(40)};
 
   ${mixins
     .chain()
@@ -58,7 +58,7 @@ const Header = styled.div`
   }
 
   > * {
-    padding-bottom: ${emify(20)};
+    padding-bottom: ${remify(20)};
   }
 
   h3 {
@@ -82,10 +82,5 @@ const Header = styled.div`
 
   margin-bottom: ${lineHeight(5)};
 `
-
-const PageNumber = styled.p`
-  padding-top: ${emify(100)};
-`
-
 
 export default PullQuote

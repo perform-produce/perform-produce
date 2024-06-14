@@ -1,13 +1,17 @@
+
 import { useContext } from 'react'
 import styled from 'styled-components'
-import { IMG_POPUP_GRID_SPAN, POP_UP_TOP_PADDING, TEXT_POPUP_GRID_SPAN } from '../../constants/styleConstants'
+import { IMG_POPUP_GRID_SPAN, MOBILE_GAP, POP_UP_TOP_PADDING, TEXT_POPUP_GRID_SPAN } from '../../constants/styleConstants'
 import { SectionContext } from '../../contexts/context'
+import useIsMobile from '../../hooks/useIsMobile'
 import { validateString } from '../../utils/commonUtils'
 import mixins from '../../utils/mixins'
 import { conditionalStyle, wordSpace } from '../../utils/styleUtils'
 import FilteredImg from '../common/filteredImg'
 import GridItem from '../common/gridItem'
+import useClickAway from '../../hooks/useClickAway'
 
+const DEBUG = false
 const PopUpCitation = ({
   x = 0,
   y = 0,
@@ -24,13 +28,18 @@ const PopUpCitation = ({
   handleMouseLeave
 }) => {
   const { onPopUpEnter } = useContext(SectionContext)
+  const isMobile = useIsMobile()
+
+  const ref = useClickAway(DEBUG ? () => {} : handleMouseLeave)
+
   return (
     <PopUp
+      ref={ref}
       style={{ left: x, top: y }}
       onMouseEnter={onPopUpEnter}
-      onMouseLeave={handleMouseLeave}
-      as={'span'}
-      $width={width}
+      onMouseLeave={DEBUG ? undefined : handleMouseLeave}
+      as='span'
+      $width={isMobile ? `calc(100vw - ${MOBILE_GAP} * 2)` : width}
       $span={src ? IMG_POPUP_GRID_SPAN : TEXT_POPUP_GRID_SPAN}
       $shouldCenter={shouldCenter}
       $backgroundColor={backgroundColor}>
@@ -55,7 +64,8 @@ const PopUp = styled(GridItem)`
   position: absolute;
   box-sizing: border-box;
   margin: 0;
-  border: 1.5px dashed black;
+  border: 1px dashed black;
+
   transform: ${conditionalStyle('$shouldCenter', 'translateY(-50%)')};
   overflow: hidden;
   cursor: default;

@@ -66,8 +66,10 @@ export const FIELDS = mapApiConstants(
     FOOTER_COPYRIGHT: 'footer_copyright',
     FOOTER_CREDENTIALS: 'footer_credentials',
     FOOTER_DISCLAIMER: 'footer_disclaimer',
+    RULER_SECTION: 'ruler_section',
     ABOUT: 'about',
-    CREDITS: 'credits'
+    CREDITS: 'credits',
+    APPENDIX: 'appendix'
   },
   'field_'
 )
@@ -88,5 +90,8 @@ export const UUID_LIST = [
   'f658fa2e-a44c-49fb-ac7e-be2a4597916d',
   RULERS_UUID
 ]
+
+export const ESSAY_TYPE = 'Essay'
+export const INTERVIEW_TYPE = 'Interview'
 
 export const DRUPAL_ENDPOINT = 'https://rw-sux.iamasq.works'

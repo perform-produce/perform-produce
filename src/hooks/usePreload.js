@@ -1,27 +1,18 @@
 import _ from 'lodash'
 import { useEffect } from 'react'
-import apiServices from '../services/apiServices'
+import { onImgLoad } from '../utils/commonUtils'
 
 function preloadImg(sources) {
   const src = sources.shift()
-  new Promise(res => {
-    const img = document.createElement('img')
-    img.onload = () => res(src)
-    img.src = src
-  }).then(() => {
+  onImgLoad(src, () => {
     if (sources.length) preloadImg(sources)
+    else console.log('All loaded!')
   })
 }
 
-const usePreload = isLoading => {
+const usePreload = imageData =>
   useEffect(() => {
-    if (isLoading) {
-      const { images } = apiServices
-      const sources = _.uniq(images)
-
-      preloadImg(sources)
-    }
-  }, [isLoading])
-}
+    if (imageData) preloadImg(Object.keys(imageData))
+  }, [imageData])
 
 export default usePreload

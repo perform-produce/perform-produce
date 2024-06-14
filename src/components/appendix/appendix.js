@@ -3,24 +3,24 @@ import { useWindowSize } from '@uidotdev/usehooks'
 import gsap from 'gsap'
 import he from 'he'
 import _ from 'lodash'
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { COLORS, GAP, LINE_HEIGHT, SECTION_HEADING_TOP } from '../../constants/styleConstants'
-import apiServices from '../../services/apiServices'
+import { COLORS, DESKTOP_GAP, SECTION_HEADING_TOP } from '../../constants/styleConstants'
+import { GlobalContext } from '../../contexts/context'
 import parserServices from '../../services/parserServices'
 import mixins from '../../utils/mixins'
-import { spanCol } from '../../utils/styleUtils'
+import { lineHeight, spanCol } from '../../utils/styleUtils'
 import GridItem from '../common/gridItem'
 import AppendixSection from './appendixSection'
 
 gsap.registerPlugin(useGSAP)
 
-const Appendix = ({ data, onScroll }) => {
+const Appendix = ({ onScroll }) => {
   const [index, setIndex] = useState(0)
   const containerRef = useRef()
   const innerContainerRef = useRef()
 
-  const appendixData = data && apiServices.getAppendices(data)
+  const appendixData = useContext(GlobalContext)?.appendices
   const { title, appendices } = appendixData ?? {}
 
   const { width } = useWindowSize()
@@ -43,7 +43,6 @@ const Appendix = ({ data, onScroll }) => {
   const handleClick = increment =>
     setIndex(_.clamp(index + increment, 0, appendices.length - 1))
 
-
   return (
     appendices &&
     <AppendixGrid>
@@ -64,7 +63,7 @@ const Appendix = ({ data, onScroll }) => {
               header={title}
               type={type}
               metrics={he.decode(metrics)} >
-              {parserServices.parseWithNoSpan(body)}
+              {parserServices.parseWithNoSpan(body, true)}
             </AppendixSection>
           })}
         </SectionInnerContainer>
@@ -81,17 +80,18 @@ const AppendixGrid = styled.div`
 const SideBar = styled(GridItem)`
   ${mixins.spansCol(2)}
   height: 100vh;
-  padding-left: ${GAP};
+  padding-left: ${DESKTOP_GAP};
   background-color: ${COLORS.GRAY};
 
   h2 {
     ${mixins.underline}
+    width: fit-content;
     margin-top: ${SECTION_HEADING_TOP};
     cursor: pointer;
   }
 
   div {
-    margin-top: ${LINE_HEIGHT * 0.5}em;
+    margin-top: ${lineHeight(0.5)};
   }
 
   button {

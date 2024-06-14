@@ -1,10 +1,9 @@
 import { useWindowSize } from '@uidotdev/usehooks'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { COLORS, DESKTOP_GAP, PERFORMING_BODY_FIGMA_COL_WIDTH, PERFORMING_BODY_GRID_COUNT, PERFORMING_BODY_GRID_SPAN, POP_UP_TIMEOUT } from '../../constants/styleConstants'
+import { COLORS, MOBILE_GAP, MOBILE_GRID_COUNT, PERFORMING_BODY_FIGMA_COL_WIDTH_MOBILE, POP_UP_TIMEOUT } from '../../constants/styleConstants'
 import parserServices from '../../services/parserServices'
 import { quickArray } from '../../utils/commonUtils'
-import mixins from '../../utils/mixins'
 import { addEventListener } from '../../utils/reactUtils'
 import { extractStyle, vh, vw } from '../../utils/styleUtils'
 import { getPx } from '../../utils/stylesBase'
@@ -18,7 +17,6 @@ const PerformingBodyContainer = ({
   data,
   margin,
   startIndex,
-  alignEnd,
   onEnter,
   onExit
 }) => {
@@ -43,19 +41,18 @@ const PerformingBodyContainer = ({
     else onExit(indices)
   }, [isIntersecting])
 
-  const getColWidth = () => (vw() - getPx(DESKTOP_GAP) * 2) / PERFORMING_BODY_GRID_COUNT
+  const getColWidth = () => (vw() - getPx(MOBILE_GAP) * 2) / MOBILE_GRID_COUNT
   const handleMouseEnter = (e, i) => {
     const citationRect = e.target.getBoundingClientRect()
-    const colWidth = getColWidth()
-    const { width, height } = citationRect
-    const { citation } = data[i]
-    const { header, subheader, toRight } = citation
+    const { height } = citationRect
+    const { citation, image } = data[i]
+    const { header, subheader } = citation
 
     setCitationData({
       header: parserServices.stripParagraph(header),
       subheader: parserServices.stripParagraph(subheader),
       number: startIndex + i,
-      x: toRight ? width - colWidth : -colWidth * (PERFORMING_BODY_GRID_SPAN - 1),
+      x: -getColWidth() * (image.start - 1),
       y: height / 2
     })
   }
@@ -65,8 +62,9 @@ const PerformingBodyContainer = ({
       key={i}
       $start={start}
       $end={end}
-      onMouseLeave={() => setCitationData()}>
-      <Container>
+      onMouseLeave={() => setCitationData()}
+    >
+      <CitationContainer>
         <Fade
           display={citationData?.number === startIndex + i}
           state={citationData}
@@ -75,10 +73,9 @@ const PerformingBodyContainer = ({
             (state = {}) => <PopUpCitation
               {...state}
               number={state.number + 1}
-              width={`calc((100vw - ${DESKTOP_GAP} * 2) / ${PERFORMING_BODY_GRID_COUNT} * ${PERFORMING_BODY_GRID_SPAN})`}
               backgroundColor={COLORS.BROWN} />
           } />
-      </Container>
+      </CitationContainer>
       <FilteredImg
         src={src}
         alt={alt}
@@ -91,22 +88,26 @@ const PerformingBodyContainer = ({
   return (
     <ImgContainer
       ref={containerRef}
-      $margin={margin / PERFORMING_BODY_FIGMA_COL_WIDTH * getColWidth()}
-      $alignEnd={alignEnd}>
+      $margin={margin / PERFORMING_BODY_FIGMA_COL_WIDTH_MOBILE * getColWidth()}>
       {data.map((entryData, i) => renderImg(entryData.image, i))}
     </ImgContainer>
   )
 }
 
-const Container = styled.div`
-  position: absolute;
+const CitationContainer = styled.div`
   display: flex;
+  position: relative;
 `
 
 const ImgContainer = styled(GridItem)`
-  ${mixins.visualEssayGrid}
+  display: grid;
+  grid-template-columns: repeat(${MOBILE_GRID_COUNT}, 1fr);
+  column-gap: 0;
   margin-top: ${extractStyle('$margin', 0)}px;
-  align-items: ${({ $alignEnd }) => $alignEnd ? 'end' : ''};
+
+  > div {
+    display: flex;
+  }
 `
 
 export default PerformingBodyContainer

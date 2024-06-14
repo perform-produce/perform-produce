@@ -1,4 +1,5 @@
-import { ABOUT_UUID, APPENDIX_UUID, DRUPAL_ENDPOINT, FIELDS, FIELD_CLASSES, FOOTER_UUID, PARAGRAPH_CLASSES, PARAGRAPH_CLASS_NAME, UUID_LIST } from '../constants/apiConstants'
+import _ from 'lodash'
+import { ABOUT_UUID, APPENDIX_UUID, DRUPAL_ENDPOINT, ESSAY_TYPE, FIELDS, FIELD_CLASSES, FOOTER_UUID, INTERVIEW_TYPE, PARAGRAPH_CLASSES, PARAGRAPH_CLASS_NAME, PERFORMING_BODY_UUID, RULERS_UUID, UUID_LIST } from '../constants/apiConstants'
 import { validateString } from '../utils/commonUtils'
 import httpServices from './httpServices'
 import parserServices from './parserServices'
@@ -10,16 +11,19 @@ const createHtml = htmlString => {
   return tempDiv
 }
 
-const images = []
-const extractImgData = html => {
+const extractImgData = img => {
+  if (!img) return {}
+  const { src, alt, width, height } = img
+  const parsedSrc = parserServices.redirectSrc(src)
+  return { src: parsedSrc, alt, width, height }
+}
+
+const extractHtmlImgData = html => {
   if (!html) return {}
   if (typeof html === 'string')
     html = createHtml(html)
 
-  const { src, alt } = html.querySelector('img')
-  const parsedSrc = parserServices.redirectSrc(src)
-  images.push(parsedSrc)
-  return { src: parsedSrc, alt }
+  return extractImgData(html.querySelector('img'))
 }
 
 const getBlocks = content => querySelectorArray(
@@ -32,19 +36,64 @@ const getBlocks = content => querySelectorArray(
 const getCitations = content =>
   getBlocks(content[FIELDS.HOVER_CITATIONS]).map(parseCitations)
 
+
+const extractDomImg = html => Array.from(createHtml(html).getElementsByTagName('img'))
+
 const data = (
   async () => {
     const { data } = (await httpServices.get(`${DRUPAL_ENDPOINT}/web/json/contents`))
-    return {
+
+    const results = {
       contents: UUID_LIST.map(uuid => data.find(content => content.uuid === uuid)),
       footer: data.find(({ uuid }) => uuid === FOOTER_UUID),
       appendix: data.find(({ uuid }) => uuid === APPENDIX_UUID),
       about: data.find(({ uuid }) => uuid === ABOUT_UUID)
     }
+
+    const imageData = {}
+
+    const addData = img => {
+      const { src, width, height } = extractImgData(img)
+      imageData[src] = { width, height }
+    }
+    results.contents.forEach(
+      content => Object.values(
+        _.pick(content, [
+          FIELDS.ESSAY_CONTENT,
+          FIELDS.HOVER_CITATIONS,
+          FIELDS.INTERVIEW_SECTION,
+          FIELDS.PERFORMING_BODY,
+          FIELDS.RULER_SECTION
+        ])
+      ).forEach(html => {
+        if (html) extractDomImg(html).forEach(img => addData(img))
+      })
+    )
+
+    extractDomImg(results.appendix[FIELDS.APPENDIX]).forEach(img => addData(img))
+
+    const testData = { ...imageData }
+
+    return {
+      results,
+      imageData,
+      menuLinks: getMenuLinks(results.contents),
+      essays: results.contents
+        .filter(content => content.type === ESSAY_TYPE)
+        .map(content => getEssay(content)),
+      interviews: results.contents
+        .filter(content => content.type === INTERVIEW_TYPE)
+        .map(content => getInterview(content)),
+      dougScottsRulers: getDougScottsRulers(
+        results.contents.find(({ uuid }) => uuid === RULERS_UUID)),
+      performingBody: getPerformingBody(
+        results.contents.find(({ uuid }) => uuid === PERFORMING_BODY_UUID)),
+      footer: getFooter(results.footer),
+      appendices: getAppendices(results.appendix),
+      about: getAbout(results.about)
+    }
   }
 )()
-
-
 
 const getBasicData = (content, {
   blockKey,
@@ -98,7 +147,7 @@ const getPerformingBody = content => ({
     .map(entry => {
       const { getContent } = getContentParsers(entry)
       return {
-        ...extractImgData(entry),
+        ...extractHtmlImgData(entry),
         title: getContent(FIELD_CLASSES.CITATION_TITLE),
         subtitle: getContent(FIELD_CLASSES.CITATION_SUBTITLE),
         text: getContent(FIELD_CLASSES.CITATION_THE_BODY_AS),
@@ -113,7 +162,7 @@ const getDougScottsRulers = content => ({
     .map(entry => {
       const { getContent } = getContentParsers(entry)
       return {
-        ...extractImgData(entry),
+        ...extractHtmlImgData(entry),
         description: getContent(FIELD_CLASSES.RULER_DESCRIPTION),
         units: getContent(FIELD_CLASSES.RULER_UNITS),
         purpose: getContent(FIELD_CLASSES.RULER_PURPOSE),
@@ -128,7 +177,6 @@ const getFooter = content => ({
   disclaimer: content[FIELDS.FOOTER_DISCLAIMER],
 })
 
-
 const getAppendices = ({ title, ...appendices }) => ({
   title,
   appendices: getBlocks(appendices.field_appendix)
@@ -137,8 +185,8 @@ const getAppendices = ({ title, ...appendices }) => ({
       return {
         number: getContent(FIELD_CLASSES.APPENDIX_NUMBER),
         images: [
-          extractImgData(getContent(FIELD_CLASSES.APPENDIX_IMAGE_1)),
-          extractImgData(getContent(FIELD_CLASSES.APPENDIX_IMAGE_2)),
+          extractHtmlImgData(getContent(FIELD_CLASSES.APPENDIX_IMAGE_1)),
+          extractHtmlImgData(getContent(FIELD_CLASSES.APPENDIX_IMAGE_2)),
         ],
         title: getContent(FIELD_CLASSES.APPENDIX_TITLE),
         type: getContent(FIELD_CLASSES.APPENDIX_TYPE),
@@ -152,7 +200,6 @@ const getAbout = content => ({
   about: content[FIELDS.ABOUT],
   credits: content[FIELDS.CREDITS]
 })
-
 
 const getBlockParser = (block, type, parser) => ({ type, content: parser(block) })
 const parseBlocks = (content, fieldName) => {
@@ -168,7 +215,7 @@ const parseBlocks = (content, fieldName) => {
 const parseCitations = elem => {
   const { getContent, getItem } = getContentParsers(elem)
   const result = {
-    ...extractImgData(getItem(FIELD_CLASSES.CITATION_IMG)),
+    ...extractHtmlImgData(getItem(FIELD_CLASSES.CITATION_IMG)),
     title: getContent(FIELD_CLASSES.CITATION_TITLE),
     subtitle: getContent(FIELD_CLASSES.CITATION_SUBTITLE),
     body: getContent(FIELD_CLASSES.CITATION_BODY),
@@ -183,7 +230,7 @@ const parseImg = elem => {
 
   const { getItem, getContent } = getContentParsers(elem)
   return {
-    ...extractImgData(getItem(FIELD_CLASSES.IMG)),
+    ...extractHtmlImgData(getItem(FIELD_CLASSES.IMG)),
     caption: getContent(FIELD_CLASSES.IMG_CAPTION),
     noMultiply: getContent(FIELD_CLASSES.IMG_NO_MULTIPLY) === 'No Multiply',
     fullWidth: getContent(FIELD_CLASSES.IMG_FULL_WIDTH) === 'Full Width'
@@ -219,17 +266,6 @@ const getContentParsers = elem => ({
   getContent: className => getContent(elem, className)
 })
 
-const apiServices = {
-  data,
-  images,
-  getMenuLinks,
-  getEssay,
-  getInterview,
-  getPerformingBody,
-  getDougScottsRulers,
-  getFooter,
-  getAppendices,
-  getAbout,
-}
+const apiServices = { data }
 
 export default apiServices

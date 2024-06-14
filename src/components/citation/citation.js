@@ -3,15 +3,16 @@ import { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { IMG_POPUP_GRID_SPAN, POP_UP_TIMEOUT, TEXT_POPUP_GRID_SPAN } from '../../constants/styleConstants'
 import { SectionContext } from '../../contexts/context'
+import useIsMobile from '../../hooks/useIsMobile'
 import { closest } from '../../utils/commonUtils'
 import { getGridData, getGridGapPx } from '../../utils/styleUtils'
-import WhiteSpace from '../common/whitespace'
 import Fade from './fade'
 import PopUpCitation from './popUpCitation'
 
 const Citation = ({ number, ...rest }) => {
   const { backgroundColor } = useContext(SectionContext)
   const [citationData, setCitationData] = useState()
+  const isMobile = useIsMobile()
 
   const onEnter = e => {
     const citationRect = e.target.getBoundingClientRect()
@@ -21,12 +22,14 @@ const Citation = ({ number, ...rest }) => {
     const colCount = rest.src ? IMG_POPUP_GRID_SPAN : TEXT_POPUP_GRID_SPAN
 
     const unadjustedPopUpLeft = left - (colWidth * colCount + getGridGapPx() * (colCount - 1)) / 2
-    const closestBound = closest(colBounds.slice(0, colBounds.length - colCount + 1), unadjustedPopUpLeft)
+    const closestBound =
+      closest(colBounds.slice(0, colBounds.length - colCount + 1), unadjustedPopUpLeft)
+
     setCitationData({
       ...rest,
       number,
-      x: closestBound - parentRect.left,
-      y: height / 2
+      x: isMobile ? 0 : closestBound - parentRect.left,
+      y: -height / 2
     })
   }
 
@@ -44,7 +47,6 @@ const Citation = ({ number, ...rest }) => {
               backgroundColor={backgroundColor} />
           } />
       </Container>
-      <WhiteSpace> </WhiteSpace>
       <StyledCitation onMouseEnter={onEnter}>
         [{_.padStart(`${number}`, 2, '0')}]
       </StyledCitation >

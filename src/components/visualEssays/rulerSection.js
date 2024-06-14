@@ -4,16 +4,27 @@ import _ from 'lodash'
 import GridItem from '../common/gridItem'
 import { conditionalStyle, getGridData, getLineHeight, lineHeight, spanCol, toggleStyle } from '../../utils/styleUtils'
 import IndentText from '../common/indentText'
-import { COLORS, GLYPH_CAP_SPACE, GLYPH_DESC, LINE_PADDING_HALF, POP_UP_TIMEOUT, POP_UP_TOP_PADDING, RULER_SECTION_MARGIN_TOP, STROKE_WIDTH } from '../../constants/styleConstants'
+import { COLORS, GLYPH_CAP_SPACE, GLYPH_DESC, DESKTOP_HALF_LINE_PADDING, POP_UP_TIMEOUT, POP_UP_TOP_PADDING, RULER_SECTION_MARGIN_TOP, STROKE_WIDTH, DESKTOP_LINE_HEIGHT } from '../../constants/styleConstants'
 import FilteredImg from '../common/filteredImg'
 import { ReactComponent as MarkSvg } from '../../assets/svg/mark.svg'
 import mixins from '../../utils/mixins'
 import Fade from '../citation/fade'
 import PopUpCitation from '../citation/popUpCitation'
-import { emify, getPx } from '../../utils/stylesBase'
+import { remify, getPx } from '../../utils/stylesBase'
 
 
-const RulerSection = ({ index, src, alt, width, description, units, purpose, children }) => {
+const RulerSection = ({
+  index,
+  src,
+  alt,
+  width,
+  height,
+  rulerWidth,
+  description,
+  units,
+  purpose,
+  children
+}) => {
   const [citationData, setCitationData] = useState()
 
   const number = _.padStart(index + 1, 2, '0')
@@ -68,11 +79,11 @@ const RulerSection = ({ index, src, alt, width, description, units, purpose, chi
       <ImgContainer
         $start={isLong ? 12 : 9}
         $end={13}
-        $colSpan={width}
+        $colSpan={rulerWidth}
         $left={left}
         $isLong={isLong}
         $isLast={isLast}>
-        <FilteredImg src={src} alt={alt} />
+        <FilteredImg src={src} alt={alt} width={width} height={height} />
       </ImgContainer>
     </>
   )
@@ -81,7 +92,7 @@ const RulerSection = ({ index, src, alt, width, description, units, purpose, chi
 
 const Description = styled.div``
 const Details = styled(IndentText)`
-  margin-top: ${lineHeight(1)};
+  margin-top: ${DESKTOP_LINE_HEIGHT};
 `
 
 const Container = styled(GridItem)`
@@ -97,14 +108,14 @@ const NumberContainer = styled(Container)`
 `
 
 const MYSTERY_FIX_VALUE = 3
-const nonTypeMarginTop = `calc(${LINE_PADDING_HALF + GLYPH_CAP_SPACE}em + ${MYSTERY_FIX_VALUE}px)`
+const nonTypeMarginTop = `calc(${DESKTOP_HALF_LINE_PADDING} + ${GLYPH_CAP_SPACE}em + ${MYSTERY_FIX_VALUE}px)`
 const MarkContainer = styled(Container)`
   ${mixins.flex('initial', 'center')}
   position: relative;
 
   p {
     position: absolute;
-    left: calc(${spanCol(0.5)} + ${emify(25)});
+    left: calc(${spanCol(0.5)} + ${remify(25)});
   }
 `
 

@@ -6,19 +6,25 @@ import Citation from '../citation/citation'
 import FilteredImg from '../common/filteredImg'
 import Paragraphs from '../common/paragraphs'
 
-const { noSpan, stripParagraph } = parserServices
+const { noSpan, getParsedLink, stripParagraph } = parserServices
 const DrupalParagraph = ({ content, citations = [] }) => {
-  const memoizedContent = useMemo(() => {
-    return parse(noSpan(content), {
+  const memoizedContent = useMemo(() =>
+    parse(noSpan(content), {
       replace: domNode => {
         const hasNestedImg = domNode.tagName === 'p' &&
           domNode.firstChild.tagName === 'img'
         if (domNode.tagName === 'img' || hasNestedImg) {
           const imgNode = hasNestedImg ? domNode.firstChild : domNode
+          const { attribs } = imgNode
+          const { src, width, height } = attribs
           return <NestedImg
             {...domNode.attribs}
-            src={parserServices.redirectSrc(imgNode.attribs.src)} />
+            src={parserServices.redirectSrc(src)}
+            width={width}
+            height={height} />
         }
+
+        if (domNode.tagName === 'a') return getParsedLink(domNode)
 
         if (domNode.tagName !== 'sup') return
         const citationNumber = parseInt(domNode.childNodes[0].data)
@@ -28,27 +34,29 @@ const DrupalParagraph = ({ content, citations = [] }) => {
         const title = stripParagraph(citation.title)
         const subheader = stripParagraph(subtitle)
         return (
-          <Citation
-            number={citationNumber}
-            header={title}
-            subheader={subheader}
-            alt={alt}
-            src={src}
-            noMultiply={noMultiply}>
-            {parse(
-              noSpan(body),
-              {
-                replace: domNode => {
-                  if (domNode.tagName === 'p')
-                    return <SpanParagraph>{domToReact(domNode.children)}</SpanParagraph>
+          <>
+            <> </>
+            <Citation
+              number={citationNumber}
+              header={title}
+              subheader={subheader}
+              alt={alt}
+              src={src}
+              noMultiply={noMultiply}>
+              {parse(
+                noSpan(body),
+                {
+                  replace: domNode => {
+                    if (domNode.tagName === 'p')
+                      return <SpanParagraph>{domToReact(domNode.children)}</SpanParagraph>
+                  }
                 }
-              }
-            )}
-          </Citation>
+              )}
+            </Citation>
+          </>
         )
       }
-    })
-  }, [content, citations])
+    }), [content, citations])
 
   return <Paragraphs>{memoizedContent}</Paragraphs>
 }
@@ -56,6 +64,7 @@ const DrupalParagraph = ({ content, citations = [] }) => {
 const nestedPadding = 0.5
 const NestedImg = styled(FilteredImg)`
   width: 100%;
+  display: flex;
 
   &:not(:first-child) {
     padding-top: ${nestedPadding}em;

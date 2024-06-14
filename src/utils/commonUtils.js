@@ -1,3 +1,5 @@
+import { detect } from 'detect-browser'
+
 export const validateString = (validatorOrString, string) => {
   if (!string) return validatorOrString || ''
   return validatorOrString ? string : ''
@@ -11,7 +13,8 @@ export const loopObject = (object, callback) => {
   return object
 }
 
-export const quickArray = (length, callback = i => i) => Array(length).fill(0).map((_, i) => callback(i))
+export const quickArray = (length, callback = i => i) =>
+  Array(length).fill(0).map((_, i) => callback(i))
 
 export const roundTo = (number, lower, upper) =>
   delta(number, lower) <= delta(number, upper) ? lower : upper
@@ -27,3 +30,14 @@ export const closest = (array, number) => array[closestIndex(array, number)]
 
 export const mod = (number, upper) => (upper + number % upper) % upper
 
+export const onImgLoad = (src, callback) =>
+  new Promise(res => {
+    const img = new Image()
+    img.onload = () => res(src)
+    img.src = src
+  }).then(() => callback())
+
+export const isFirefox = () => {
+  const name = detect()?.name
+  return name === 'fxios' || name === 'firefox'
+}

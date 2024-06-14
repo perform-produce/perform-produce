@@ -6,11 +6,14 @@ import { validateString } from '../utils/commonUtils'
 
 
 const noSpan = (htmlString = '') => he.decode(htmlString).replaceAll(/<\/?span>/g, '').replaceAll('&nbsp;', '').replaceAll(/\s+/g, ' ')
-const parseWithNoSpan = (htmlString = '', replace) => parse(noSpan(htmlString), {
+const getParsedLink = (domNode, noFocus) =>
+  <UnderlineLink {...domNode.attribs} target='_blank' tabIndex={noFocus ? -1 : undefined}>
+    {domToReact(domNode.children)}
+  </UnderlineLink>
+
+const parseWithNoSpan = (htmlString = '', noFocus) => parse(noSpan(htmlString), {
   replace: domNode => {
-    if (domNode.tagName === 'a')
-      return <UnderlineLink {...domNode.attribs} target='_blank'>{domToReact(domNode.children)}</UnderlineLink>
-    if (replace) return replace(domNode)
+    if (domNode.tagName === 'a') return getParsedLink(domNode, noFocus)
   }
 })
 const stripParagraph = (htmlString = '') => parseWithNoSpan((htmlString?.match(/(?<=<p>)(.*?)(?=<\/p>)/) || [])[0])
@@ -25,6 +28,7 @@ const redirectSrc = src => validateString(src, DRUPAL_ENDPOINT + src?.replace(wi
 
 const parserServices = {
   noSpan,
+  getParsedLink,
   parseWithNoSpan,
   stripParagraph,
   parseTitleWithName,

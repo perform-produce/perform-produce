@@ -1,7 +1,8 @@
 import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import mixins from '../../utils/mixins'
-import { extractStyle } from '../../utils/styleUtils'
+import mixins from '../../../utils/mixins'
+import { extractStyle } from '../../../utils/styleUtils'
+
 
 const MenuItem = ({ to, forceUnderline, hoverUnderlineOnly, ...rest }) => {
   const location = useLocation()

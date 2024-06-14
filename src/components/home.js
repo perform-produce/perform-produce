@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import { COLORS } from '../constants/styleConstants'
+import { COLORS, DESKTOP_MENU_HEIGHT, DESKTOP_VERT_GAP } from '../constants/styleConstants'
 import mixins from '../utils/mixins'
 import { windowScrollTo } from '../utils/reactUtils'
 import Grid from './common/grid'
@@ -13,7 +13,7 @@ import DougScottsRulers from './visualEssays/dougScottsRulers'
 import PerformingBody from './visualEssays/performingBody'
 
 
-const Home = ({ contents, footer, allRendered, onRendered }) => {
+const Home = ({ contents, allRendered, onRendered }) => {
   const location = useLocation()
   const [childrenRendered, setChildrenRendered] = useState(new Set())
 
@@ -22,7 +22,7 @@ const Home = ({ contents, footer, allRendered, onRendered }) => {
     const id = location.hash.replace(/^#/, '')
     const section = document.getElementById(id)
     if (!section) return window.scrollTo({ top: 0 })
-    windowScrollTo(section)
+    windowScrollTo(section, false)
   }, [location, contents, allRendered])
 
   useEffect(() => {
@@ -51,25 +51,42 @@ const Home = ({ contents, footer, allRendered, onRendered }) => {
     <>
       <Cover>
         <GridItem $end='span 8'>
-          <p><i>Perform — Produce</i> defines graphic design as a discipline rooted in work rather than a process that springs forth spontaneously from the creative imagination.</p>
-          <p><i>Perform — Produce</i> is driven by strict constraints and machine-like craft, but employs outdated tools and the physical body in processes of making that are stubbornly slow.</p>
-          <p><i>Perform — Produce</i> deploys performance as a tactic to expose the otherwise invisible labor of design and its valuation.</p>
-          <p><i>Perform — Produce</i> proposes a new organizational model that integrates live happenings, cross-disciplinary dialogue, and self-publishing to consider not just the product of design but also the conditions under which it is produced.</p>
+          <p>
+            <i>Perform — Produce</i> defines graphic design as a discipline
+            rooted in work rather than a process that springs forth spontaneously
+            from the creative imagination.
+          </p>
+          <p>
+            <i>Perform — Produce</i> is driven by strict constraints and
+            machine-like craft, but employs outdated tools and the physical
+            body in processes of making that are stubbornly slow.
+          </p>
+          <p>
+            <i>Perform — Produce</i> deploys performance as a tactic to expose
+            the otherwise invisible labor of design and its valuation.
+          </p>
+          <p>
+            <i>Perform — Produce</i> proposes a new organizational model that
+            integrates live happenings, cross-disciplinary dialogue, and self-publishing
+            to consider not just the product of design but also the conditions under which
+            it is produced.
+          </p>
         </GridItem>
       </Cover>
       {
-        contents && footer &&
+        contents &&
         <>
-          {contents?.map((content, i) => {
+          {contents.map((content, i) => {
             const { type } = content
             const Component = componentMap[type]
             return <Component
               key={i}
               content={content}
+              uuid={content.uuid}
               onRendered={() => onChildRendered(i)}
               backgroundColor={type === 'Interview' ? interviewColorMap.shift() : undefined} />
           })}
-          <Footer content={footer} />
+          <Footer />
         </>
       }
 

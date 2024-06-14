@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { COLORS, GRID_COUNT, GRID_GAP, PERFORMING_BODY_GRID_COUNT, STROKE_WIDTH, VERT_GAP } from '../constants/styleConstants'
+import { COLORS, GRID_COUNT, GRID_GAP, DESKTOP_MENU_HEIGHT, PERFORMING_BODY_GRID_COUNT, STROKE_WIDTH, DESKTOP_VERT_GAP, MOBILE_VERT_GAP, MOBILE_MENU_HEIGHT, MOBILE_QUERY, MOBILE_GRID_GAP, MOBILE_GRID_COUNT, MOBILE_LINE_HEIGHT } from '../constants/styleConstants'
 import { loopObject, validateString } from './commonUtils'
 import { spanCol } from './styleUtils'
 
@@ -14,14 +14,24 @@ const flex = (
 `
 
 const grid = colCount => ({ $start, $end }) => {
-  let cols
-  if ($start ?? $end)
-    cols = ($end ?? GRID_COUNT) - ($start ?? 0)
-  else cols = typeof colCount === 'number' ? colCount : GRID_COUNT
+  const getCols = isMobile => {
+    const gridCount = isMobile ? MOBILE_GRID_COUNT : GRID_COUNT
+    let cols
+    if ($start ?? $end)
+      cols = ($end ?? gridCount) - ($start ?? 0)
+    else cols = typeof colCount === 'number' ? colCount : gridCount
+    return cols
+  }
+
   return `
       display: grid;
-      grid-template-columns: repeat(${cols}, 1fr);
+      grid-template-columns: repeat(${getCols(false)}, 1fr);
       column-gap: ${GRID_GAP};
+
+      @media (${MOBILE_QUERY}) {
+        grid-template-columns: repeat(${getCols(true)}, 1fr);
+        column-gap: ${MOBILE_GRID_GAP};
+      }
       margin: 0;
     `
 }
@@ -52,11 +62,26 @@ const border = isBottom => `
   border${validateString(isBottom, '-bottom')}: black solid ${STROKE_WIDTH};
 `
 
-const cover = () => `
-  height: calc(100vh - ${VERT_GAP});
-  align-items: end;
-  background-color: ${COLORS.GRAY};
-`
+const cover = isMobile => {
+  const vertTopGap = isMobile ? MOBILE_LINE_HEIGHT : DESKTOP_VERT_GAP
+  const menuHeight = isMobile ? MOBILE_MENU_HEIGHT : DESKTOP_MENU_HEIGHT
+  return `
+    height: calc(100svh - ${vertTopGap} * 2 - ${menuHeight});
+    min-height: fit-content;
+    align-items: end;
+    padding-top: calc(${vertTopGap} + ${menuHeight});
+    background-color: ${COLORS.GRAY};
+
+    @media (${MOBILE_QUERY}) {
+      height: calc(100svh - ${vertTopGap} - ${MOBILE_VERT_GAP} / 2 - ${menuHeight});
+      padding-bottom: calc(${MOBILE_VERT_GAP} / 2);
+    }
+
+    div {
+      margin-top: auto;
+    }
+  `
+}
 
 const noScrollBar = () => `
   -ms-overflow-style: none;

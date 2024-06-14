@@ -1,4 +1,6 @@
-export const DEFAULT_EM = 30
-export const emify = px => `${px / DEFAULT_EM}em`
-export const getEm = (em = 1) => parseInt(getComputedStyle(document.body).fontSize) * em
-export const getPx = emString => parseFloat(emString.replace(/em$/, '')) * getEm()
+export const getRem = (rem = 1) =>
+  parseInt(getComputedStyle(document.documentElement).fontSize) * rem
+export const getFontSize = (em = 1) => parseInt(getComputedStyle(document.body).fontSize) * em
+
+export const getPx = remString => parseFloat(remString.replace(/rem$/, '')) * getRem()
+export const remify = px => `${px / 16}rem`

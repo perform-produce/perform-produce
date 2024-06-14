@@ -1,11 +1,10 @@
 import { useWindowSize } from '@uidotdev/usehooks'
 import _ from 'lodash'
-import { useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { COLORS, LINE_HEIGHT, SECTION_HEADING_PADDING_TOP, SECTION_HEADING_TOP } from '../../constants/styleConstants'
-import useApi from '../../hooks/useApi'
+import { COLORS, DESKTOP_LINE_HEIGHT, SECTION_HEADING_PADDING_TOP, SECTION_HEADING_TOP } from '../../constants/styleConstants'
+import { GlobalContext } from '../../contexts/context'
 import useRender from '../../hooks/useRender'
-import apiServices from '../../services/apiServices'
 import { quickArray } from '../../utils/commonUtils'
 import mixins from '../../utils/mixins'
 import { getLineHeight, vh } from '../../utils/styleUtils'
@@ -51,8 +50,9 @@ const entryPositions = [
 ]
 
 
-const PerformingBody = ({ content, onRendered }) => {
-  const { title, sectionId, entries, loading } = useApi(content, apiServices.getPerformingBody)
+const PerformingBody = ({ onRendered }) => {
+  const data = useContext(GlobalContext)?.performingBody
+  const { title, sectionId, entries } = data ?? {}
 
   const getColumnLength = () => (
     vh() - getPx(SECTION_HEADING_TOP) - getPx(SECTION_HEADING_PADDING_TOP)
@@ -67,12 +67,12 @@ const PerformingBody = ({ content, onRendered }) => {
   const onExit = indices =>
     setTextList(prev => _.uniq(_.without(prev, ...indices)))
 
-  useRender(onRendered, loading)
+  useRender(onRendered, !data)
   const memoizedComponents = useMemo(() => {
-    if (loading) return
+    if (!data) return
     const children = []
     const getData = i => {
-      const { title, subtitle, src, alt } = entries[i]
+      const { title, subtitle, src, alt, width, height } = entries[i]
       const [start, end, citationPosition, positionConfigs] = entryPositions[i]
       return {
         entryData: {
@@ -81,7 +81,7 @@ const PerformingBody = ({ content, onRendered }) => {
             subheader: subtitle,
             toRight: citationPosition
           },
-          image: { start, end, src, alt },
+          image: { start, end, src, alt, width, height },
         },
         positionConfigs: positionConfigs || {}
       }
@@ -112,7 +112,7 @@ const PerformingBody = ({ content, onRendered }) => {
 
 
   return (
-    !loading &&
+    data &&
     <Section
       id={sectionId}
       header={title}
@@ -144,7 +144,7 @@ const TextContainer = styled(GridItem)`
   ${mixins.visualEssayGrid}
   height: calc(100vh - ${SECTION_HEADING_TOP} - ${SECTION_HEADING_PADDING_TOP});
   position: sticky;
-  top: calc(${SECTION_HEADING_TOP} + ${LINE_HEIGHT}em);
+  top: calc(${SECTION_HEADING_TOP} + ${DESKTOP_LINE_HEIGHT});
 `
 
 const List = styled(GridItem)`
@@ -152,7 +152,7 @@ const List = styled(GridItem)`
   padding: 0;
   margin: 0;
   position: relative;
-  top: -${LINE_HEIGHT}em;
+  top: -${DESKTOP_LINE_HEIGHT};
 `
 
 export default PerformingBody

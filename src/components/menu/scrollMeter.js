@@ -11,7 +11,7 @@ const ScrollMeter = ({ altText, loaded }) => {
   useEffect(() => addEventListener(window, 'scroll', () => {
     if (!loaded) return
     setData(({ pxScrolled, lastScrollY }) => {
-      const scrolled = lastScrollY ? delta(window.scrollY, lastScrollY) : 0
+      const scrolled = delta(window.scrollY, lastScrollY ?? 0)
       const newPxScrolled = pxScrolled + scrolled
 
       return {

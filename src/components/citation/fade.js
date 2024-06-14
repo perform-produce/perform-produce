@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { extractStyle } from '../../utils/styleUtils'
 import usePrevious from '../../hooks/usePrevious'
 
-const Fade = forwardRef(({
+const Fade = forwardRef(function Fade({
   display,
   state,
   timeout = 100,
@@ -13,7 +13,7 @@ const Fade = forwardRef(({
   onEnterEnd = _.noop,
   onExitStart = _.noop,
   onExitEnd = _.noop
-}, ref) => {
+}, ref) {
   const prevState = usePrevious(state)
   const [isDisplayed, setIsDisplayed] = useState(display)
   const [opacity, setOpacity] = useState(display ? 1 : 0)
@@ -45,10 +45,7 @@ const Fade = forwardRef(({
     <FadeWrapper
       ref={ref}
       style={{ opacity }}
-      onTransitionEnd={() => {
-        console.log('end')
-        setIsDisplayed(display)
-      }}
+      onTransitionEnd={() => setIsDisplayed(display)}
       $timeout={timeout}>
       {render(animationState === 'exiting' ? prevState : state)}
     </FadeWrapper>

@@ -7,11 +7,11 @@ import InterviewIntro from '../section/interviewIntro'
 import Section from '../section/section'
 import RulerSection from './rulerSection'
 
-const rulerWidths = [1, 2.25, 2, 2.25, 1, 3.25, 1.75, 4, 0.75]
+const rulerWidths = [2.5, 6, 6, 6, 3, 6, 5, 6, 3]
 
 const DougScottsRulers = ({ onRendered }) => {
   const rulersData = useContext(GlobalContext)?.dougScottsRulers
-  const { sectionId, title, entries } = rulersData ?? {}
+  const { sectionId, entries } = rulersData ?? {}
 
   const { parseWithNoSpan, stripParagraph } = parserServices
 
@@ -37,7 +37,7 @@ const DougScottsRulers = ({ onRendered }) => {
     rulersData &&
     <Section
       id={sectionId}
-      header={parserServices.parseTitleWithName(title)}
+      header={undefined}
       backgroundColor={COLORS.GREEN}>
       <InterviewIntro content={rulersData} />
       {memoizedComponents}

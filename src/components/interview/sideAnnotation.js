@@ -1,25 +1,31 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { GLYPH_CAP_SPACE, GLYPH_DESC, LINE_PADDING_HALF } from '../../constants/styleConstants'
-import { closest, quickArray, validateString } from '../../utils/commonUtils'
+import { GLYPH_CAP_SPACE, GLYPH_DESC, DESKTOP_LINE_HEIGHT, DESKTOP_HALF_LINE_PADDING, MOBILE_QUERY, DESKTOP_QUERY, MOBILE_FIGURE_GAP, MOBILE_VERT_GAP, MOBILE_LINE_HEIGHT } from '../../constants/styleConstants'
+import { closest, quickArray } from '../../utils/commonUtils'
 import mixins from '../../utils/mixins'
 import { addEventListener } from '../../utils/reactUtils'
-import { conditionalStyle, getLineHeight, getSpanCol, lineHeight, spanCol, toggleStyle, vw } from '../../utils/styleUtils'
-import { getEm } from '../../utils/stylesBase'
+import { conditionalStyle, getLineHeight, getSpanCol, lineHeight, toggleStyle, vw } from '../../utils/styleUtils'
+import { getFontSize, getPx, remify } from '../../utils/stylesBase'
 import FilteredImg from '../common/filteredImg'
 import GridItem from '../common/gridItem'
+import useIsMobile from '../../hooks/useIsMobile'
 
 
 const SideAnnotation = ({ src, alt, caption, alignRight }) => {
   const [imgHeight, setImgHeight] = useState()
-  const [width, setWidth] = useState(vw())
+  const [imgWidth, setImgWidth] = useState(vw())
   const imgRef = useRef()
   const aspectRatio = useRef()
+  const isMobile = useIsMobile()
 
-  useEffect(() => addEventListener(window, 'resize', () =>
-    setWidth(vw())), [])
+  useEffect(() => {
+    if (isMobile) return
+    return addEventListener(window, 'resize', () =>
+      setImgWidth(vw()))
+  }, [isMobile])
 
   useLayoutEffect(() => {
+    if (isMobile) return
     const img = imgRef.current
     const { height, width: w } = img.getBoundingClientRect()
     const width = w * (alignRight ? (getSpanCol(3) / getSpanCol(4)) : 1)
@@ -30,18 +36,26 @@ const SideAnnotation = ({ src, alt, caption, alignRight }) => {
 
     const croppedHeight = closest(
       quickArray(50, multiplier =>
-        getLineHeight(multiplier) + getEm(1 + LINE_PADDING_HALF - GLYPH_DESC - GLYPH_CAP_SPACE)),
+        getLineHeight(multiplier) +
+        getFontSize(1 - GLYPH_DESC - GLYPH_CAP_SPACE) +
+        (getPx(DESKTOP_LINE_HEIGHT) - getFontSize()) / 2
+      ),
       uncroppedHeight
     )
 
     setImgHeight(croppedHeight)
-  }, [src, width])
+  }, [isMobile, src, imgWidth])
 
   return (
     <Figure as='figure' $noCaption={!caption} $alignRight={alignRight}>
-      <FilteredImg style={{ height: imgHeight }} src={src} alt={alt} as='img' ref={imgRef} />
+      <FilteredImg
+        style={{ height: isMobile ? undefined : imgHeight }}
+        as='img'
+        src={src}
+        alt={alt}
+        ref={imgRef} />
       {caption &&
-        <FigCaption as='figcaption'>{alignRight ? '↗' : '↑'}<br />{caption}</FigCaption>}
+        <Caption as='figcaption'>{(alignRight && !isMobile) ? '↗' : '↑'}<br />{caption}</Caption>}
     </Figure>
   )
 }
@@ -52,21 +66,37 @@ const Figure = styled(GridItem)`
   flex-direction: column;
 
   &:not(:last-child){
-    margin-bottom: calc(${LINE_PADDING_HALF}em + ${toggleStyle('$noCaption', `${GLYPH_DESC}em`, lineHeight(2))
-  });
+    margin-bottom: calc(${DESKTOP_HALF_LINE_PADDING} + ${toggleStyle('$noCaption', `${GLYPH_DESC}em`, lineHeight(2))});
+    @media (${MOBILE_QUERY}) {
+      margin-bottom: ${toggleStyle('$noCaption', remify(10), 0)};
+    }
   }
 
-
   img {
-    ${conditionalStyle('$alignRight', mixins.spansCol(3))}
+    @media (${DESKTOP_QUERY}) {
+      ${conditionalStyle('$alignRight', mixins.spansCol(3))}
+      margin-top: ${DESKTOP_HALF_LINE_PADDING};
+    }
+
     vertical-align: top;
     align-self: flex-end;
-    margin-top: ${LINE_PADDING_HALF}em;
+  }
+
+  &:last-child > figcaption {
+    @media (${MOBILE_QUERY}) {
+      padding-bottom: ${lineHeight(2, true)};
+    }
   }
 `
 
-const FigCaption = styled.figcaption`
-  padding-top: ${GLYPH_DESC}em;
+const Caption = styled.figcaption`
+  @media (${MOBILE_QUERY}) {
+    padding: ${MOBILE_FIGURE_GAP} 0 ${lineHeight(1.5, true)}; // TODO: Q
+  }
+
+  @media (${DESKTOP_QUERY}) {
+    padding-top: ${GLYPH_DESC}em;
+  }
   text-align: left;
 `
 

@@ -19,7 +19,6 @@ const Home = ({ contents, allRendered, onRendered }) => {
   const [childrenRendered, setChildrenRendered] = useState(new Set())
   const browserIsFirefox = isFirefox()
 
-
   const scroll = () => {
     const id = location.hash.replace(/^#/, '')
     const section = document.getElementById(id)

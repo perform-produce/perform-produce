@@ -24,16 +24,16 @@ const grid = colCount => ({ $start, $end }) => {
   }
 
   return `
-      display: grid;
-      grid-template-columns: repeat(${getCols(false)}, 1fr);
-      column-gap: ${GRID_GAP};
+    display: grid;
+    grid-template-columns: repeat(${getCols(false)}, 1fr);
+    column-gap: ${GRID_GAP};
 
-      @media (${MOBILE_QUERY}) {
-        grid-template-columns: repeat(${getCols(true)}, 1fr);
-        column-gap: ${MOBILE_GRID_GAP};
-      }
-      margin: 0;
-    `
+    @media (${MOBILE_QUERY}) {
+      grid-template-columns: repeat(${getCols(true)}, 1fr);
+      column-gap: ${MOBILE_GRID_GAP};
+    }
+    margin: 0;
+  `
 }
 
 const visualEssayGrid = ({ $start, $end }) => `

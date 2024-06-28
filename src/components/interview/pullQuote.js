@@ -2,7 +2,7 @@ import { useIntersectionObserver } from '@uidotdev/usehooks'
 import { useContext, useEffect } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as CloseSvg } from '../../assets/svg/close.svg'
-import { COLORS, SECTION_PADDING_LINE_HEIGHT, STROKE_WIDTH } from '../../constants/styleConstants'
+import { COLORS, SECTION_PADDING_LINE_HEIGHT, DESKTOP_STROKE_WIDTH } from '../../constants/styleConstants'
 import { SectionContext } from '../../contexts/context'
 import mixins from '../../utils/mixins'
 import { lineHeight, spanCol } from '../../utils/styleUtils'
@@ -72,7 +72,7 @@ const Header = styled.div`
   }
 
   svg {
-    stroke-width: ${STROKE_WIDTH};
+    stroke-width: ${DESKTOP_STROKE_WIDTH};
     cursor: pointer;
 
     &:hover {

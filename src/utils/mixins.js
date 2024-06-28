@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { COLORS, GRID_COUNT, GRID_GAP, DESKTOP_MENU_HEIGHT, PERFORMING_BODY_GRID_COUNT, DESKTOP_STROKE_WIDTH, DESKTOP_VERT_GAP, MOBILE_VERT_GAP, MOBILE_MENU_HEIGHT, MOBILE_QUERY, MOBILE_GRID_GAP, MOBILE_GRID_COUNT } from '../constants/styleConstants'
+import { COLORS, GRID_COUNT, GRID_GAP, DESKTOP_MENU_HEIGHT, PERFORMING_BODY_GRID_COUNT, DESKTOP_STROKE_WIDTH, DESKTOP_VERT_GAP, MOBILE_VERT_GAP, MOBILE_MENU_HEIGHT, MOBILE_QUERY, MOBILE_GRID_GAP, MOBILE_GRID_COUNT, MOBILE_STROKE_WIDTH } from '../constants/styleConstants'
 import { loopObject, validateString } from './commonUtils'
 import { spanCol } from './styleUtils'
 
@@ -58,7 +58,7 @@ const underline = () => `
   text-decoration-skip-ink: none;
 
   @media (${MOBILE_QUERY}) {
-    text-decoration-thickness: ${DESKTOP_STROKE_WIDTH};
+    text-decoration-thickness: ${MOBILE_STROKE_WIDTH};
   }
 `
 

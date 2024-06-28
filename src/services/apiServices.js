@@ -72,8 +72,6 @@ const data = (
 
     extractDomImg(results.appendix[FIELDS.APPENDIX]).forEach(img => addData(img))
 
-    const testData = { ...imageData }
-
     return {
       results,
       imageData,

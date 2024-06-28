@@ -1,4 +1,4 @@
-import { MOBILE_LINE_HEIGHT, MOBILE_MENU_PADDING, SECTION_HEADING_TOP, SECTION_PADDING_LINE_HEIGHT } from '../constants/styleConstants'
+import { SECTION_HEADING_TOP, SECTION_PADDING_LINE_HEIGHT } from '../constants/styleConstants'
 import { getLineHeight, getMobileMenuHeight } from './styleUtils'
 import { getPx } from './stylesBase'
 

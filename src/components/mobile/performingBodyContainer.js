@@ -27,7 +27,7 @@ const PerformingBodyContainer = ({
 
   const checkIsIntersecting = () => {
     const { top } = containerRef.current.getBoundingClientRect()
-    setIsIntersecting(top < vh(60))
+    setIsIntersecting(top < vh(75))
   }
 
   useEffect(() => {

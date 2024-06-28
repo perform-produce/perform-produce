@@ -63,7 +63,7 @@ const border = isBottom => `
 `
 
 const cover = isMobile => {
-  const vertTopGap = isMobile ? MOBILE_LINE_HEIGHT : DESKTOP_VERT_GAP
+  const vertTopGap = isMobile ? MOBILE_VERT_GAP : DESKTOP_VERT_GAP
   const menuHeight = isMobile ? MOBILE_MENU_HEIGHT : DESKTOP_MENU_HEIGHT
   return `
     height: calc(100svh - ${vertTopGap} * 2 - ${menuHeight});

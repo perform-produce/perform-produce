@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { COLORS, MOBILE_GAP, MOBILE_LINE_HEIGHT, MOBILE_MENU_PADDING } from '../../../constants/styleConstants'
+import { COLORS, MOBILE_GAP, MOBILE_LINE_HEIGHT, MOBILE_MENU_PADDING, MOBILE_VERT_GAP, STROKE_WIDTH } from '../../../constants/styleConstants'
 import { GlobalContext } from '../../../contexts/context'
 import mixins from '../../../utils/mixins'
 import { remify } from '../../../utils/stylesBase'
@@ -22,7 +22,6 @@ const MobileMenu = ({ scrollMeterAltText, loaded }) => {
     <Link {...props} onClick={() => setIsOpened(false)} />, [])
 
   return (
-
     <MenuOuterContainer>
       <MenuContainer>
         <GridItem $start='span 6'>
@@ -73,7 +72,7 @@ const MenuOuterContainer = styled.menu`
 const MenuContainer = styled.div`
   ${mixins.grid}
   padding: ${MOBILE_MENU_PADDING} ${MOBILE_GAP};
-  outline: black solid 1px;
+  outline: black solid ${STROKE_WIDTH};
 
   width: calc(100dvw - ${MOBILE_GAP} * 2);
 
@@ -82,7 +81,6 @@ const MenuContainer = styled.div`
 
 const ExpandMenuContainer = styled(GridItem)`
   justify-self: flex-end;
-
   button {
     ${mixins.flex('center', 'center')}
     width: fit-content;
@@ -98,13 +96,15 @@ const paddingTop = remify(16)
 const menuLineHeight = remify(28)
 const ExpandedMenu = styled.div`
   height: calc(100dvh - (${MOBILE_MENU_PADDING} * 2 + ${MOBILE_LINE_HEIGHT} + ${paddingTop}));
-  padding: ${menuLineHeight} ${MOBILE_GAP} 0;
+  padding: ${MOBILE_VERT_GAP} ${MOBILE_GAP} 0;
+
   background-color: ${COLORS.WHITE};
-  line-height: ${menuLineHeight};
+
   overflow: scroll;
 
   a {
     display: block;
+    padding-bottom: calc(${menuLineHeight} - ${MOBILE_LINE_HEIGHT});
   }
 
   div {

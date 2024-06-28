@@ -4,7 +4,7 @@ import _ from 'lodash'
 import GridItem from '../common/gridItem'
 import { conditionalStyle, getGridData, getLineHeight, lineHeight, spanCol, toggleStyle } from '../../utils/styleUtils'
 import IndentText from '../common/indentText'
-import { COLORS, GLYPH_CAP_SPACE, GLYPH_DESC, DESKTOP_HALF_LINE_PADDING, POP_UP_TIMEOUT, POP_UP_TOP_PADDING, RULER_SECTION_MARGIN_TOP, STROKE_WIDTH, DESKTOP_LINE_HEIGHT } from '../../constants/styleConstants'
+import { COLORS, GLYPH_CAP_SPACE, GLYPH_DESC, DESKTOP_HALF_LINE_PADDING, POP_UP_TIMEOUT, POP_UP_TOP_PADDING, RULER_SECTION_MARGIN_TOP, DESKTOP_STROKE_WIDTH, DESKTOP_LINE_HEIGHT } from '../../constants/styleConstants'
 import FilteredImg from '../common/filteredImg'
 import { ReactComponent as MarkSvg } from '../../assets/svg/mark.svg'
 import mixins from '../../utils/mixins'
@@ -129,7 +129,7 @@ const SvgContainer = styled.div`
   svg {
     height: calc(${lineHeight(6)} - ${nonTypeMarginTop} - ${GLYPH_DESC}em);
     margin-top: ${nonTypeMarginTop};
-    stroke-width: ${STROKE_WIDTH};
+    stroke-width: ${DESKTOP_STROKE_WIDTH};
   }
 `
 

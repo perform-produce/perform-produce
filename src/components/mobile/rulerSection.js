@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as MarkSvg } from '../../assets/svg/mark.svg'
-import { COLORS, MOBILE_GAP, MOBILE_GRID_COUNT, MOBILE_GRID_GAP, MOBILE_LINE_HEIGHT, POP_UP_TIMEOUT, STROKE_WIDTH, TEXT_INDENT } from '../../constants/styleConstants'
+import { COLORS, MOBILE_GAP, MOBILE_GRID_COUNT, MOBILE_GRID_GAP, MOBILE_LINE_HEIGHT, POP_UP_TIMEOUT, DESKTOP_STROKE_WIDTH, TEXT_INDENT } from '../../constants/styleConstants'
 import useClickAway from '../../hooks/useClickAway'
 import mixins from '../../utils/mixins'
 import { conditionalStyle, getLineHeight, lineHeight } from '../../utils/styleUtils'
@@ -130,7 +130,7 @@ const SvgContainer = styled.div`
   height: fit-content;
   svg {
     height: ${lineHeight(6, true)};
-    stroke-width: ${STROKE_WIDTH};
+    stroke-width: ${DESKTOP_STROKE_WIDTH};
   }
 `
 

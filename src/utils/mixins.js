@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { COLORS, GRID_COUNT, GRID_GAP, DESKTOP_MENU_HEIGHT, PERFORMING_BODY_GRID_COUNT, STROKE_WIDTH, DESKTOP_VERT_GAP, MOBILE_VERT_GAP, MOBILE_MENU_HEIGHT, MOBILE_QUERY, MOBILE_GRID_GAP, MOBILE_GRID_COUNT, MOBILE_LINE_HEIGHT } from '../constants/styleConstants'
+import { COLORS, GRID_COUNT, GRID_GAP, DESKTOP_MENU_HEIGHT, PERFORMING_BODY_GRID_COUNT, DESKTOP_STROKE_WIDTH, DESKTOP_VERT_GAP, MOBILE_VERT_GAP, MOBILE_MENU_HEIGHT, MOBILE_QUERY, MOBILE_GRID_GAP, MOBILE_GRID_COUNT } from '../constants/styleConstants'
 import { loopObject, validateString } from './commonUtils'
 import { spanCol } from './styleUtils'
 
@@ -53,13 +53,17 @@ const highZIndex = level => `z-index: ${'9'.repeat(level)};`
 
 const underline = () => `
   text-decoration: underline;
-  text-decoration-thickness: ${STROKE_WIDTH};
+  text-decoration-thickness: ${DESKTOP_STROKE_WIDTH};
   text-underline-offset: 0.07em;
   text-decoration-skip-ink: none;
+
+  @media (${MOBILE_QUERY}) {
+    text-decoration-thickness: ${DESKTOP_STROKE_WIDTH};
+  }
 `
 
 const border = isBottom => `
-  border${validateString(isBottom, '-bottom')}: black solid ${STROKE_WIDTH};
+  border${validateString(isBottom, '-bottom')}: black solid ${DESKTOP_STROKE_WIDTH};
 `
 
 const cover = isMobile => {

@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { COLORS, MOBILE_GAP, MOBILE_LINE_HEIGHT, MOBILE_MENU_PADDING, MOBILE_VERT_GAP, STROKE_WIDTH } from '../../../constants/styleConstants'
+import { COLORS, MOBILE_GAP, MOBILE_LINE_HEIGHT, MOBILE_MENU_PADDING, MOBILE_VERT_GAP, DESKTOP_STROKE_WIDTH } from '../../../constants/styleConstants'
 import { GlobalContext } from '../../../contexts/context'
 import mixins from '../../../utils/mixins'
 import { remify } from '../../../utils/stylesBase'
@@ -72,7 +72,7 @@ const MenuOuterContainer = styled.menu`
 const MenuContainer = styled.div`
   ${mixins.grid}
   padding: ${MOBILE_MENU_PADDING} ${MOBILE_GAP};
-  outline: black solid ${STROKE_WIDTH};
+  outline: black solid ${DESKTOP_STROKE_WIDTH};
 
   width: calc(100dvw - ${MOBILE_GAP} * 2);
 

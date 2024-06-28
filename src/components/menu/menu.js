@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
-import { COLORS, DESKTOP_MENU_PADDING_BOT, DESKTOP_MENU_PADDING_TOP, STROKE_WIDTH } from '../../constants/styleConstants'
+import { COLORS, DESKTOP_MENU_PADDING_BOT, DESKTOP_MENU_PADDING_TOP, DESKTOP_STROKE_WIDTH } from '../../constants/styleConstants'
 import { GlobalContext } from '../../contexts/context'
 import mixins from '../../utils/mixins'
 import { conditionalStyle, lineHeight } from '../../utils/styleUtils'
@@ -70,7 +70,7 @@ const MenuContainer = styled(Grid)`
   position: fixed;
   top: 0;
   background-color: ${COLORS.WHITE};
-  outline: ${conditionalStyle('$outline', `black solid ${STROKE_WIDTH}`)};
+  outline: ${conditionalStyle('$outline', `black solid ${DESKTOP_STROKE_WIDTH}`)};
 `
 
 const LinkWrapper = styled(GridItem)`

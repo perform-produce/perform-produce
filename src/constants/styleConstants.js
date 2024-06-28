@@ -61,7 +61,8 @@ export const SECTION_HEADING_PADDING_TOP = remify(35)
 export const SECTION_HEADING_TOP =
   remify(DESKTOP_MENU_HEIGHT_PX + getPx(SECTION_HEADING_PADDING_TOP))
 
-export const STROKE_WIDTH = '2px'
+export const DESKTOP_STROKE_WIDTH = '2px'
+export const MOBILE_STROKE_WIDTH = '1.5px'
 
 export const COLORS = {
   WHITE: 'white',
